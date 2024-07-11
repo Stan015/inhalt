@@ -1,16 +1,16 @@
 <template>
-  <header class="w-full h-[6rem] flex items-center justify-between px-[7%]">
+  <header class="w-full h-[6rem] flex items-center justify-between px-[12%]">
     <Logo />
 
     <Search />
 
-    <NuxtLink to="/create-post" class="flex items-center gap-1">
+    <NuxtLink to="/create-inhalt" class="flex items-center gap-1">
       <Icon name="ph:plus-bold" />
-      create post
+      create inhalt
     </NuxtLink>
 
     <NuxtLink to="notification">
-      <Notification />
+      <NotificationButton />
     </NuxtLink>
 
     <div class="flex gap-6 items-center">

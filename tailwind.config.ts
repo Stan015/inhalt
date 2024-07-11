@@ -21,7 +21,11 @@ export default <Partial<Config>>{
       },
       backgroundColor: {
         light: "#EFEFEF",
-        dark: "#000000"
+        dark: "#000000",
+        secondary: "#969696"
+      },
+      minHeight: {
+        main: "calc(100svh - 6rem)"
       }
     },
   },
