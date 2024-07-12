@@ -57,7 +57,7 @@
                     <button type="button" aria-labelledby="share"><Icon name="uil:share" /></button>
                 </div>
 
-                <NuxtLink to="/profile" class="flex flex-col items-end text-[0.7rem]">
+                <NuxtLink to="/" class="flex flex-col items-end text-[0.7rem]">
                     <NuxtImg src="/img2.png" alt="user profile picture" class="w-6 h-6 rounded-full border" />
                     <h3 class="text-end font-medium">Stanley Azi</h3>
                     <p class="text-end">Frontend Developer</p>
@@ -86,4 +86,5 @@
       </section>
     </aside>
   </div>
+  <NuxtPage />
 </template>
