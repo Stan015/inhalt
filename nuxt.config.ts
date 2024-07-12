@@ -7,18 +7,26 @@ export default defineNuxtConfig({
       titleTemplate: "%s | The contents app.",
     },
   },
-  // modules: ["@nuxtjs/tailwindcss", "@nuxtjs/supabase"],
-  // supabase: {
-  //   url: process.env.NUXT_PUBLIC_SUPABASE_URL,
-  //   key: process.env.NUXT_PUBLIC_SUPABASE_KEY,
-  // },
-  css: ["~/assets/css/global.css"],
   modules: [
     "@nuxtjs/tailwindcss",
+    "@nuxtjs/supabase",
     "@nuxtjs/google-fonts",
     "@nuxt/image",
     "@nuxt/icon",
   ],
+  supabase: {
+    url: process.env.NUXT_PUBLIC_SUPABASE_URL,
+    key: process.env.NUXT_PUBLIC_SUPABASE_KEY,
+    redirect: true,
+    redirectOptions: {
+      login: "/login",
+      callback: "/confirm",
+      include: ["/dashboard", "/create-inhalt", "/notification"],
+      exclude: ["/", "/sign-up"],
+      cookieRedirect: false,
+    },
+  },
+  css: ["~/assets/css/global.css"],
   googleFonts: {
     families: {
       Poppins: [100, 200, 300, 400, 500, 600, 700, 800, 900],
@@ -50,12 +58,11 @@ export default defineNuxtConfig({
             light: "#EFEFEF",
             dark: "#000000",
             secondary: "#969696",
-            action: "#6D28D9"
+            action: "#6D28D9",
           },
           borderColor: {
             light: "#EFEFEF",
-          }
-          ,
+          },
           minHeight: {
             main: "calc(100svh - 6rem)",
           },
