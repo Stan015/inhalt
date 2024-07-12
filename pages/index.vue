@@ -50,14 +50,14 @@
                   <span>10 min read</span>
                 </div>
 
-                <div class="flex gap-4" >
+                <div class="flex gap-4 cursor-default" >
                     <button type="button" aria-labelledby="likes"><Icon name="mdi:heart-outline" /></button>
                     <button type="button" aria-labelledby="comments"><Icon name="uil:comment" /></button>
                     <button type="button" aria-labelledby="bookmark"><Icon name="material-symbols:bookmark-outline" /></button>
                     <button type="button" aria-labelledby="share"><Icon name="uil:share" /></button>
                 </div>
 
-                <NuxtLink to="/" class="flex flex-col items-end text-[0.7rem]">
+                <NuxtLink to="/profile" class="flex flex-col items-end text-[0.7rem]">
                     <NuxtImg src="/img2.png" alt="user profile picture" class="w-6 h-6 rounded-full border" />
                     <h3 class="text-end font-medium">Stanley Azi</h3>
                     <p class="text-end">Frontend Developer</p>
