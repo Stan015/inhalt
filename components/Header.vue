@@ -4,12 +4,12 @@
 
     <Search />
 
-    <NuxtLink to="/create-inhalt" class="flex items-center gap-1">
+    <NuxtLink to="/stan015/create-inhalt" class="flex items-center gap-1">
       <Icon name="ph:plus-bold" />
       create inhalt
     </NuxtLink>
 
-    <NuxtLink to="notification">
+    <NuxtLink to="/stan015/notification">
       <NotificationButton />
     </NuxtLink>
 
