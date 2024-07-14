@@ -10,10 +10,14 @@ export default defineNuxtConfig({
   modules: [
     "@nuxtjs/tailwindcss",
     "@nuxtjs/supabase",
+    "@nuxt/content",
     "@nuxtjs/google-fonts",
     "@nuxt/image",
     "@nuxt/icon",
   ],
+  content: {
+    documentDriven: true
+  },
   supabase: {
     url: process.env.NUXT_PUBLIC_SUPABASE_URL,
     key: process.env.NUXT_PUBLIC_SUPABASE_KEY,
