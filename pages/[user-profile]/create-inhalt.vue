@@ -29,28 +29,38 @@ const submitPost = async () => {
     formData.append("article_title", title);
     formData.append("markdown_content", markdownContent);
     // formData.append("html_content", markdownContent);
-    formData.append("created_at", submittedAt);
+    formData.append("submitted_at", submittedAt);
 
     try {
-      const response = await fetch("/api/articles", {
-        method: "POST",
+      const response = await $fetch("/api/articles", {
+        method: 'post',
         body: formData,
       });
 
-      if (response.ok) {
-        alert("Article created successfully!");
-      }
+      console.log(response)
+
+      // if (response.statusCode === 200) {
+      //   alert("Article created successfully!");
+      // } else {
+      //   alert("Error creating article.");
+      // }
     } catch (error) {
-      console.log(error);
+      console.log((error as Error).message);
       alert("Error creating article.");
     }
   }
 };
+
+const testFecth = async () => {
+  const res = await $fetch('/api/fetch-articles')
+  console.log(res)
+}
 </script>
 
 <template>
   <section class="w-full min-h-main flex gap-4 py-6 px-[12%]">
     <article>
+      <button type="button" @click="testFecth" >test fetch</button>
       <h1>Write A New Article</h1>
       <form @submit.prevent="submitPost" class="flex flex-col gap-6">
         <input type="file" ref="coverImg" placeholder="Upload cover image" />

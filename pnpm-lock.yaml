@@ -21,8 +21,8 @@ importers:
         specifier: ^3.2.0
         version: 3.2.0(magicast@0.3.4)(rollup@4.18.1)
       '@nuxtjs/supabase':
-        specifier: ^1.3.4
-        version: 1.3.4(magicast@0.3.4)(rollup@4.18.1)
+        specifier: ^1.3.5
+        version: 1.3.5
       '@supabase/supabase-js':
         specifier: ^2.44.4
         version: 2.44.4
@@ -902,8 +902,8 @@ packages:
   '@nuxtjs/mdc@0.8.3':
     resolution: {integrity: sha512-FqvJFWkBN9u2FeWog+7+C0aIOx0WIu61TYgAXPmmIOVVua6s2mXQsMyF3fXY2M56QBIaYJzK/SYN+5FGr5GNTQ==}
 
-  '@nuxtjs/supabase@1.3.4':
-    resolution: {integrity: sha512-DNWpheKPYXiWGYEFQGSES5yimMArG+LxIZ9o+88H2lOpad7B75qUWcGZt3TpPkrnc0WlJ0TSf5rWqfbh0ezfow==}
+  '@nuxtjs/supabase@1.3.5':
+    resolution: {integrity: sha512-hRHlRm7mAAUbcLSuc5X1ST5VdZLXwiQeYA/vpK54bVhZ/sU62T8/KqYhogrSul20ZDBZyGs1ugD3V79nysK24Q==}
 
   '@nuxtjs/tailwindcss@6.12.0':
     resolution: {integrity: sha512-vXvEq8z177TQcx0tc10mw3O6T9WeN0iTL8hIKGDfidmr+HKReexJU01aPgHefFrCu4LJB70egYFYnywzB9lMyQ==}
@@ -5403,18 +5403,14 @@ snapshots:
       - rollup
       - supports-color
 
-  '@nuxtjs/supabase@1.3.4(magicast@0.3.4)(rollup@4.18.1)':
+  '@nuxtjs/supabase@1.3.5':
     dependencies:
-      '@nuxt/kit': 3.12.3(magicast@0.3.4)(rollup@4.18.1)
       '@supabase/ssr': 0.4.0(@supabase/supabase-js@2.44.4)
       '@supabase/supabase-js': 2.44.4
       defu: 6.1.4
       pathe: 1.1.2
     transitivePeerDependencies:
       - bufferutil
-      - magicast
-      - rollup
-      - supports-color
       - utf-8-validate
 
   '@nuxtjs/tailwindcss@6.12.0(magicast@0.3.4)(rollup@4.18.1)':
