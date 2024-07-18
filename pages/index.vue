@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import type { ArticleCard } from "~/types/tables.types";
+
+const allArticles = ref<Array<ArticleCard>>();
+
+const fecthArticles = async () => {
+  try {
+    const response = await $fetch("/api/fetch-articles");
+    const data = response.data;
+
+    allArticles.value = data as Array<ArticleCard>;
+
+    // console.log(allArticles.value);
+  } catch (error) {
+    console.log((error as Error).message);
+  }
+};
+
+onMounted(() => {
+  fecthArticles();
+});
+</script>
+
 <template>
   <div
     class="w-full min-h-main grid grid-cols-[13rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%]"
@@ -33,25 +56,30 @@
         <button type="button">Following</button>
       </nav>
 
-      <section>
+      <section v-for="article in allArticles">
         <article
           class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
+          :key="article.id"
         >
           <NuxtLink to="/stan015/articles/123">
-            <NuxtImg src="/img1.png" alt="cover photo" class="w-full h-11/12" />
+            <NuxtImg
+              v-if="article.cover_image"
+              :src="article.cover_image_url"
+              alt="cover photo"
+              class="w-full h-11/12"
+            />
           </NuxtLink>
 
           <div class="w-full h-max bg-white px-4 pb-4">
             <NuxtLink to="/stan015/articles/123">
               <h2 class="w-full text-center font-bold text-[1.5rem] pt-4">
-                Mastering ChatGPT Blog Creation: Dos and Don'ts for SaaS
-                Marketing Managers
+                {{ article.title }}
               </h2>
             </NuxtLink>
 
             <div class="flex items-end justify-between gap-6">
               <div class="text-[0.7rem]">
-                <span>Jul 9</span> .
+                <span>{{ article.created_at }}</span> .
                 <span>10 min read</span>
               </div>
 

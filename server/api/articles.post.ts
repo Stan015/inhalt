@@ -21,14 +21,14 @@ export default defineEventHandler(async (event) => {
     let coverImg;
 
     form.forEach((item) => {
-      if (item.name === 'cover_img') {
+      if (item.name === "cover_img") {
         coverImg = item;
       } else {
         fields[item.name] = item.data.toString();
       }
     });
 
-    console.log(fields, coverImg)
+    // console.log(fields, coverImg)
 
     const { article_title, markdown_content, submitted_at } = fields;
 
@@ -40,11 +40,13 @@ export default defineEventHandler(async (event) => {
     }
 
     // Upload cover image to Supabase Storage
-    let coverImageUrl = null;
+    let uploadedCoverImage = null;
+    let uploadedCoverImageUrl = null;
+
     if (coverImg) {
       const { data: storageData, error: storageError } = await supabase.storage
         .from("article_cover_images")
-        .upload(`covers/${uuidv4()}`, coverImg.data, {
+        .upload(uuidv4(), coverImg.data, {
           contentType: coverImg.type,
         });
 
@@ -55,7 +57,17 @@ export default defineEventHandler(async (event) => {
         });
       }
 
-      coverImageUrl = storageData.path;
+      uploadedCoverImage = storageData.path;
+
+      try {
+        const { data: publicUrlData } = await supabase.storage
+          .from("article_cover_images")
+          .getPublicUrl(uploadedCoverImage);
+
+        uploadedCoverImageUrl = publicUrlData.publicUrl;
+      } catch (error) {
+        throw new Error((error as Error).message);
+      }
     }
 
     const { data, error } = await supabase.from("articles").insert([
@@ -63,7 +75,8 @@ export default defineEventHandler(async (event) => {
         title: article_title,
         markdown_content: markdown_content,
         created_at: submitted_at,
-        cover_image_url: coverImageUrl,
+        cover_image: uploadedCoverImage,
+        cover_image_url: uploadedCoverImageUrl,
       },
     ]);
 

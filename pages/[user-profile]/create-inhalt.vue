@@ -15,11 +15,11 @@ const submitPost = async () => {
     const coverImageFile = coverImg.value?.files?.[0];
     const submittedAt = new Date().toISOString();
 
-    console.log("Title:", title);
-    console.log("cover image:", coverImageFile);
-    console.log("Markdown Content:", markdownContent);
-    console.log("HTML Content:", htmlContent);
-    console.log("created at:", submittedAt);
+    // console.log("Title:", title);
+    // console.log("cover image:", coverImageFile);
+    // console.log("Markdown Content:", markdownContent);
+    // console.log("HTML Content:", htmlContent);
+    // console.log("created at:", submittedAt);
 
     const formData = new FormData();
 
@@ -50,17 +50,11 @@ const submitPost = async () => {
     }
   }
 };
-
-const testFecth = async () => {
-  const res = await $fetch('/api/fetch-articles')
-  console.log(res)
-}
 </script>
 
 <template>
   <section class="w-full min-h-main flex gap-4 py-6 px-[12%]">
     <article>
-      <button type="button" @click="testFecth" >test fetch</button>
       <h1>Write A New Article</h1>
       <form @submit.prevent="submitPost" class="flex flex-col gap-6">
         <input type="file" ref="coverImg" placeholder="Upload cover image" />
