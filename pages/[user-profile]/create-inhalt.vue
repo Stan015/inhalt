@@ -10,7 +10,7 @@ const markdownEditor = ref<{
 const submitPost = async () => {
   if (markdownEditor.value) {
     const markdownContent = markdownEditor.value?.getMarkdown();
-    const htmlContent = markdownEditor.value?.getHTML();
+    // const htmlContent = markdownEditor.value?.getHTML();
     const title = articleTitle.value;
     const coverImageFile = coverImg.value?.files?.[0];
     const submittedAt = new Date().toISOString();

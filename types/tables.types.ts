@@ -3,7 +3,8 @@ export type Article = {
   title: string;
   cover_image: string;
   cover_image_url: string;
-  content: string;
+  markdown_content: string;
+  html_content: string;
   created_at: string;
 };
 

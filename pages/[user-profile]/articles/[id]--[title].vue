@@ -1,4 +1,34 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { Article } from "~/types/tables.types";
+
+const route = useRoute();
+
+const article = ref<Article | null>(null);
+
+const fecthArticle = async () => {
+  const { id, title } = route.params;
+
+  try {
+    const response = await useFetch<Article>(
+      `/api/fetch-single-article?id=${id}&title=${title}`
+    );
+
+    const data = response.data;
+
+    // console.log(data.value)
+
+    if (response.status.value === "success") {
+      article.value = data.value;
+    }
+  } catch (error) {
+    console.error("Error fetching article:", error);
+  }
+};
+
+onMounted(() => {
+  fecthArticle();
+});
+</script>
 
 <template>
   <div class="w-full min-h-main flex gap-4 py-6 px-[12%]">
@@ -29,15 +59,19 @@
       <article
         class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
       >
-        <NuxtImg src="/img1.png" alt="cover photo" class="w-full h-11/12" />
+        <NuxtImg
+          v-if="article?.cover_image"
+          :src="article?.cover_image_url"
+          :alt="`cover photo of ${article?.title}`"
+          class="w-full h-11/12"
+        />
         <div class="w-full h-max bg-white p-4">
           <h2 class="w-full text-center font-bold text-[1.5rem]">
-            Mastering ChatGPT Blog Creation: Dos and Don'ts for SaaS Marketing
-            Managers
+            {{ article?.title }}
           </h2>
           <div class="flex items-end justify-between gap-6">
             <div class="text-[0.7rem]">
-              <span>Jul 9</span> .
+              <span>{{ article?.created_at }}</span> .
               <span>10 min read</span>
             </div>
 
@@ -66,56 +100,7 @@
           </div>
         </div>
         <div class="flex flex-col gap-2 p-4">
-          <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-            Repudiandae, autem laboriosam facere perferendis earum asperiores
-            doloremque sunt accusamus officiis rerum, iste eum quibusdam
-            perspiciatis explicabo magni aspernatur quaerat nemo dolorum? Lorem
-            ipsum dolor sit amet consectetur adipisicing elit. Ipsam deserunt
-            ipsum modi pariatur obcaecati quaerat quas dolor asperiores beatae
-            consequuntur vel sequi illum maxime nisi a amet quod, eveniet
-            facere!
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            finibus tempor metus, at accumsan orci mattis vel. In interdum eu
-            risus a faucibus. Sed in lectus non sem sollicitudin euismod.
-            Vestibulum lacinia elit non finibus ultricies. Ut ultricies justo
-            sit amet sapien tristique, eu commodo ligula aliquet. Morbi nibh
-            metus, sagittis id efficitur a, varius a turpis. Morbi lobortis
-            pellentesque sem vitae suscipit. Nullam euismod sed felis et
-            accumsan. Vestibulum mattis quam sit amet interdum accumsan. In at
-            nisl ipsum. Phasellus interdum fermentum nisi. Fusce posuere, turpis
-            eu viverra pulvinar, risus ligula consectetur ligula, at vestibulum
-            metus eros id nibh. Praesent tincidunt justo ac justo dignissim, nec
-            ornare erat malesuada.
-          </p>
-          <p>
-            Curabitur consectetur purus et ipsum tempus, non euismod massa
-            euismod. Donec convallis sodales mi nec tincidunt. Nunc porta, nulla
-            in mattis viverra, sem magna aliquet ligula, eu pulvinar mauris quam
-            in eros. Fusce felis mauris, viverra in elementum ut, suscipit
-            laoreet augue. Nunc aliquam libero eu sollicitudin ultricies. Sed
-            scelerisque ut odio eget tempor. Nulla suscipit congue est, non
-            feugiat eros egestas tincidunt. Cras efficitur tellus sit amet metus
-            scelerisque, in laoreet metus suscipit. Morbi sed bibendum odio.
-            Vestibulum viverra dui at lorem tristique, mattis bibendum sem
-            elementum. Quisque vel placerat neque. Vestibulum porta ante velit,
-            et tincidunt metus vehicula at.
-          </p>
-          <p>
-            Aenean eget rhoncus metus. Sed ac sodales nibh, convallis maximus
-            augue. Proin viverra arcu arcu, ac imperdiet diam eleifend nec.
-            Morbi ac interdum lorem. Curabitur purus ex, imperdiet mollis nisi
-            a, pharetra malesuada diam. Aliquam id viverra felis. Vivamus
-            fringilla elit eget venenatis varius. Cras aliquam massa ac ante
-            rutrum congue. Aenean dignissim felis metus, et dictum turpis
-            lacinia at. Sed porta dictum nunc, quis facilisis arcu maximus in.
-            Morbi a nisl pretium, efficitur libero vel, pulvinar odio. Morbi
-            eleifend ligula vitae diam vestibulum, nec posuere dolor
-            pellentesque. Etiam finibus urna diam. Nam arcu quam, facilisis eu
-            ex at, interdum elementum quam. Morbi convallis pretium consequat.
-          </p>
+          <MarkdownRenderer :content="article?.markdown_content!" />
         </div>
         <div
           class="flex items-end p-4 border-t border-white justify-between gap-6"

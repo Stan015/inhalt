@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   const articles = await supabase.from("articles").select();
 
-  console.log(articles);
+  // console.log(articles);
 
   return articles;
 });

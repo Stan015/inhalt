@@ -23,6 +23,7 @@
     "@toast-ui/editor": "^3.2.2",
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",
     "@toast-ui/editor-plugin-color-syntax": "^3.1.0",
+    "markdown-it": "^14.1.0",
     "multer": "1.4.5-lts.1",
     "nuxt": "^3.12.3",
     "uuid": "^10.0.0",
@@ -44,6 +45,7 @@
     "@iconify-json/solar": "^1.1.9",
     "@iconify-json/uil": "^1.1.8",
     "@nuxtjs/tailwindcss": "^6.12.0",
+    "@types/markdown-it": "^14.1.1",
     "@types/multer": "^1.4.11",
     "@types/uuid": "^10.0.0"
   }

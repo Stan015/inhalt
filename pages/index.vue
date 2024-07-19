@@ -61,8 +61,8 @@ onMounted(() => {
           class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
           :key="article.id"
         >
-          <NuxtLink to="/stan015/articles/123">
-            <NuxtImg
+        <NuxtLink :to="`/stan015/articles/${article.id}--${article.title.replace(/\s+/g, '-').toLowerCase()}`">
+          <NuxtImg
               v-if="article.cover_image"
               :src="article.cover_image_url"
               alt="cover photo"
@@ -71,7 +71,7 @@ onMounted(() => {
           </NuxtLink>
 
           <div class="w-full h-max bg-white px-4 pb-4">
-            <NuxtLink to="/stan015/articles/123">
+            <NuxtLink :to="`/stan015/articles/${article.id}--${article.title.replace(/\s+/g, '-').toLowerCase()}`">
               <h2 class="w-full text-center font-bold text-[1.5rem] pt-4">
                 {{ article.title }}
               </h2>
