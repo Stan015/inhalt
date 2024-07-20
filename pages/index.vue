@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ArticleCard } from "~/types/tables.types";
 
-const allArticles = ref<Array<ArticleCard>>();
+const allArticles = useState<Array<ArticleCard>>();
 
 const fecthArticles = async () => {
   try {
@@ -10,7 +10,7 @@ const fecthArticles = async () => {
 
     allArticles.value = data as Array<ArticleCard>;
 
-    // console.log(allArticles.value);
+    console.log(allArticles.value);
   } catch (error) {
     console.log((error as Error).message);
   }

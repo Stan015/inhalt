@@ -14,9 +14,10 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "@nuxt/image",
     "@nuxt/icon",
+    "@pinia/nuxt",
   ],
   content: {
-    documentDriven: true
+    documentDriven: true,
   },
   supabase: {
     url: process.env.NUXT_PUBLIC_SUPABASE_URL,

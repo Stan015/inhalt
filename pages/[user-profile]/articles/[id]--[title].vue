@@ -3,22 +3,20 @@ import type { Article } from "~/types/tables.types";
 
 const route = useRoute();
 
-const article = ref<Article | null>(null);
+const article = useState<Article | null>("article", () => null);
 
 const fecthArticle = async () => {
   const { id, title } = route.params;
 
   try {
-    const response = await useFetch<Article>(
+    const response = await $fetch<Article>(
       `/api/articles/fetch-single-article?id=${id}&title=${title}`
     );
 
-    const data = response.data;
+    console.log(response)
 
-    // console.log(data.value)
-
-    if (response.status.value === "success") {
-      article.value = data.value;
+    if (response) {
+      article.value = response;
     }
   } catch (error) {
     console.error("Error fetching article:", error);
