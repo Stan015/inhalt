@@ -32,7 +32,7 @@ const submitPost = async () => {
     formData.append("submitted_at", submittedAt);
 
     try {
-      const response = await $fetch("/api/articles", {
+      const response = await $fetch("/api/articles/create-article", {
         method: 'post',
         body: formData,
       });

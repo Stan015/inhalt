@@ -5,7 +5,7 @@ const allArticles = ref<Array<ArticleCard>>();
 
 const fecthArticles = async () => {
   try {
-    const response = await $fetch("/api/fetch-articles");
+    const response = await $fetch("/api/articles/fetch-articles");
     const data = response.data;
 
     allArticles.value = data as Array<ArticleCard>;

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient();
-
 type FormData = {
   firstName: string;
   lastName: string;
@@ -16,36 +14,34 @@ const formData = reactive<FormData>({
 });
 
 async function signUpWithEmailAndPassword() {
-  const { data, error } = await supabase.auth.signUp({
-    email: formData.email,
-    password: formData.password,
-    options: {
-      emailRedirectTo: "http://localhost:3000/confirm",
-    },
-  });
+  try {
+    const response = await $fetch(
+      `/api/auth/sign-up-with-pw?email=${formData.email}&password=${formData.password}`
+    );
 
-  if (error) {
-    console.log(error.message);
-    throw new Error(error);
-  } else {
-    console.log(formData);
-    console.log(data);
+    if (response) {
+      // console.log(response);
+      navigateTo("/confirm");
+    }
+  } catch (error) {
+    console.log((error as Error).message);
   }
 }
 
 const signInWithOAuth = async (provider: string) => {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: provider,
-    options: {
-      redirectTo: "http://localhost:3000/confirm",
-    },
-  });
+  try {
+    const response = await $fetch(
+      `/api/auth/sign-in-with-o-auth?provider=${provider}`
+    );
 
-  if (error) {
-    console.log(error.message);
-    throw new Error(error);
-  } else {
-    console.log(data);
+    if (response) {
+      navigateTo(response.url, {
+        external: true,
+      });
+      // console.log(response);
+    }
+  } catch (error) {
+    console.log((error as Error).message);
   }
 };
 </script>

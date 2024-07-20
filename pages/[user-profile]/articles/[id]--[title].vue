@@ -10,7 +10,7 @@ const fecthArticle = async () => {
 
   try {
     const response = await useFetch<Article>(
-      `/api/fetch-single-article?id=${id}&title=${title}`
+      `/api/articles/fetch-single-article?id=${id}&title=${title}`
     );
 
     const data = response.data;

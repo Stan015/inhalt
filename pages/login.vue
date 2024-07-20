@@ -1,37 +1,35 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient();
-
 const email = ref<string>("");
 const password = ref<string>("");
 
 const signInWithEmailAndPassword = async () => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: email.value,
-    password: password.value,
-  });
+  try {
+    const response = await $fetch(
+      `/api/auth/login-with-pw?email=${email.value}&password=${password.value}`
+    );
 
-  if (error) {
-    console.log(error.message);
-    throw new Error(error);
-  } else {
-    console.log(data);
-    navigateTo("/")
+    if (response) {
+      // console.log(response);
+      navigateTo("/");
+    }
+  } catch (error) {
+    console.log((error as Error).message);
   }
 };
 
 const signInWithOAuth = async (provider: string) => {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: provider,
-    options: {
-      redirectTo: "http://localhost:3000/confirm",
-    },
-  });
+  try {
+    const response = await $fetch(
+      `/api/auth/sign-in-with-o-auth?provider=${provider}`
+    );
 
-  if (error) {
-    console.log(error.message);
-    throw new Error(error);
-  } else {
-    console.log(data);
+    if (response) {
+      // console.log(response);
+      navigateTo(response.url, {
+        external: true,
+      });    }
+  } catch (error) {
+    console.log((error as Error).message);
   }
 };
 </script>
