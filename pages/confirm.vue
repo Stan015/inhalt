@@ -1,4 +1,4 @@
-<script lang="ts">
+<script setup lang="ts">
 const user = useSupabaseUser();
 
 watch(
@@ -14,6 +14,6 @@ watch(
 
 <template>
   <section>
-    <h1>Waiting to sign in ...</h1>
+    <h1>Waiting to sign in...</h1>
   </section>
 </template>

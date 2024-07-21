@@ -16,7 +16,7 @@ const fecthArticles = async () => {
   }
 };
 
-onMounted(() => {
+onBeforeMount(() => {
   fecthArticles();
 });
 </script>

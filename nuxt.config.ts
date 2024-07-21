@@ -10,25 +10,21 @@ export default defineNuxtConfig({
   modules: [
     "@nuxtjs/tailwindcss",
     "@nuxtjs/supabase",
-    "@nuxt/content",
     "@nuxtjs/google-fonts",
     "@nuxt/image",
     "@nuxt/icon",
     "@pinia/nuxt",
   ],
-  content: {
-    documentDriven: true,
-  },
   supabase: {
     url: process.env.NUXT_PUBLIC_SUPABASE_URL,
     key: process.env.NUXT_PUBLIC_SUPABASE_KEY,
-    // redirect: true,
+    // redirect: false,
     redirectOptions: {
       login: "/login",
       callback: "/confirm",
-      include: ["/dashboard", "/create-inhalt", "/notification"],
+      include: ["/stan015/dashboard", "/stan015/create-inhalt", "/stan015/notification"],
       exclude: ["/", "/sign-up"],
-      cookieRedirect: false,
+      // cookieRedirect: false,
     },
   },
   css: ["~/assets/css/global.css"],

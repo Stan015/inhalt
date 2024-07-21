@@ -9,14 +9,16 @@ const fecthArticle = async () => {
   const { id, title } = route.params;
 
   try {
-    const response = await $fetch<Article>(
-      `/api/articles/fetch-single-article?id=${id}&title=${title}`
+    const response = await useAsyncData(() =>
+      $fetch<Article>(
+        `/api/articles/fetch-single-article?id=${id}&title=${title}`
+      )
     );
 
-    console.log(response)
+    console.log(response.data.value);
 
     if (response) {
-      article.value = response;
+      article.value = response.data.value;
     }
   } catch (error) {
     console.error("Error fetching article:", error);
