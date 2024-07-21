@@ -1,10 +1,6 @@
 <script setup lang="ts">
-type FormData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-};
+import { signInWithOAuth, signUpWithEmailAndPassword } from "~/auth/auth";
+import type { FormData } from "~/types/user.types";
 
 const formData = reactive<FormData>({
   firstName: "",
@@ -12,38 +8,6 @@ const formData = reactive<FormData>({
   email: "",
   password: "",
 });
-
-async function signUpWithEmailAndPassword() {
-  try {
-    const response = await $fetch(
-      `/api/auth/sign-up-with-pw?email=${formData.email}&password=${formData.password}`
-    );
-
-    if (response) {
-      // console.log(response);
-      navigateTo("/confirm");
-    }
-  } catch (error) {
-    console.log((error as Error).message);
-  }
-}
-
-const signInWithOAuth = async (provider: string) => {
-  try {
-    const response = await $fetch(
-      `/api/auth/sign-in-with-o-auth?provider=${provider}`
-    );
-
-    if (response) {
-      navigateTo(response.url, {
-        external: true,
-      });
-      // console.log(response);
-    }
-  } catch (error) {
-    console.log((error as Error).message);
-  }
-};
 </script>
 
 <template>
@@ -55,7 +19,9 @@ const signInWithOAuth = async (provider: string) => {
     >
       <form
         class="flex flex-col items-center bg-white gap-4 w-full max-sm:w-full"
-        @submit.prevent="signUpWithEmailAndPassword"
+        @submit.prevent="
+          signUpWithEmailAndPassword(formData)
+        "
       >
         <h1 class="font-bold text-lg">Sign up</h1>
         <p class="text-sm text-gray-600 text-center mb-2">

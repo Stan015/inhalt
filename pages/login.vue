@@ -1,40 +1,12 @@
 <script setup lang="ts">
+import { signInWithEmailAndPassword, signInWithOAuth } from '../auth/auth';
+
 const email = ref<string>("");
 const password = ref<string>("");
 
-const signInWithEmailAndPassword = async () => {
-  try {
-    const response = await $fetch(
-      `/api/auth/login-with-pw?email=${email.value}&password=${password.value}`
-    );
-
-    if (response) {
-      // console.log(response);
-      navigateTo("/");
-    }
-  } catch (error) {
-    console.log((error as Error).message);
-  }
-};
-
-const signInWithOAuth = async (provider: string) => {
-  try {
-    const response = await $fetch(
-      `/api/auth/sign-in-with-o-auth?provider=${provider}`
-    );
-
-    if (response) {
-      // console.log(response);
-      navigateTo(response.url, {
-        external: true,
-      });    }
-  } catch (error) {
-    console.log((error as Error).message);
-  }
-};
 </script>
 
-<template>
+  <template>
   <section
     class="w-full min-h-main flex items-center justify-center px[12%] py-6"
   >
@@ -43,7 +15,7 @@ const signInWithOAuth = async (provider: string) => {
     >
       <form
         class="flex flex-col items-center gap-4 w-full max-sm:w-full"
-        @submit.prevent="signInWithEmailAndPassword"
+        @submit.prevent="signInWithEmailAndPassword(email, password)"
       >
         <h1 class="font-bold text-lg">Login</h1>
         <p class="text-sm text-gray-600 text-center mb-2">
