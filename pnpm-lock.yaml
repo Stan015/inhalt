@@ -66,6 +66,9 @@ importers:
       '@iconify-json/flat-color-icons':
         specifier: ^1.1.10
         version: 1.1.10
+      '@iconify-json/fluent':
+        specifier: ^1.1.59
+        version: 1.1.59
       '@iconify-json/fluent-emoji-flat':
         specifier: ^1.1.16
         version: 1.1.16
@@ -751,6 +754,9 @@ packages:
 
   '@iconify-json/fluent-emoji-flat@1.1.16':
     resolution: {integrity: sha512-rfag8s2Ippaos57BC8huT6cVc0oWkvYaLDl0lokVX2EsS7VakKEvUlJ20CqaKiPTuaccWRthlCbjEq8XfLHDHw==}
+
+  '@iconify-json/fluent@1.1.59':
+    resolution: {integrity: sha512-4gihRqVI4aVfx26VOk0LAcjLkii7DWsdb1AP0NXRQ/fZ5VJOIqf7NdVfz5K01w+4ayDLl+aDdp7X1zlCh2kOwg==}
 
   '@iconify-json/gravity-ui@1.1.4':
     resolution: {integrity: sha512-Oezyd2Ga/gRWqP/RptimLe4Xx1q1psdq4CS3gVASDzTxbUCjMOJe4hf3+ilkYZNv6L4Ib5L26s40MFTKh6Tjlg==}
@@ -4510,6 +4516,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/fluent-emoji-flat@1.1.16':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/fluent@1.1.59':
     dependencies:
       '@iconify/types': 2.0.0
 

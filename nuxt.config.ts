@@ -63,6 +63,8 @@ export default defineNuxtConfig({
           },
           borderColor: {
             light: "#EFEFEF",
+            dark: "#000000",
+            accent: "#6D28D9",
           },
           minHeight: {
             main: "calc(100svh - 6rem)",
