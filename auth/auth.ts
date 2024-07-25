@@ -1,3 +1,4 @@
+import type { Provider } from "@supabase/supabase-js";
 import type { FormData } from "~/types/user.types";
 
 export const signInWithEmailAndPassword = async (
@@ -22,7 +23,7 @@ export async function signUpWithEmailAndPassword(formData: FormData) {
   try {
     const response = await useAsyncData("sign-up", () =>
       $fetch(
-        `/api/auth/sign-up-with-pw?email=${formData.email}&password=${formData.password}`
+        `/api/auth/sign-up-with-pw?email=${formData.email}&password=${formData.password}&username=${formData.username}&firstName=${formData.firstName}&lastName=${formData.lastName}`
       )
     );
 
@@ -51,3 +52,4 @@ export const signInWithOAuth = async (provider: string) => {
     console.log((error as Error).message);
   }
 };
+

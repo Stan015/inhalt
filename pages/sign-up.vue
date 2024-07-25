@@ -2,6 +2,8 @@
 import { signInWithOAuth, signUpWithEmailAndPassword } from "~/auth/auth";
 import type { FormData } from "~/types/user.types";
 
+const showPassword = ref(false);
+
 const formData = reactive<FormData>({
   firstName: "",
   lastName: "",
@@ -19,9 +21,7 @@ const formData = reactive<FormData>({
     >
       <form
         class="flex flex-col items-center bg-white gap-4 w-full max-sm:w-full"
-        @submit.prevent="
-          signUpWithEmailAndPassword(formData)
-        "
+        @submit.prevent="signUpWithEmailAndPassword(formData)"
       >
         <h1 class="font-bold text-lg">Sign up</h1>
         <p class="text-sm text-gray-600 text-center mb-2">
@@ -60,6 +60,19 @@ const formData = reactive<FormData>({
             </label>
           </div>
           <label class="w-full flex flex-col gap-1">
+            Username
+            <input
+              type="text"
+              class="w-full bg-white text-primary text-sm p-2 rounded-lg border-2 border-light outline-none hover:border-accent focus:border-accent"
+              v-model="formData.username"
+              name="username"
+              id="username"
+              pattern="^[^\s]+$" 
+              required
+              placeholder="Enter a username..."
+            />
+          </label>
+          <label class="w-full flex flex-col gap-1">
             Email
             <input
               type="email"
@@ -75,7 +88,7 @@ const formData = reactive<FormData>({
             Password
             <span class="relative flex items-center">
               <input
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 v-model="formData.password"
                 name="password"
                 class="w-full bg-white text-primary text-sm p-2 rounded-lg border-2 border-light outline-none hover:border-accent focus:border-accent"
@@ -87,9 +100,10 @@ const formData = reactive<FormData>({
                 type="button"
                 aria-labelledby="toggle password visibility"
                 class="absolute right-2"
+                @click="showPassword = !showPassword"
               >
-                <Icon name="akar-icons:eye-open" />
-                <Icon name="oui:eye-closed" />
+                <Icon v-if="showPassword" name="oui:eye-closed" />
+                <Icon v-else name="akar-icons:eye-open" />
               </button>
             </span>
           </label>
@@ -97,7 +111,7 @@ const formData = reactive<FormData>({
             Confirm password
             <span class="relative flex items-center">
               <input
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 name="confirm-password"
                 class="w-full bg-white text-primary text-sm p-2 rounded-lg border-2 border-light outline-none hover:border-accent focus:border-accent"
                 id="confirm-password"
@@ -108,9 +122,10 @@ const formData = reactive<FormData>({
                 type="button"
                 aria-labelledby="toggle password visibility"
                 class="absolute right-2"
+                @click="showPassword = !showPassword"
               >
-                <Icon name="akar-icons:eye-open" />
-                <Icon name="oui:eye-closed" />
+                <Icon v-if="showPassword" name="oui:eye-closed" />
+                <Icon v-else name="akar-icons:eye-open" />
               </button>
             </span>
           </label>
