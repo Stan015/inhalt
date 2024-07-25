@@ -61,8 +61,12 @@ onBeforeMount(() => {
           class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
           :key="article.id"
         >
-        <NuxtLink :to="`/stan015/articles/${article.id}--${article.title.replace(/\s+/g, '-').toLowerCase()}`">
-          <NuxtImg
+          <NuxtLink
+            :to="`/stan015/articles/${article.id}--${article.title
+              .replace(/\s+/g, '-')
+              .toLowerCase()}`"
+          >
+            <NuxtImg
               v-if="article.cover_image"
               :src="article.cover_image_url"
               alt="cover photo"
@@ -71,7 +75,11 @@ onBeforeMount(() => {
           </NuxtLink>
 
           <div class="w-full h-max bg-white px-4 pb-4">
-            <NuxtLink :to="`/stan015/articles/${article.id}--${article.title.replace(/\s+/g, '-').toLowerCase()}`">
+            <NuxtLink
+              :to="`/stan015/articles/${article.id}--${article.title
+                .replace(/\s+/g, '-')
+                .toLowerCase()}`"
+            >
               <h2 class="w-full text-center font-bold text-[1.5rem] pt-4">
                 {{ article.title }}
               </h2>
@@ -84,18 +92,10 @@ onBeforeMount(() => {
               </div>
 
               <div class="flex gap-4 cursor-default">
-                <button type="button" aria-labelledby="likes">
-                  <Icon name="mdi:heart-outline" />
-                </button>
-                <button type="button" aria-labelledby="comments">
-                  <Icon name="uil:comment" />
-                </button>
-                <button type="button" aria-labelledby="bookmark">
-                  <Icon name="material-symbols:bookmark-outline" />
-                </button>
-                <button type="button" aria-labelledby="share">
-                  <Icon name="uil:share" />
-                </button>
+                <LikeButton />
+                <CommentButton />
+                <BookmarkButton />
+                <ShareButton />
               </div>
 
               <ProfileCard

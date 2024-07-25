@@ -9,13 +9,96 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      articles: {
+        Row: {
+          cover_image: string | null
+          cover_image_url: string | null
+          created_at: string | null
+          id: number
+          markdown_content: string
+          title: string
+        }
+        Insert: {
+          cover_image?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          id?: number
+          markdown_content: string
+          title: string
+        }
+        Update: {
+          cover_image?: string | null
+          cover_image_url?: string | null
+          created_at?: string | null
+          id?: number
+          markdown_content?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          avatar: string | null
+          created_at: string | null
+          email: string
+          first_name: string | null
+          full_name: string | null
+          id: string
+          last_name: string | null
+          password: string | null
+          tags: string[] | null
+          total_bookmarks: number | null
+          total_comments: number | null
+          total_likes: number | null
+          updated_at: string | null
+          username: string | null
+          username_updated: boolean | null
+        }
+        Insert: {
+          avatar?: string | null
+          created_at?: string | null
+          email: string
+          first_name?: string | null
+          full_name?: string | null
+          id?: string
+          last_name?: string | null
+          password?: string | null
+          tags?: string[] | null
+          total_bookmarks?: number | null
+          total_comments?: number | null
+          total_likes?: number | null
+          updated_at?: string | null
+          username?: string | null
+          username_updated?: boolean | null
+        }
+        Update: {
+          avatar?: string | null
+          created_at?: string | null
+          email?: string
+          first_name?: string | null
+          full_name?: string | null
+          id?: string
+          last_name?: string | null
+          password?: string | null
+          tags?: string[] | null
+          total_bookmarks?: number | null
+          total_comments?: number | null
+          total_likes?: number | null
+          updated_at?: string | null
+          username?: string | null
+          username_updated?: boolean | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      create_articles_table: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

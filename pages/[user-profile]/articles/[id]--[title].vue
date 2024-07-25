@@ -76,18 +76,10 @@ onMounted(() => {
             </div>
 
             <div class="flex gap-4 cursor-default">
-              <button type="button" aria-labelledby="likes">
-                <Icon name="mdi:heart-outline" />
-              </button>
-              <button type="button" aria-labelledby="comments">
-                <Icon name="uil:comment" />
-              </button>
-              <button type="button" aria-labelledby="bookmark">
-                <Icon name="material-symbols:bookmark-outline" />
-              </button>
-              <button type="button" aria-labelledby="share">
-                <Icon name="uil:share" />
-              </button>
+              <LikeButton />
+              <CommentButton />
+              <BookmarkButton />
+              <ShareButton />
             </div>
 
             <ProfileCard
@@ -114,18 +106,10 @@ onMounted(() => {
           />
 
           <div class="flex gap-4 cursor-default">
-            <button type="button" aria-labelledby="likes">
-              <Icon name="mdi:heart-outline" />
-            </button>
-            <button type="button" aria-labelledby="comments">
-              <Icon name="uil:comment" />
-            </button>
-            <button type="button" aria-labelledby="bookmark">
-              <Icon name="material-symbols:bookmark-outline" />
-            </button>
-            <button type="button" aria-labelledby="share">
-              <Icon name="uil:share" />
-            </button>
+            <LikeButton />
+            <CommentButton />
+            <BookmarkButton />
+            <ShareButton />
           </div>
           <div class="text-[0.7rem]"><span>Jul 9 2023 .</span> 10:02AM</div>
         </div>
@@ -174,18 +158,10 @@ onMounted(() => {
               </div>
 
               <div class="flex gap-4 cursor-default">
-                <button type="button" aria-labelledby="likes">
-                  <Icon name="mdi:heart-outline" />
-                </button>
-                <button type="button" aria-labelledby="comments">
-                  <Icon name="uil:comment" />
-                </button>
-                <button type="button" aria-labelledby="bookmark">
-                  <Icon name="material-symbols:bookmark-outline" />
-                </button>
-                <button type="button" aria-labelledby="share">
-                  <Icon name="uil:share" />
-                </button>
+                <LikeButton />
+                <CommentButton />
+                <BookmarkButton />
+                <ShareButton />
               </div>
 
               <ProfileCard
