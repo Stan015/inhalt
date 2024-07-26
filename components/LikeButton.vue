@@ -1,11 +1,129 @@
 <script setup lang="ts">
-const isLiked = ref(false)
+import { useUserStore } from "../store/userStore";
+import type { Article, Likes } from "../types/tables.types";
+
+const supabase = useSupabaseClient<Article>();
+
+const props = defineProps({
+  articleId: Number,
+});
+
+const userStore = useUserStore();
+
+const isLiked = ref(false);
+const currentLikes = ref<Likes>();
+const username = userStore.userCredentials.username;
+
+// Fetch the existing likes data
+const fetchArticleLikes = async () => {
+  const { data: article, error: fetchError } = await supabase
+    .from("articles")
+    .select("likes")
+    .eq("id", props.articleId)
+    .single();
+
+  if (fetchError) {
+    console.error("Error fetching article:", fetchError);
+  }
+
+  // Check if user already liked the article
+  if (article) {
+    currentLikes.value = article?.likes;
+
+    for (let i = 0; i < currentLikes.value?.liked_by.length!; i++) {
+      if (
+        userStore.isLoggedIn &&
+        currentLikes.value?.liked_by[i].name === username
+      ) {
+        isLiked.value = true;
+        console.log("user already liked this article");
+      } else {
+        isLiked.value = false;
+        console.log("user hasn't liked this article");
+      }
+    }
+  }
+};
+//
+
+// reusable function to update the likes data on db
+const handleToggleLikeOnDB = async (liked: boolean) => {
+  const likes = currentLikes.value!;
+  if (liked) {
+    likes.liked_by.push({
+      name: username!,
+      at: new Date().toISOString(),
+    });
+    likes.number_of_likes = likes.liked_by.length;
+
+    console.log("from like", currentLikes.value);
+  } else {
+    const filteredLikes = likes.liked_by.filter(
+      ({ name }) => name !== username
+    );
+    likes.liked_by = filteredLikes;
+    likes.number_of_likes = likes.liked_by.length;
+    console.log("from unlike", currentLikes.value, filteredLikes);
+  }
+
+  // Update the article with new likes data
+  const { error: updateError } = await supabase
+    .from("articles")
+    .update({ likes })
+    .eq("id", props.articleId);
+
+  if (updateError) {
+    console.error("Error liking article:", updateError);
+  } else if (liked) {
+    isLiked.value = true;
+    console.log("Article liked successfully");
+  } else {
+    isLiked.value = false;
+    console.log("Article unliked successfully");
+  }
+};
+
+const handleLike = async () => {
+  // increment like
+  if (userStore.isLoggedIn && !isLiked.value) {
+    handleToggleLikeOnDB(true);
+  }
+
+  // decrement like
+  if (userStore.isLoggedIn && isLiked.value) {
+    handleToggleLikeOnDB(false);
+  }
+
+  if (!userStore.isLoggedIn) {
+    alert("Sign in to like post.")
+  }
+};
+
+onMounted(() => {
+  fetchArticleLikes();
+});
+
+watch(
+  isLiked,
+  () => {
+    fetchArticleLikes();
+    console.log(isLiked.value)
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
-  <button @click="isLiked = !isLiked" class="relative" type="button" aria-labelledby="likes">
+  <button
+    @click="handleLike"
+    class="relative"
+    type="button"
+    aria-labelledby="likes"
+  >
     <Icon v-if="isLiked" class="text-[1.3rem] text-red-500" name="mdi:heart" />
     <Icon v-else class="text-[1.3rem]" name="mdi:heart-outline" />
-    <span class="absolute -top-2  right-0 text-[10px]">32</span>
+    <span class="absolute -top-2 right-0 text-[10px]">{{
+      currentLikes?.number_of_likes
+    }}</span>
   </button>
 </template>

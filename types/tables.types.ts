@@ -1,11 +1,34 @@
+export type Likes = {
+  number_of_likes: number;
+  liked_by: Array<{
+    name: string;
+    at: string;
+  }>;
+};
+
+export type Comment = {
+  comment: string;
+  commented_by: string;
+  commented_at: string;
+};
+
+export type Bookmark = {
+  number_of_bookmarks: number;
+  bookmarked_by: String[];
+};
+
 export type Article = {
   id: number;
   title: string;
   cover_image: string;
   cover_image_url: string;
   markdown_content: string;
-  html_content: string;
+  likes: Likes;
+  bookmarks: Bookmark;
+  share?: number;
+  comments: Array<Comment>;
+  html_content?: string;
   created_at: string;
 };
 
-export type ArticleCard = Omit<Article, "content">
+export type ArticleCard = Omit<Article, "content">;

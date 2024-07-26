@@ -92,7 +92,7 @@ onBeforeMount(() => {
               </div>
 
               <div class="flex gap-4 cursor-default">
-                <LikeButton />
+                <LikeButton :likes="article?.likes.number_of_likes" :article-id="article?.id" />
                 <CommentButton />
                 <BookmarkButton />
                 <ShareButton />
