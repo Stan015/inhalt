@@ -32,18 +32,16 @@ const submitPost = async () => {
     formData.append("submitted_at", submittedAt);
 
     try {
-      const response = await $fetch("/api/articles/create-article", {
-        method: 'post',
+      const response = await useAsyncData(() => $fetch("/api/articles/create-article", {
+        method: "post",
         body: formData,
-      });
+      }));
 
-      console.log(response)
+      console.log(response);
 
-      // if (response.statusCode === 200) {
-      //   alert("Article created successfully!");
-      // } else {
-      //   alert("Error creating article.");
-      // }
+      if (response.data.value?.statusCode === 200) {
+        alert("Article created successfully!");
+      }
     } catch (error) {
       console.log((error as Error).message);
       alert("Error creating article.");
@@ -64,7 +62,11 @@ const submitPost = async () => {
           placeholder="Article title"
           required
         />
-        <MarkdownEditor ref="markdownEditor" />
+        <MarkdownEditor
+          box-height="500px"
+          class-name="w-full"
+          ref="markdownEditor"
+        />
         <button type="submit">Submit</button>
       </form>
     </article>

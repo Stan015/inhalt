@@ -31,4 +31,4 @@ export type Article = {
   created_at: string;
 };
 
-export type ArticleCard = Omit<Article, "content">;
+export type ArticleCard = Omit<Article, "markdown_content">;

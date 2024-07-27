@@ -1,25 +1,34 @@
 <script setup lang="ts">
 import type { Article } from "~/types/tables.types";
+import { useArticlesStore } from "~/store/articlesStore";
 
 const route = useRoute();
+const { id: articleId, title: articleTitle } = route.params;
 
 const article = useState<Article | null>("article", () => null);
 
 const fecthArticle = async () => {
-  const { id, title } = route.params;
-
   try {
-    const response = await useAsyncData(() =>
-      $fetch<Article>(
-        `/api/articles/fetch-single-article?id=${id}&title=${title}`
-      )
-    );
+    // const response = await useAsyncData(() =>
+    //   $fetch<Article>(
+    //     `/api/articles/fetch-single-article?id=${articleId}&title=${articleTitle}`
+    //   )
+    // );
 
-    console.log(response.data.value);
+    // if (response) {
+    //   article.value = response.data.value;
+    // }
 
-    if (response) {
-      article.value = response.data.value;
+    // fetched article from store instead of making another api call
+    const articlesStore = useArticlesStore();
+
+    if (articlesStore.fetchError) {
+      throw new Error("Failed to fetch article from store");
     }
+
+    article.value = articlesStore.fetchedArticles?.find(
+      ({ id }) => id.toString() === articleId
+    ) as Article;
   } catch (error) {
     console.error("Error fetching article:", error);
   }
@@ -28,6 +37,8 @@ const fecthArticle = async () => {
 onMounted(() => {
   fecthArticle();
 });
+
+watchEffect(() => fecthArticle());
 </script>
 
 <template>
@@ -76,8 +87,8 @@ onMounted(() => {
             </div>
 
             <div class="flex gap-4 cursor-default">
-              <LikeButton :likes="article?.likes.number_of_likes" :article-id="article?.id" />
-              <CommentButton />
+              <LikeButton :article-id="article?.id" />
+              <CommentButton :article-id="article?.id" />
               <BookmarkButton />
               <ShareButton />
             </div>
@@ -106,33 +117,15 @@ onMounted(() => {
           />
 
           <div class="flex gap-4 cursor-default">
-            <LikeButton :likes="article?.likes.number_of_likes" :article-id="article?.id" />
-            <CommentButton />
+            <LikeButton :article-id="article?.id" />
+            <CommentButton :article-id="article?.id" />
             <BookmarkButton />
             <ShareButton />
           </div>
           <div class="text-[0.7rem]"><span>Jul 9 2023 .</span> 10:02AM</div>
         </div>
       </article>
-      <section>
-        <div class="w-full h-max rounded-2xl border p-4 border-white">
-          <ProfileCard
-            user-profile-link="/stan015"
-            name="Stanley Azi"
-            occupation="Frontend Developer"
-            profile-photo-src="/img2.png"
-          />
-          <p>You wrote a fantastic article right here!!! 🔥</p>
-          <div class="flex gap-4 cursor-default">
-            <button type="button" aria-labelledby="likes">
-              <Icon name="mdi:heart-outline" />
-            </button>
-            <button type="button" aria-labelledby="comments">
-              <Icon name="uil:comment" />
-            </button>
-          </div>
-        </div>
-      </section>
+      <CommentSection />
       <section>
         <h2 class="font-bold text-md">Related inhalts</h2>
         <article
@@ -158,8 +151,8 @@ onMounted(() => {
               </div>
 
               <div class="flex gap-4 cursor-default">
-                <LikeButton />
-                <CommentButton />
+                <!-- <LikeButton /> -->
+                <!-- <CommentButton /> -->
                 <BookmarkButton />
                 <ShareButton />
               </div>

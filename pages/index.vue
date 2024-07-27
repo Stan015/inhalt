@@ -1,18 +1,22 @@
 <script setup lang="ts">
-import type { ArticleCard } from "~/types/tables.types";
+import type { Article, ArticleCard } from "~/types/tables.types";
+import { useArticlesStore } from "~/store/articlesStore";
 
-const allArticles = useState<Array<ArticleCard>>();
+const articlesStore = useArticlesStore();
+const allArticleCards = useState<Array<ArticleCard>>();
 
 const fecthArticles = async () => {
   try {
     const response = await $fetch("/api/articles/fetch-articles");
     const data = response.data;
 
-    allArticles.value = data as Array<ArticleCard>;
+    articlesStore.fetchedArticles = data as Array<Article>;
+    allArticleCards.value = articlesStore.fetchedArticles as Array<ArticleCard>;
 
-    console.log(allArticles.value);
+    console.log(allArticleCards.value);
   } catch (error) {
     console.log((error as Error).message);
+    articlesStore.fetchError = error as Error;
   }
 };
 
@@ -56,7 +60,7 @@ onBeforeMount(() => {
         <button type="button">Following</button>
       </nav>
 
-      <section v-for="article in allArticles">
+      <section v-for="article in allArticleCards">
         <article
           class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
           :key="article.id"
@@ -92,8 +96,10 @@ onBeforeMount(() => {
               </div>
 
               <div class="flex gap-4 cursor-default">
-                <LikeButton :likes="article?.likes.number_of_likes" :article-id="article?.id" />
-                <CommentButton />
+                <LikeButton
+                  :article-id="article?.id"
+                />
+                <CommentButton :article-id="article?.id" />
                 <BookmarkButton />
                 <ShareButton />
               </div>
