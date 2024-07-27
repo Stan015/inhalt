@@ -12,6 +12,7 @@ const userStore = useUserStore();
 
 const isLiked = ref(false);
 const currentLikes = ref<Likes>();
+const numberOfLikesIsZero = ref(false);
 const username = userStore.userCredentials.username;
 
 // Fetch the existing likes data
@@ -29,6 +30,10 @@ const fetchArticleLikes = async () => {
   // Check if user already liked the article
   if (article) {
     currentLikes.value = article?.likes;
+
+    currentLikes.value?.number_of_likes === 0
+      ? (numberOfLikesIsZero.value = true)
+      : (numberOfLikesIsZero.value = false);
 
     for (let i = 0; i < currentLikes.value?.liked_by.length!; i++) {
       if (
@@ -95,7 +100,7 @@ const handleLike = async () => {
   }
 
   if (!userStore.isLoggedIn) {
-    alert("Sign in to like post.")
+    alert("Sign in to like post.");
   }
 };
 
@@ -107,7 +112,7 @@ watch(
   isLiked,
   () => {
     fetchArticleLikes();
-    console.log(isLiked.value)
+    console.log(isLiked.value);
   },
   { immediate: true }
 );
@@ -122,7 +127,7 @@ watch(
   >
     <Icon v-if="isLiked" class="text-[1.3rem] text-red-500" name="mdi:heart" />
     <Icon v-else class="text-[1.3rem]" name="mdi:heart-outline" />
-    <span class="absolute -top-2 right-0 text-[10px]">{{
+    <span v-if="!numberOfLikesIsZero" class="absolute -top-2 right-0 text-[10px]">{{
       currentLikes?.number_of_likes
     }}</span>
   </button>
