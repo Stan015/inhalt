@@ -89,8 +89,12 @@ watchEffect(() => fecthArticle());
             <div class="flex gap-4 cursor-default">
               <LikeButton :article-id="article?.id" />
               <CommentButton :article-id="article?.id" />
-              <BookmarkButton />
-              <ShareButton />
+              <BookmarkButton :article-id="article?.id" />
+              <ShareButton
+                :article-id="article?.id"
+                :title="article?.title"
+                :author-username="article?.author_username"
+              />
             </div>
 
             <ProfileCard
@@ -119,8 +123,12 @@ watchEffect(() => fecthArticle());
           <div class="flex gap-4 cursor-default">
             <LikeButton :article-id="article?.id" />
             <CommentButton :article-id="article?.id" />
-            <BookmarkButton />
-            <ShareButton />
+            <BookmarkButton :article-id="article?.id" />
+            <ShareButton
+              :article-id="article?.id"
+              :title="article?.title"
+              :author-username="article?.author_username"
+            />
           </div>
           <div class="text-[0.7rem]"><span>Jul 9 2023 .</span> 10:02AM</div>
         </div>

@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
     // console.log(fields, coverImg)
 
-    const { article_title, markdown_content, submitted_at } = fields;
+    const { article_title, markdown_content, submitted_at, username, user_id } = fields;
 
     if (!article_title || !markdown_content || !submitted_at) {
       throw createError({
@@ -73,6 +73,8 @@ export default defineEventHandler(async (event) => {
     const { data, error } = await supabase.from("articles").insert([
       {
         title: article_title,
+        author_id: user_id,
+        author_username: username,
         markdown_content: markdown_content,
         created_at: submitted_at,
         cover_image: uploadedCoverImage,

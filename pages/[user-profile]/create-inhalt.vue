@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import { useUserStore } from "../../store/userStore";
+
 const coverImg = ref<HTMLInputElement | null>(null);
 const articleTitle = ref("");
+
+const userStore = useUserStore();
 
 const markdownEditor = ref<{
   getMarkdown: () => string;
@@ -14,6 +18,8 @@ const submitPost = async () => {
     const title = articleTitle.value;
     const coverImageFile = coverImg.value?.files?.[0];
     const submittedAt = new Date().toISOString();
+    const userId = userStore.userCredentials.user_id!;
+    const username = userStore.userCredentials.username!;
 
     // console.log("Title:", title);
     // console.log("cover image:", coverImageFile);
@@ -30,12 +36,16 @@ const submitPost = async () => {
     formData.append("markdown_content", markdownContent);
     // formData.append("html_content", markdownContent);
     formData.append("submitted_at", submittedAt);
+    formData.append("user_id", userId);
+    formData.append("username", username);
 
     try {
-      const response = await useAsyncData(() => $fetch("/api/articles/create-article", {
-        method: "post",
-        body: formData,
-      }));
+      const response = await useAsyncData(() =>
+        $fetch("/api/articles/create-article", {
+          method: "post",
+          body: formData,
+        })
+      );
 
       console.log(response);
 

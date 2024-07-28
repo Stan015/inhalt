@@ -58,9 +58,9 @@
               </div>
 
               <div class="flex gap-4 cursor-default">
-                <LikeButton />
-                <CommentButton />
-                <BookmarkButton />
+                <!-- <LikeButton /> -->
+                <!-- <CommentButton /> -->
+                <!-- <BookmarkButton /> -->
                 <ShareButton />
               </div>
 

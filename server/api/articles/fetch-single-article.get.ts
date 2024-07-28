@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const formattedTitle = title.replace(/-/g, " ");
+  // const formattedTitle = title.replace(/-/g, " ");
 
   const { data, error } = await supabase
     .from("articles")

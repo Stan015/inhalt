@@ -14,18 +14,31 @@ export type Comment = {
 
 export type Bookmark = {
   number_of_bookmarks: number;
-  bookmarked_by: String[];
+  bookmarked_by: Array<{
+    name: string;
+    at: string;
+  }>;
+};
+
+export type Shares = {
+  number_of_shares: number;
+  shared_by: Array<{
+    name: string;
+    at: string;
+  }>;
 };
 
 export type Article = {
   id: number;
   title: string;
+  author_username: string;
+  author_id: string;
   cover_image: string;
   cover_image_url: string;
   markdown_content: string;
   likes: Likes;
   bookmarks: Bookmark;
-  share?: number;
+  shares?: Shares;
   comments: Array<Comment>;
   html_content?: string;
   created_at: string;

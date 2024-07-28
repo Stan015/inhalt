@@ -1,5 +1,5 @@
 import { useUserStore } from "~/store/userStore";
-import type { UserData } from "~/types/user.types";
+// import type { User, UserData } from "~/types/user.types";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const supabase = useSupabaseClient();
@@ -75,10 +75,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       .select("*")
       .eq("email", supabaseUser.email as string);
 
-    const { email, username, first_name, last_name, full_name, avatar } = data[0];
+    const { id, email, username, first_name, last_name, full_name, avatar } = data[0];
 
     userStore.userCredentials = {
       username: username,
+      user_id: id,
       email: email,
       firstName: first_name,
       lastName: last_name,

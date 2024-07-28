@@ -66,9 +66,9 @@ onBeforeMount(() => {
           :key="article.id"
         >
           <NuxtLink
-            :to="`/stan015/articles/${article.id}--${article.title
-              .replace(/\s+/g, '-')
-              .toLowerCase()}`"
+            :to="`/${article.author_username}/articles/${
+              article.id
+            }--${article.title.replace(/\s+/g, '-').toLowerCase()}`"
           >
             <NuxtImg
               v-if="article.cover_image"
@@ -80,9 +80,9 @@ onBeforeMount(() => {
 
           <div class="w-full h-max bg-white px-4 pb-4">
             <NuxtLink
-              :to="`/stan015/articles/${article.id}--${article.title
-                .replace(/\s+/g, '-')
-                .toLowerCase()}`"
+              :to="`/${article.author_username}/articles/${
+                article.id
+              }--${article.title.replace(/\s+/g, '-').toLowerCase()}`"
             >
               <h2 class="w-full text-center font-bold text-[1.5rem] pt-4">
                 {{ article.title }}
@@ -96,12 +96,14 @@ onBeforeMount(() => {
               </div>
 
               <div class="flex gap-4 cursor-default">
-                <LikeButton
-                  :article-id="article?.id"
-                />
+                <LikeButton :article-id="article?.id" />
                 <CommentButton :article-id="article?.id" />
-                <BookmarkButton />
-                <ShareButton />
+                <BookmarkButton :article-id="article?.id" />
+                <ShareButton
+                  :article-id="article?.id"
+                  :title="article?.title"
+                  :author-username="article?.author_username"
+                />
               </div>
 
               <ProfileCard
