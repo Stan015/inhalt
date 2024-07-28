@@ -46,7 +46,7 @@ const handleComment = async () => {
     // const commentHtmlContent = markdownEditor.value?.getHTML();
 
     const commentedBy = userStore.userCredentials.username;
-    const commentedAt = new Date().toString();
+    const commentedAt = new Date().toISOString();
 
     // console.log(commentMarkdownContent, commentedBy, commentedAt);
 
