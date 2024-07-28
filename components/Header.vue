@@ -33,15 +33,15 @@ const {firstName, username, avatar } = user.userCredentials;
     >
       <div class="flex items-center justify-center gap-4 pr-4 border-r-2">
         <Icon name="fluent:thumb-like-48-filled" />
-        <span>11200</span>
+        <span>1120</span>
       </div>
 
       <div class="flex items-center justify-center gap-4 pl-4">
         <span
-          class="flex items-center justify-center border p-1 rounded-full gap-4"
+          class="flex items-center justify-center border rounded-full gap-4 w-max h-max overflow-hidden"
         >
-          <NuxtImg v-if="avatar" src="/logo.png" alt="user"  class="w-6 h-6"  />
-          <Icon v-else name="hugeicons:user" class="w-6 h-6" />
+          <NuxtImg v-if="avatar" :src="avatar" alt="user"  class="w-6 h-6 rounded-full"  />
+          <Icon v-else name="hugeicons:user" class="w-6 h-6 rounded-full m-1" />
         </span>
         <span v-if="firstName">{{ firstName }}</span>
       </div>
