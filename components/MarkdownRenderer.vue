@@ -27,11 +27,8 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div v-if="htmlContent">
-    <div v-html="htmlContent" />
-    <!-- <prev>
-      {{ htmlContent }}
-    </prev> -->
+  <div v-if="htmlContent" class="html-content-container w-full">
+    <div class="content-wrapper w-full" v-html="htmlContent" />
   </div>
   <div v-else>
     <p>Loading...</p>

@@ -29,7 +29,7 @@ onBeforeMount(() => {
   <div
     class="w-full min-h-main grid grid-cols-[13rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%]"
   >
-    <div class="flex flex-col gap-4 justify-between w-full h-full">
+    <div class="flex flex-col gap-4 justify-between w-full h-full max-h-[calc(100svh-8rem)]">
       <nav class="flex flex-col gap-4 w-full h-max">
         <NuxtLink
           to="/"
@@ -60,9 +60,10 @@ onBeforeMount(() => {
         <button type="button">Following</button>
       </nav>
 
-      <section v-for="article in allArticleCards">
+      <section class="flex flex-col gap-4 w-full min-h-dvh h-full">
         <article
           class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
+          v-for="article in allArticleCards"
           :key="article.id"
         >
           <NuxtLink
@@ -74,7 +75,7 @@ onBeforeMount(() => {
               v-if="article.cover_image"
               :src="article.cover_image_url"
               alt="cover photo"
-              class="w-full h-11/12"
+              class="w-full max-h-[18rem]"
             />
           </NuxtLink>
 

@@ -9,3 +9,135 @@ body {
 body {
   @apply font-sans text-primary bg-light dark:bg-dark dark:text-secondary ;
 } */
+
+/* .html-content-container .content-wrapper {
+  line-height: 2.5rem;
+} */
+
+.rendered-markdown-content-container img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  max-height: 23rem;
+  margin-bottom: 0.5rem;
+}
+
+.rendered-markdown-content-container h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.rendered-markdown-content-container h1 {
+  font-size: 1.5rem;
+}
+
+.rendered-markdown-content-container h2 {
+  font-size: 1.4rem;
+}
+
+.rendered-markdown-content-container h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.rendered-markdown-content-container h4,
+h5,
+h6 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.rendered-markdown-content-container p,
+li {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.rendered-markdown-content-container li {
+  list-style: disc;
+  margin-left: 1rem;
+}
+
+.rendered-markdown-content-container pre,
+.rendered-markdown-content-container p:has(code) {
+  color: white;
+  background-color: black;
+  overflow-x: scroll;
+  padding: 1rem;
+  max-width: 100%;
+  /* width: max-content; */
+  margin-bottom: 0.5rem;
+}
+
+.rendered-markdown-content-container code {
+  color: white;
+  background-color: black;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.rendered-markdown-content-container table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.rendered-markdown-content-container td,
+.rendered-markdown-content-container th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.rendered-markdown-content-container tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.rendered-markdown-content-container tr:hover {
+  background-color: #ddd;
+}
+
+.rendered-markdown-content-container th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: black;
+  color: white;
+}
+
+.rendered-markdown-content-container blockquote {
+  margin-top: 0.8rem;
+  margin-bottom: 0.8rem;
+  margin-left: 1.5rem;
+  padding-left: 0.5rem;
+  border-left: 3px solid #ccc;
+  font-style: italic;
+}
+
+.rendered-markdown-content-container blockquote > p {
+  display: inline;
+}
+
+.rendered-markdown-content-container blockquote:before {
+  content: "“";
+}
+
+.rendered-markdown-content-container blockquote:after {
+  content: "”";
+}
+
+.rendered-markdown-content-container a:not(.profile-card) {
+  color: rgb(109 40 217);
+}
+
+.rendered-markdown-content-container a:hover {
+  text-decoration: underline;
+}

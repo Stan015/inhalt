@@ -66,26 +66,59 @@ watchEffect(() => fecthArticle());
           <div class="w-full h-[20rem]"></div>
         </section>
       </div> -->
-    <main class="flex flex-col gap-6 w-[90%] h-full pb-6">
-      <article
-        class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
-      >
-        <NuxtImg
-          v-if="article?.cover_image"
-          :src="article?.cover_image_url"
-          :alt="`cover photo of ${article?.title}`"
-          class="w-full h-11/12"
-        />
-        <div class="w-full h-max bg-white p-4">
-          <h2 class="w-full text-center font-bold text-[1.5rem]">
-            {{ article?.title }}
-          </h2>
-          <div class="flex items-end justify-between gap-6">
-            <div class="text-[0.7rem]">
-              <span>{{ article?.created_at }}</span> .
-              <span>10 min read</span>
+    <main class="flex flex-col gap-6 w-3/4 h-full pb-6">
+      <section class="rendered-markdown-content-container w-full flex flex-col gap-4">
+        <article
+          class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
+        >
+          <NuxtImg
+            v-if="article?.cover_image"
+            :src="article?.cover_image_url"
+            :alt="`cover photo of ${article?.title}`"
+            class="w-full max-h-[18rem]"
+          />
+          <div class="w-full h-max bg-white p-4">
+            <h1 class="w-full text-center font-bold text-[1.5rem]">
+              {{ article?.title }}
+            </h1>
+            <div class="flex items-end justify-between gap-6">
+              <div class="text-[0.7rem]">
+                <span>{{ article?.created_at }}</span> .
+                <span>10 min read</span>
+              </div>
+              <div class="flex gap-4 cursor-default">
+                <LikeButton :article-id="article?.id" />
+                <CommentButton :article-id="article?.id" />
+                <BookmarkButton :article-id="article?.id" />
+                <ShareButton
+                  :article-id="article?.id"
+                  :title="article?.title"
+                  :author-username="article?.author_username"
+                />
+              </div>
+              <ProfileCard
+                user-profile-link="/stan015"
+                name="Stanley Azi"
+                occupation="Frontend Developer"
+                profile-photo-src="/img2.png"
+                class-name="profile-card items-end"
+              />
             </div>
-
+          </div>
+          <div class="flex flex-col gap-2 p-4">
+            <MarkdownRenderer :content="article?.markdown_content!" />
+          </div>
+          <div
+            class="flex items-end p-4 border-t border-white justify-between gap-6"
+          >
+            <ProfileCard
+              user-profile-link="/stan015"
+              :authorTag="true"
+              name="Stanley Azi"
+              occupation="Frontend Developer"
+              profilePhotoSrc="/img2.png"
+              class-name="profile-card"
+            />
             <div class="flex gap-4 cursor-default">
               <LikeButton :article-id="article?.id" />
               <CommentButton :article-id="article?.id" />
@@ -96,44 +129,11 @@ watchEffect(() => fecthArticle());
                 :author-username="article?.author_username"
               />
             </div>
-
-            <ProfileCard
-              user-profile-link="/stan015"
-              name="Stanley Azi"
-              occupation="Frontend Developer"
-              profile-photo-src="/img2.png"
-              class-name="items-end"
-            />
+            <div class="text-[0.7rem]"><span>Jul 9 2023 .</span> 10:02AM</div>
           </div>
-        </div>
-        <div class="flex flex-col gap-2 p-4">
-          <MarkdownRenderer :content="article?.markdown_content!" />
-        </div>
-        <div
-          class="flex items-end p-4 border-t border-white justify-between gap-6"
-        >
-          <ProfileCard
-            user-profile-link="/stan015"
-            :authorTag="true"
-            name="Stanley Azi"
-            occupation="Frontend Developer"
-            profilePhotoSrc="/img2.png"
-          />
-
-          <div class="flex gap-4 cursor-default">
-            <LikeButton :article-id="article?.id" />
-            <CommentButton :article-id="article?.id" />
-            <BookmarkButton :article-id="article?.id" />
-            <ShareButton
-              :article-id="article?.id"
-              :title="article?.title"
-              :author-username="article?.author_username"
-            />
-          </div>
-          <div class="text-[0.7rem]"><span>Jul 9 2023 .</span> 10:02AM</div>
-        </div>
-      </article>
-      <CommentSection />
+        </article>
+        <CommentSection markdown-class-name="comment-section" />
+      </section>
       <section>
         <h2 class="font-bold text-md">Related inhalts</h2>
         <article
@@ -170,7 +170,7 @@ watchEffect(() => fecthArticle());
                 name="Stanley Azi"
                 occupation="Frontend Developer"
                 profile-photo-src="/img2.png"
-                class-name="items-end"
+                class-name="profile-card items-end"
               />
             </div>
           </div>

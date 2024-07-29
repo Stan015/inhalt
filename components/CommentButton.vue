@@ -21,11 +21,11 @@ commentList.length === 0
   ? (commentIsZero.value = true)
   : (commentIsZero.value = false);
 
-console.log(
-  "test from commentButton component",
-  specificArticle.value,
-  commentList
-);
+// console.log(
+//   "test from commentButton component",
+//   specificArticle.value,
+//   commentList
+// );
 
 watchEffect(() => {});
 </script>

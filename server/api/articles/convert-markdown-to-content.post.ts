@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   });
   const htmlContent = md.render(markdownContent);
 
-  console.log(htmlContent);
+  // console.log(htmlContent);
 
   return {
     html: htmlContent,

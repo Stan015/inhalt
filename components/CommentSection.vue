@@ -3,6 +3,10 @@ import { useUserStore } from "../store/userStore";
 // import { useArticlesStore } from '../store/articlesStore';
 import type { Article, Comment } from "~/types/tables.types";
 
+const props = defineProps({
+  markdownClassName: String,
+});
+
 const supabase = useSupabaseClient<Article>();
 
 const route = useRoute();
@@ -18,8 +22,7 @@ const userStore = useUserStore();
 
 const articleComments = ref<Array<Comment>>([]);
 const isNewCommentAdded = ref(false);
-
-console.log("test from commentBox component", articleComments.value);
+const convertedArticleComments = ref<Array<Comment>>([]);
 
 // Fetch the existing comments
 const handleFetchExistingComments = async () => {
@@ -34,10 +37,41 @@ const handleFetchExistingComments = async () => {
     return;
   }
 
-  articleComments.value = articleData.comments as Comment[];
+  if (articleData && articleData.comments) {
+    articleComments.value = articleData.comments as Comment[];
+
+    articleComments.value.forEach(async (commentInfo) => {
+      const comment = commentInfo.comment;
+
+      console.log(comment);
+
+      try {
+        const response = await useAsyncData(() =>
+          $fetch<{ html: string }>(
+            "/api/articles/convert-markdown-to-content",
+            {
+              method: "POST",
+              body: { markdown: comment },
+            }
+          )
+        );
+
+        if (response) {
+          commentInfo.comment = response.data.value?.html!;
+          convertedArticleComments.value = articleComments.value;
+          
+          // console.log(
+          //   "test from commentBox component",
+          //   articleComments.value, commentInfo
+          // );
+        }
+      } catch (error) {
+        console.error("Error converting markdown comment:", error);
+      }
+    });
+  }
 
   isNewCommentAdded.value = false;
-  console.log(articleComments.value, articleData.comments);
 };
 
 const handleComment = async () => {
@@ -83,7 +117,12 @@ watch(isNewCommentAdded, () => handleFetchExistingComments(), {
 
 <template>
   <section class="w-full">
-    <div v-if="articleComments.length > 0" v-for="comment in articleComments" class="w-full">
+    <div
+      v-if="convertedArticleComments.length > 0"
+      v-for="comment in convertedArticleComments"
+      class="w-full"
+    >
+      <h2>Comments:</h2>
       <div
         :key="comment.commented_at"
         class="w-full h-max rounded-2xl border p-4 border-white"
@@ -93,8 +132,9 @@ watch(isNewCommentAdded, () => handleFetchExistingComments(), {
           name="Stanley Azi"
           occupation="Frontend Developer"
           profile-photo-src="/img2.png"
+          class-name="profile-card"
         />
-        <p>{{ comment.comment }}</p>
+        <div v-html="comment.comment" :class="`${markdownClassName}`"></div>
         <div class="flex gap-4 cursor-default">
           <button type="button" aria-labelledby="likes">
             <Icon name="mdi:heart-outline" />
