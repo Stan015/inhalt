@@ -20,6 +20,9 @@ const submitPost = async () => {
     const submittedAt = new Date().toISOString();
     const userId = userStore.userCredentials.user_id!;
     const username = userStore.userCredentials.username!;
+    const avatar = userStore.userCredentials.avatar!;
+    const fullName = userStore.userCredentials.fullName!;
+    const occupation = userStore.userCredentials.occupation!;
 
     // console.log("Title:", title);
     // console.log("cover image:", coverImageFile);
@@ -38,6 +41,9 @@ const submitPost = async () => {
     formData.append("submitted_at", submittedAt);
     formData.append("user_id", userId);
     formData.append("username", username);
+    formData.append("author_fullname", fullName);
+    formData.append("author_occupation", occupation);
+    formData.append("author_avatar", avatar);
 
     try {
       const response = await useAsyncData(() =>

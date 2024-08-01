@@ -33,6 +33,9 @@ export type Article = {
   title: string;
   author_username: string;
   author_id: string;
+  author_avatar: string;
+  author_occupation: string;
+  author_fullname: string;
   cover_image: string;
   cover_image_url: string;
   markdown_content: string;

@@ -67,9 +67,21 @@ const formData = reactive<FormData>({
               v-model="formData.username"
               name="username"
               id="username"
-              pattern="^[^\s]+$" 
+              pattern="^[^\s]+$"
               required
               placeholder="Enter a username..."
+            />
+          </label>
+          <label class="w-full flex flex-col gap-1">
+            Occupation
+            <input
+              type="text"
+              class="w-full bg-white text-primary text-sm p-2 rounded-lg border-2 border-light outline-none hover:border-accent focus:border-accent"
+              v-model="formData.occupation"
+              name="occupation"
+              id="occupation"
+              required
+              placeholder="Enter a occupation..."
             />
           </label>
           <label class="w-full flex flex-col gap-1">

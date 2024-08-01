@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 export default defineEventHandler(async (event) => {
   const supabase = await serverSupabaseClient(event);
 
-  const { email, password, username, firstName, lastName } = getQuery(
+  const { email, password, username, firstName, lastName, occupation } = getQuery(
     event
   ) as FormData;
 
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   const passwordHash = await bcrypt.hash(password, salt);
   // const isMatch = await bcrypt.compare(password, hash);
 
-  let usersTableT;
+  // let usersTableT;
 
   const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
     email: email,
@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
           username: username,
           first_name: firstName,
           last_name: lastName,
+          occupation: occupation,
           email: email,
           password: passwordHash,
         },

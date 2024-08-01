@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
     // console.log(fields, coverImg)
 
-    const { article_title, markdown_content, submitted_at, username, user_id } = fields;
+    const { article_title, markdown_content, submitted_at, username, user_id, author_fullname, author_occupation, author_avatar } = fields;
 
     if (!article_title || !markdown_content || !submitted_at) {
       throw createError({
@@ -75,6 +75,9 @@ export default defineEventHandler(async (event) => {
         title: article_title,
         author_id: user_id,
         author_username: username,
+        author_fullname: author_fullname,
+        author_occupation: author_occupation,
+        author_avatar: author_avatar,
         markdown_content: markdown_content,
         created_at: submitted_at,
         cover_image: uploadedCoverImage,

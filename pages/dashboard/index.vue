@@ -9,5 +9,6 @@ const signOut = async () => {
 </script>
 
 <template>
+  <h1>Dashboard</h1>
   <button type="button" @click="signOut">Logout</button>
 </template>

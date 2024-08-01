@@ -1,3 +1,9 @@
+export type Follower = {
+  full_name: string;
+  username: string;
+  date: string;
+}
+
 export type User = {
   user_id?: string;
   username?: string;
@@ -6,6 +12,13 @@ export type User = {
   lastName?: string;
   fullName?: string;
   avatar?: string;
+  occupation?: string;
+  bio?: string;
+  total_likes?: number;
+  total_bookmarks?: number;
+  total_comments?: number;
+  followers?: Array<Follower>;
+  following?: Array<Follower>;
 };
 
 export type FormData = User & {

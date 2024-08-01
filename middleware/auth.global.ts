@@ -75,7 +75,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       .select("*")
       .eq("email", supabaseUser.email as string);
 
-    const { id, email, username, first_name, last_name, full_name, avatar } = data[0];
+    const { id, email, username, first_name, last_name, full_name, avatar, occupation } = data[0];
 
     userStore.userCredentials = {
       username: username,
@@ -85,6 +85,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       lastName: last_name,
       fullName: full_name,
       avatar: avatar,
+      occupation: occupation,
     };
 
     if (error) {

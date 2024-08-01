@@ -29,7 +29,9 @@ onBeforeMount(() => {
   <div
     class="w-full min-h-main grid grid-cols-[13rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%]"
   >
-    <div class="flex flex-col gap-4 justify-between w-full h-full max-h-[calc(100svh-8rem)]">
+    <div
+      class="flex flex-col gap-4 justify-between w-full h-full max-h-[calc(100svh-8rem)]"
+    >
       <nav class="flex flex-col gap-4 w-full h-max">
         <NuxtLink
           to="/"
@@ -108,10 +110,10 @@ onBeforeMount(() => {
               </div>
 
               <ProfileCard
-                user-profile-link="/stan015"
-                name="Stanley Azi"
-                occupation="Frontend Developer"
-                profile-photo-src="/img2.png"
+                :user-profile-link="`/${article?.author_username}`"
+                :name="`${article?.author_fullname}`"
+                :occupation="`${article?.author_occupation}`"
+                :profile-photo-src="`${article?.author_avatar}`"
                 class-name="items-end"
               />
             </div>

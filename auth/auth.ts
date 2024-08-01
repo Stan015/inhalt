@@ -52,4 +52,3 @@ export const signInWithOAuth = async (provider: string) => {
     console.log((error as Error).message);
   }
 };
-
