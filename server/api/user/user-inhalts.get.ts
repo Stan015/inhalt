@@ -15,13 +15,12 @@ export default defineEventHandler(async (event) => {
   }
 
   const { data, error } = await supabase
-    .from("users")
+    .from("articles")
     .select("*")
-    .eq("username", user)
-    .single();
+    .eq("author_username", user)
 
   if (error) {
-    console.error("Failed to fetch user");
+    console.error("Failed to fetch user articles");
   }
 
 //   console.log(data);

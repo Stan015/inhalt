@@ -1,13 +1,8 @@
 <script setup lang="ts">
+import type { Article } from "~/types/tables.types";
 import type { User } from "~/types/user.types";
 
-const supabase = useSupabaseClient();
-
-const signOut = async () => {
-  const { error } = await supabase.auth.signOut();
-  error ? console.log(error) : console.log("signed out");
-  navigateTo("/");
-};
+import { signOut } from "~/auth/auth";
 
 const route = useRoute();
 
@@ -23,6 +18,7 @@ const transformUser = (dbUser: any): User => {
 };
 
 const user = ref<User | null>(null);
+const userInhalts = ref<Array<Article> | null>(null);
 const isLoading = ref(true);
 
 const handleUserProfile = async () => {
@@ -45,7 +41,30 @@ const handleUserProfile = async () => {
   }
 };
 
-onMounted(() => handleUserProfile());
+const handleUserInhalts = async () => {
+  isLoading.value = true;
+
+  try {
+    const response = await useAsyncData("user-inhalts", () =>
+      $fetch(`/api/user/user-inhalts?user=${userProfile}`)
+    );
+
+    if (!response) {
+      throw new Error("Failed to fetch data");
+    }
+
+    userInhalts.value = response.data.value;
+  } catch (error) {
+    console.error((error as Error).message);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  handleUserProfile();
+  handleUserInhalts();
+});
 </script>
 
 <template>
@@ -62,17 +81,19 @@ onMounted(() => handleUserProfile());
           Profile
         </h1>
         <div class="flex flex-col gap-4 items-center justify-center">
-          <span>
+          <span
+            class="w-[6rem] h-[6rem] rounded-full border-2 border-accent overflow-hidden"
+          >
             <NuxtImg
               v-if="user?.avatar"
-              class="w-[6rem] h-[6rem] rounded-full border-2 border-accent"
+              class="w-full h-full rounded-full"
               :src="user.avatar"
               alt="avatar"
             />
             <Icon
               v-else
               name="hugeicons:user"
-              class="w-[6rem] h-[6rem] rounded-full border-2 border-accent"
+              class="w-full h-full rounded-full"
             />
           </span>
           <div class="flex flex-col items-center gap-1">
@@ -120,8 +141,8 @@ onMounted(() => handleUserProfile());
         </div>
       </div>
       <button
-        @click="signOut"
-        class="px-4 py-1 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-base flex items-center w-max"
+      @click="async () => await signOut()"
+      class="px-4 py-1 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-base flex items-center w-max"
         type="button"
       >
         Sign Out
@@ -132,29 +153,38 @@ onMounted(() => handleUserProfile());
         class="grid grid-cols-3 place-items-center gap-2 text-base border-b-2 border-b-accent pb-2 w-full"
       >
         <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent">{{
-            user?.total_likes
+          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+            user?.total_likes || 0
           }}</span>
           Likes
         </p>
         <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent">32K</span> Inhalts
+          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+            user?.total_articles! + user?.total_videos! || 0
+          }}</span>
+          Inhalts
         </p>
         <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent">{{
-            user?.total_bookmarks
+          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+            user?.total_bookmarks || 0
           }}</span>
           Bookmarks
         </p>
         <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent">{{user?.followers?.length}}</span> Followers
+          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+            user?.followers?.length || 0
+          }}</span>
+          Followers
         </p>
         <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent">{{user?.following?.length}}</span> Following
+          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+            user?.following?.length || 0
+          }}</span>
+          Following
         </p>
         <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent">{{
-            user?.total_comments
+          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+            user?.total_comments || 0
           }}</span>
           Comments
         </p>
@@ -168,21 +198,46 @@ onMounted(() => handleUserProfile());
       >
       <section class="w-full">
         <h2 class="text-[1.3rem]">Recent inhalts</h2>
-        <div class="w-full flex flex-col gap-4">
+        <div class="w-full h-full flex flex-col gap-4">
           <NuxtLink
-            class="flex w-full justify-between items-center border-b-2 border-white rounded-2xl px-2 hover:border-accent transition-all"
-            to="/"
+            v-for="inhalt in userInhalts"
+            :key="inhalt.id"
+            class="flex w-full h-max justify-between items-center border-b-2 border-white rounded-2xl px-2 hover:border-accent transition-all"
+            :to="`/${inhalt.author_username}/articles/${
+              inhalt.id
+            }--${inhalt.title.replace(/\s+/g, '-').toLowerCase()}`"
           >
-            <h3>inhalt title</h3>
-            <div class="flex gap-4 cursor-default bg-red-500 w-[4rem] h-4">
-              <!-- <LikeButton />
-              <CommentButton />
-              <BookmarkButton />
-              <ShareButton /> -->
+            <h3>{{ inhalt?.title }}</h3>
+            <div class="flex gap-4 cursor-default">
+              <LikeButton :article-id="inhalt?.id" />
+              <CommentButton :article-id="inhalt?.id" />
+              <BookmarkButton :article-id="inhalt?.id" />
+              <ShareButton
+                :article-id="inhalt?.id"
+                :title="inhalt?.title"
+                :author-username="inhalt?.author_username"
+              />
             </div>
           </NuxtLink>
         </div>
       </section>
     </main>
+    <aside class="flex flex-col gap-6 w-full h-full">
+      <section class="w-full h-max bg-white rounded-2xl p-4">
+        <h2>Promotion</h2>
+        <div class="w-full h-[20rem]"></div>
+      </section>
+
+      <section class="w-full h-max bg-white rounded-2xl p-4">
+        <h2>Hot Trends <Icon name="fluent-emoji-flat:fire" /></h2>
+        <div class="w-full h-[25rem]">
+          <h3>Rendering images the good way</h3>
+          <h3>18 tools to master Nuxt</h3>
+          <h3>Vue is getting super fun!</h3>
+          <h3>Iconify + Nuxt</h3>
+          <h3>Next vs Nuxt</h3>
+        </div>
+      </section>
+    </aside>
   </div>
 </template>

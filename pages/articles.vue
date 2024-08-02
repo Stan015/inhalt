@@ -1,27 +1,55 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { Article, ArticleCard } from "~/types/tables.types";
+import { useArticlesStore } from "~/store/articlesStore";
+
+const articlesStore = useArticlesStore();
+const allArticleCards = useState<Array<ArticleCard>>();
+
+const fecthArticles = async () => {
+  try {
+    const response = await $fetch("/api/articles/fetch-articles");
+    const data = response.data;
+
+    articlesStore.fetchedArticles = data as Array<Article>;
+    allArticleCards.value = articlesStore.fetchedArticles as Array<ArticleCard>;
+
+    console.log(allArticleCards.value);
+  } catch (error) {
+    console.log((error as Error).message);
+    articlesStore.fetchError = error as Error;
+  }
+};
+
+onBeforeMount(() => {
+  fecthArticles();
+});
+</script>
 
 <template>
-  <h1>Hello articles page</h1>
-
   <div
     class="w-full min-h-main grid grid-cols-[13rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%]"
   >
-    <div class="flex flex-col gap-4 justify-between w-full h-full">
+    <div
+      class="flex flex-col gap-4 justify-between w-full h-full max-h-[calc(100svh-8rem)]"
+    >
       <nav class="flex flex-col gap-4 w-full h-max">
         <NuxtLink
           to="/"
-          class="flex flex-shrink-0 items-center gap-3 w-[90%] bg-white px-4 py-[1.5px] rounded-l-lg relative after:content-[' '] after:w-2 after:h-full after:absolute after:right-[-10%] after:rounded-l-2xl after:bg-white after:pointer-events-none"
+          aria-current="false"
+          class="flex flex-shrink-0 items-center gap-3 w-[90%] bg-white border-b-2 border-b-white hover:border-b-accent transition-all px-4 py-[1.5px] rounded-l-lg relative after:content-[' '] after:w-2 after:h-full after:absolute after:right-[-10%] after:rounded-l-2xl after:bg-white after:pointer-events-none aria-[current=true]:after:bg-accent"
           ><Icon name="icon-park-outline:data-all" /> All</NuxtLink
         >
         <NuxtLink
           to="/articles"
-          class="flex flex-shrink-0 items-center gap-3 w-[90%] bg-white px-4 py-[1.5px] rounded-l-lg relative after:content-[' '] after:w-2 after:h-full after:absolute after:right-[-10%] after:rounded-l-2xl after:bg-white after:pointer-events-none"
+          aria-current="true"
+          class="flex flex-shrink-0 items-center gap-3 w-[90%] bg-white border-b-2 border-b-white hover:border-b-accent transition-all px-4 py-[1.5px] rounded-l-lg relative after:content-[' '] after:w-2 after:h-full after:absolute after:right-[-10%] after:rounded-l-2xl after:bg-white after:pointer-events-none aria-[current=true]:after:bg-accent"
           ><Icon name="gravity-ui:square-article" /> Articles</NuxtLink
         >
         <NuxtLink
-          to="/"
-          class="flex flex-shrink-0 items-center gap-3 w-[90%] bg-white px-4 py-[1.5px] rounded-l-lg relative after:content-[' '] after:w-2 after:h-full after:absolute after:right-[-10%] after:rounded-l-2xl after:bg-white after:pointer-events-none"
-          ><Icon name="lets-icons:video-fill" /> Video inhalt</NuxtLink
+          to="/videos"
+          aria-current="false"
+          class="flex flex-shrink-0 items-center gap-3 w-[90%] bg-white border-b-2 border-b-white hover:border-b-accent transition-all px-4 py-[1.5px] rounded-l-lg relative after:content-[' '] after:w-2 after:h-full after:absolute after:right-[-10%] after:rounded-l-2xl after:bg-white after:pointer-events-none aria-[current=true]:after:bg-accent"
+          ><Icon name="lets-icons:video-fill" /> Videos</NuxtLink
         >
       </nav>
       <section class="w-full h-max bg-white rounded-2xl p-4">
@@ -37,42 +65,60 @@
         <button type="button">Following</button>
       </nav>
 
-      <section>
+      <section class="flex flex-col gap-4 w-full min-h-dvh h-full">
         <article
           class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
+          v-for="article in allArticleCards"
+          :key="article.id"
         >
-          <NuxtLink to="/stan015/articles/123">
-            <NuxtImg src="/img1.png" alt="cover photo" class="w-full h-11/12" />
+          <NuxtLink
+            :to="`/${article.author_username}/articles/${
+              article.id
+            }--${article.title.replace(/\s+/g, '-').toLowerCase()}`"
+          >
+            <NuxtImg
+              v-if="article.cover_image"
+              :src="article.cover_image_url"
+              alt="cover photo"
+              class="w-full max-h-[18rem]"
+            />
           </NuxtLink>
-          <div class="w-full h-max bg-white p-4">
-            <NuxtLink to="/stan015/articles/123">
-              <h2 class="w-full text-center font-bold text-[1.5rem]">
-                Mastering ChatGPT Blog Creation: Dos and Don'ts for SaaS
-                Marketing Managers
+
+          <div class="w-full h-max bg-white px-4 pb-4">
+            <NuxtLink
+              :to="`/${article.author_username}/articles/${
+                article.id
+              }--${article.title.replace(/\s+/g, '-').toLowerCase()}`"
+            >
+              <h2 class="w-full text-center font-bold text-[1.5rem] pt-4">
+                {{ article.title }}
               </h2>
             </NuxtLink>
+
             <div class="flex items-end justify-between gap-6">
               <div class="text-[0.7rem]">
-                <span>Jul 9</span> .
+                <span>{{ article.created_at }}</span> .
                 <span>10 min read</span>
               </div>
 
               <div class="flex gap-4 cursor-default">
-                <!-- <LikeButton /> -->
-                <!-- <CommentButton /> -->
-                <!-- <BookmarkButton /> -->
-                <ShareButton />
+                <LikeButton :article-id="article?.id" />
+                <CommentButton :article-id="article?.id" />
+                <BookmarkButton :article-id="article?.id" />
+                <ShareButton
+                  :article-id="article?.id"
+                  :title="article?.title"
+                  :author-username="article?.author_username"
+                />
               </div>
 
-              <NuxtLink to="/" class="flex flex-col items-end text-[0.7rem]">
-                <NuxtImg
-                  src="/img2.png"
-                  alt="user profile picture"
-                  class="w-6 h-6 rounded-full border"
-                />
-                <h3 class="text-end font-medium">Stanley Azi</h3>
-                <p class="text-end">Frontend Developer</p>
-              </NuxtLink>
+              <ProfileCard
+                :user-profile-link="`/${article?.author_username}`"
+                :name="`${article?.author_fullname}`"
+                :occupation="`${article?.author_occupation}`"
+                :profile-photo-src="`${article?.author_avatar}`"
+                class-name="items-end"
+              />
             </div>
           </div>
         </article>

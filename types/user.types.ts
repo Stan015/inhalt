@@ -17,6 +17,8 @@ export type User = {
   total_likes?: number;
   total_bookmarks?: number;
   total_comments?: number;
+  total_articles?: number;
+  total_videos?: number;
   followers?: Array<Follower>;
   following?: Array<Follower>;
 };

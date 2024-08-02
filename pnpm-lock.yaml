@@ -75,6 +75,9 @@ importers:
       '@iconify-json/fluent-emoji-flat':
         specifier: ^1.1.16
         version: 1.1.16
+      '@iconify-json/game-icons':
+        specifier: ^1.1.9
+        version: 1.1.9
       '@iconify-json/gravity-ui':
         specifier: ^1.1.4
         version: 1.1.4
@@ -103,6 +106,9 @@ importers:
         specifier: ^1.1.12
         version: 1.1.12
       '@iconify-json/raphael':
+        specifier: ^1.1.8
+        version: 1.1.8
+      '@iconify-json/simple-line-icons':
         specifier: ^1.1.8
         version: 1.1.8
       '@iconify-json/solar':
@@ -773,6 +779,9 @@ packages:
   '@iconify-json/fluent@1.1.59':
     resolution: {integrity: sha512-4gihRqVI4aVfx26VOk0LAcjLkii7DWsdb1AP0NXRQ/fZ5VJOIqf7NdVfz5K01w+4ayDLl+aDdp7X1zlCh2kOwg==}
 
+  '@iconify-json/game-icons@1.1.9':
+    resolution: {integrity: sha512-DipxbRFPK+KgDekVGx5if3mlxzKvTNM74yF5y9LIU8FPNShND9JnaDGCz5cfyaGVQxj7BITztO5v042hRFsahg==}
+
   '@iconify-json/gravity-ui@1.1.4':
     resolution: {integrity: sha512-Oezyd2Ga/gRWqP/RptimLe4Xx1q1psdq4CS3gVASDzTxbUCjMOJe4hf3+ilkYZNv6L4Ib5L26s40MFTKh6Tjlg==}
 
@@ -802,6 +811,9 @@ packages:
 
   '@iconify-json/raphael@1.1.8':
     resolution: {integrity: sha512-F64PvQjhF51z9AsDf90JBxY68j1HEZqgcxdDh3ZIyPfuwyaw2jRfTaSYg0hpVJGTzdsFnxmrwYQUxfZOI3fY1g==}
+
+  '@iconify-json/simple-line-icons@1.1.8':
+    resolution: {integrity: sha512-p4Fyw5WCa6n4zEOhfAfEm1D0pS+AeatSTYTE8UDnuXxj5h5I/Y3B1+Z3ion4D+C0QOJ8Jl7QUYygK1jjlY3A0A==}
 
   '@iconify-json/solar@1.1.9':
     resolution: {integrity: sha512-BcWzZqA02BiQduYizqU/J4v4RNs0MkjZUGpMbejpozH8YQSt3+S/LfV6zfVRonx/2DhXTVSqiLa1abDRAZtojQ==}
@@ -4557,6 +4569,10 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
+  '@iconify-json/game-icons@1.1.9':
+    dependencies:
+      '@iconify/types': 2.0.0
+
   '@iconify-json/gravity-ui@1.1.4':
     dependencies:
       '@iconify/types': 2.0.0
@@ -4594,6 +4610,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/raphael@1.1.8':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/simple-line-icons@1.1.8':
     dependencies:
       '@iconify/types': 2.0.0
 

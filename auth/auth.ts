@@ -1,6 +1,8 @@
 import type { Provider } from "@supabase/supabase-js";
 import type { FormData } from "~/types/user.types";
 
+const supabase = useSupabaseClient();
+
 export const signInWithEmailAndPassword = async (
   email: string,
   password: string
@@ -51,4 +53,10 @@ export const signInWithOAuth = async (provider: string) => {
   } catch (error) {
     console.log((error as Error).message);
   }
+};
+
+export const signOut = async () => {
+  const { error } = await supabase.auth.signOut();
+  error ? console.log(error) : console.log("signed out");
+  navigateTo("/");
 };
