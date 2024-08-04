@@ -30,7 +30,7 @@ onBeforeMount(() => {
     class="w-full min-h-main grid grid-cols-[13rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%]"
   >
     <div
-      class="flex flex-col gap-4 justify-between w-full h-full max-h-[calc(100svh-8rem)]"
+      class="flex flex-col gap-4 justify-between w-full h-full max-h-[calc(100svh-8rem)] text-primary dark:text-primary"
     >
       <nav class="flex flex-col gap-4 w-full h-max">
         <NuxtLink
@@ -52,13 +52,13 @@ onBeforeMount(() => {
           ><Icon name="lets-icons:video-fill" /> Videos</NuxtLink
         >
       </nav>
-      <section class="w-full h-max bg-white rounded-2xl p-4">
+      <section class="w-full h-max bg-white rounded-2xl p-4  text-primary dark:text-primary">
         <h2>News</h2>
         <div class="w-full h-[20rem]"></div>
       </section>
     </div>
-    <main class="block w-full h-full pb-6">
-      <nav class="flex gap-4 mb-4">
+    <main class="block w-full h-full pb-6  text-primary dark:text-primary">
+      <nav class="flex gap-4 mb-4  text-primary dark:text-secondary">
         <button type="button">For you</button>
         <button type="button">Recent</button>
         <button type="button">Trending</button>
@@ -67,7 +67,7 @@ onBeforeMount(() => {
 
       <section class="flex flex-col gap-4 w-full min-h-dvh h-full">
         <article
-          class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
+          class="w-full h-max rounded-2xl border border-white relative overflow-hidden text-primary dark:text-primary"
           v-for="article in allArticleCards"
           :key="article.id"
         >
@@ -117,14 +117,14 @@ onBeforeMount(() => {
                 :name="`${article?.author_fullname}`"
                 :occupation="`${article?.author_occupation}`"
                 :profile-photo-src="`${article?.author_avatar}`"
-                class-name="items-end"
+                class-name="items-end text-primary dark:text-primary"
               />
             </div>
           </div>
         </article>
       </section>
     </main>
-    <aside class="flex flex-col gap-6 w-full h-full">
+    <aside class="flex flex-col gap-6 w-full h-full text-primary dark:text-primary">
       <section class="w-full h-max bg-white rounded-2xl p-4">
         <h2>Promotion</h2>
         <div class="w-full h-[20rem]"></div>

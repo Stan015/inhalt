@@ -1,12 +1,7 @@
 <script setup lang="ts">
+import { signOut } from "~/auth/auth";
 import type { Article } from "~/types/tables.types";
 import type { User } from "~/types/user.types";
-
-import { signOut } from "~/auth/auth";
-
-const route = useRoute();
-
-const userProfile = route.params.userprofile;
 
 const transformUser = (dbUser: any): User => {
   return {
@@ -19,45 +14,52 @@ const transformUser = (dbUser: any): User => {
 
 const user = ref<User | null>(null);
 const userInhalts = ref<Array<Article> | null>(null);
-const isLoading = ref(true);
+const isLoadingProfile = ref(true);
+const isLoadingInhalt = ref(true);
 
 const handleUserProfile = async () => {
-  isLoading.value = true;
+  const route = useRoute();
+  const userProfile = route.params.userprofile;
+
+  isLoadingProfile.value = true;
 
   try {
-    const response = await useAsyncData("user-profile", () =>
+    const {data, error} = await useAsyncData("user-profile", () =>
       $fetch(`/api/user/user-profile?user=${userProfile}`)
     );
 
-    if (!response) {
+    if (!data || !data.value) {
       throw new Error("Failed to fetch data");
     }
 
-    user.value = transformUser(response.data.value);
+    user.value = transformUser(data.value);
   } catch (error) {
     console.error((error as Error).message);
   } finally {
-    isLoading.value = false;
+    isLoadingProfile.value = false;
   }
 };
 
 const handleUserInhalts = async () => {
-  isLoading.value = true;
+  const route = useRoute();
+  const userProfile = route.params.userprofile;
+
+  isLoadingInhalt.value = true;
 
   try {
-    const response = await useAsyncData("user-inhalts", () =>
+    const {data, error} = await useAsyncData("user-inhalts", () =>
       $fetch(`/api/user/user-inhalts?user=${userProfile}`)
     );
 
-    if (!response) {
+    if (!data.value) {
       throw new Error("Failed to fetch data");
     }
 
-    userInhalts.value = response.data.value;
+    userInhalts.value = data.value;
   } catch (error) {
     console.error((error as Error).message);
   } finally {
-    isLoading.value = false;
+    isLoadingInhalt.value = false;
   }
 };
 
@@ -69,7 +71,7 @@ onMounted(() => {
 
 <template>
   <div
-    class="w-full min-h-main grid grid-cols-[15rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%]"
+    class="w-full min-h-main grid grid-cols-[15rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%] text-primary dark:text-primary"
   >
     <section
       class="bg-white p-6 rounded-2xl flex flex-col justify-between items-center"
@@ -141,8 +143,8 @@ onMounted(() => {
         </div>
       </div>
       <button
-      @click="async () => await signOut()"
-      class="px-4 py-1 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-base flex items-center w-max"
+        @click="signOut"
+        class="px-4 py-1 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-base flex items-center w-max"
         type="button"
       >
         Sign Out

@@ -13,22 +13,16 @@ const markdownEditor = ref<{
 
 const submitPost = async () => {
   if (markdownEditor.value) {
-    const markdownContent = markdownEditor.value?.getMarkdown();
+    const markdownContent = markdownEditor.value.getMarkdown();
     // const htmlContent = markdownEditor.value?.getHTML();
     const title = articleTitle.value;
     const coverImageFile = coverImg.value?.files?.[0];
     const submittedAt = new Date().toISOString();
-    const userId = userStore.userCredentials.user_id!;
-    const username = userStore.userCredentials.username!;
-    const avatar = userStore.userCredentials.avatar!;
-    const fullName = userStore.userCredentials.fullName!;
-    const occupation = userStore.userCredentials.occupation!;
-
-    // console.log("Title:", title);
-    // console.log("cover image:", coverImageFile);
-    // console.log("Markdown Content:", markdownContent);
-    // console.log("HTML Content:", htmlContent);
-    // console.log("created at:", submittedAt);
+    const userId = userStore.userCredentials.user_id;
+    const username = userStore.userCredentials.username;
+    const avatar = userStore.userCredentials.avatar;
+    const fullName = userStore.userCredentials.fullName;
+    const occupation = userStore.userCredentials.occupation;
 
     const formData = new FormData();
 
@@ -37,39 +31,40 @@ const submitPost = async () => {
     }
     formData.append("article_title", title);
     formData.append("markdown_content", markdownContent);
-    // formData.append("html_content", markdownContent);
+    // formData.append("html_content", htmlContent);
     formData.append("submitted_at", submittedAt);
-    formData.append("user_id", userId);
-    formData.append("username", username);
-    formData.append("author_fullname", fullName);
-    formData.append("author_occupation", occupation);
-    formData.append("author_avatar", avatar);
+    formData.append("user_id", userId!);
+    formData.append("username", username!);
+    formData.append("author_fullname", fullName!);
+    formData.append("author_occupation", occupation!);
+    formData.append("author_avatar", avatar!);
 
     try {
-      const response = await useAsyncData(() =>
-        $fetch("/api/articles/create-article", {
-          method: "post",
-          body: formData,
-        })
-      );
+      const response = await $fetch("/api/articles/create-article", {
+        method: "post",
+        body: formData,
+      });
 
       console.log(response);
 
-      if (response.data.value?.statusCode === 200) {
+      if (response.statusCode === 200) {
         alert("Article created successfully!");
+      } else {
+        alert("Error creating article.");
       }
     } catch (error) {
-      console.log((error as Error).message);
+      console.error("Error creating article:", (error as Error).message);
       alert("Error creating article.");
     }
   }
 };
 </script>
 
+
 <template>
-  <section class="w-full min-h-main flex gap-4 py-6 px-[12%]">
+  <section class="w-full min-h-main flex gap-4 py-6 px-[12%]  text-primary dark:text-secondar">
     <article>
-      <h1>Write A New Article</h1>
+      <h1 class="  text-primary dark:text-secondary">Write A New Article</h1>
       <form @submit.prevent="submitPost" class="flex flex-col gap-6">
         <input type="file" ref="coverImg" placeholder="Upload cover image" />
         <input

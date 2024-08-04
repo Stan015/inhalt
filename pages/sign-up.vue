@@ -14,7 +14,7 @@ const formData = reactive<FormData>({
 
 <template>
   <section
-    class="w-full min-h-main flex items-center justify-center px[12%] py-6"
+    class="w-full min-h-main flex items-center justify-center px[12%] py-6 text-primary dark:text-primary"
   >
     <div
       class="flex flex-col items-center bg-white p-6 rounded-2xl gap-4 w-[30rem] max-sm:w-[18rem]"

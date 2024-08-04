@@ -14,6 +14,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxt/icon",
     "@pinia/nuxt",
+    "@nuxtjs/color-mode",
   ],
   supabase: {
     url: process.env.NUXT_PUBLIC_SUPABASE_URL,

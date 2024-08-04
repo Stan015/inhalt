@@ -1,4 +1,4 @@
-<script lang="ts"></script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="flex items-center relative w-3/4 ml-4 text-primary dark:text-primary">

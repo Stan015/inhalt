@@ -27,7 +27,7 @@ onBeforeMount(() => {
 
 <template>
   <div
-    class="w-full min-h-main grid grid-cols-[13rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%]"
+    class="w-full min-h-main grid grid-cols-[13rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%] text-primary dark:text-primary"
   >
     <div
       class="flex flex-col gap-4 justify-between w-full h-full max-h-[calc(100svh-8rem)]"
@@ -58,7 +58,7 @@ onBeforeMount(() => {
       </section>
     </div>
     <main class="block w-full h-full pb-6">
-      <nav class="flex gap-4 mb-4">
+      <nav class="flex gap-4 mb-4 text-primary dark:text-secondary">
         <button type="button">For you</button>
         <button type="button">Recent</button>
         <button type="button">Trending</button>

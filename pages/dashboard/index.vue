@@ -6,7 +6,6 @@ import { signOut } from "~/auth/auth";
 import { useUserStore } from "~/store/userStore";
 
 const userStore = useUserStore();
-
 const userProfileName = userStore.userCredentials.username;
 
 const transformUser = (dbUser: any): User => {
@@ -20,45 +19,46 @@ const transformUser = (dbUser: any): User => {
 
 const user = ref<User | null>(null);
 const userInhalts = ref<Array<Article> | null>(null);
-const isLoading = ref(true);
+const isLoadingProfile = ref(true);
+const isLoadingInhalts = ref(true);
 
 const handleUserProfile = async () => {
-  isLoading.value = true;
+  isLoadingProfile.value = true;
 
   try {
-    const response = await useAsyncData("user-profile", () =>
+    const { data } = await useAsyncData("user-profile", () =>
       $fetch(`/api/user/user-profile?user=${userProfileName}`)
     );
 
-    if (!response) {
-      throw new Error("Failed to fetch data");
+    if (!data.value) {
+      throw new Error("Failed to fetch user profile");
     }
 
-    user.value = transformUser(response.data.value);
+    user.value = transformUser(data.value);
   } catch (error) {
     console.error((error as Error).message);
   } finally {
-    isLoading.value = false;
+    isLoadingProfile.value = false;
   }
 };
 
 const handleUserInhalts = async () => {
-  isLoading.value = true;
+  isLoadingInhalts.value = true;
 
   try {
-    const response = await useAsyncData("user-inhalts", () =>
+    const { data } = await useAsyncData("user-inhalts", () =>
       $fetch(`/api/user/user-inhalts?user=${userProfileName}`)
     );
 
-    if (!response) {
-      throw new Error("Failed to fetch data");
+    if (!data.value) {
+      throw new Error("Failed to fetch user articles");
     }
 
-    userInhalts.value = response.data.value;
+    userInhalts.value = data.value;
   } catch (error) {
     console.error((error as Error).message);
   } finally {
-    isLoading.value = false;
+    isLoadingInhalts.value = false;
   }
 };
 
@@ -69,8 +69,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="py-6 px-[12%] min-h-main w-full">
-    <h1 class="font-bold text-[1.5rem] mb-4">My Dashboard</h1>
+  <div class="py-6 px-[12%] min-h-main w-full text-primary dark:text-primary">
+    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">My Dashboard</h1>
     <div
       class="w-full min-h-[calc(100svh-13rem)] grid grid-cols-[15rem_1fr] grid-rows-1 gap-4"
     >
@@ -135,7 +135,7 @@ onMounted(() => {
           <div class="w-full h-[15rem]"></div>
         </section>
         <button
-          @click="async () => await signOut()"
+          @click="signOut"
           class="px-4 py-1 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-base flex items-center w-max"
           type="button"
         >

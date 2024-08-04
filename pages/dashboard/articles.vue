@@ -5,26 +5,24 @@ import { signOut } from "~/auth/auth";
 import { useUserStore } from "~/store/userStore";
 
 const userStore = useUserStore();
-
-const userProfileName = userStore.userCredentials.username;
-
 const userInhalts = ref<Array<Article> | null>(null);
 const isLoading = ref(true);
 
-
 const handleUserInhalts = async () => {
+  const userProfileName = userStore.userCredentials.username;
+
   isLoading.value = true;
 
   try {
-    const response = await useAsyncData("user-inhalts", () =>
+    const { data, error } = await useAsyncData("user-inhalts", () =>
       $fetch(`/api/user/user-inhalts?user=${userProfileName}`)
     );
 
-    if (!response) {
+    if (error.value) {
       throw new Error("Failed to fetch data");
     }
 
-    userInhalts.value = response.data.value;
+    userInhalts.value = data.value;
   } catch (error) {
     console.error((error as Error).message);
   } finally {
@@ -38,8 +36,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="py-6 px-[12%] min-h-main w-full">
-    <h1 class="font-bold text-[1.5rem] mb-4">My Dashboard</h1>
+  <div class="py-6 px-[12%] min-h-main w-full text-primary dark:text-primary">
+    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">My Dashboard</h1>
     <div
       class="w-full min-h-[calc(100svh-13rem)] grid grid-cols-[15rem_1fr] grid-rows-1 gap-4"
     >
@@ -104,21 +102,21 @@ onMounted(() => {
           <div class="w-full h-[15rem]"></div>
         </section>
         <button
-          @click="async () => await signOut()"
+          @click="signOut"
           class="px-4 py-1 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-base flex items-center w-max"
           type="button"
         >
           Sign Out
         </button>
       </section>
-      <main class="w-full min-h-[16rem] h-full flex flex-col gap-4 bg-white rounded-2xl p-4"">
-          <h2
-            class="text-[1.5rem] font-semibold mb-2 w-full border-b-2 border-b-accent"
-          >
-            My Articles
-          </h2>
-          <div class="w-full h-full flex flex-col gap-4">
-          <NuxtLink
+      <main class="w-full min-h-[16rem] h-full flex flex-col gap-4 bg-white rounded-2xl p-4">
+        <h2
+          class="text-[1.5rem] font-semibold mb-2 w-full border-b-2 border-b-accent"
+        >
+          My Articles
+        </h2>
+        <div class="w-full h-full flex flex-col gap-4">
+          <!-- <NuxtLink
             v-for="inhalt in userInhalts"
             :key="inhalt.id"
             class="flex w-full h-max justify-between items-center border-b-2 border-white rounded-2xl px-2 hover:border-accent transition-all"
@@ -137,7 +135,7 @@ onMounted(() => {
                 :author-username="inhalt?.author_username"
               />
             </div>
-          </NuxtLink>
+          </NuxtLink> -->
         </div>
       </main>
     </div>

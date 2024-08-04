@@ -1,44 +1,37 @@
 <script setup lang="ts">
 import type { Article } from "~/types/tables.types";
-import { useArticlesStore } from "~/store/articlesStore";
 
-const route = useRoute();
-const { id: articleId, title: articleTitle } = route.params;
+const article = ref<Article | null>(null);
 
-const article = useState<Article | null>("article", () => null);
+const fetchArticle = async () => {
+  const route = useRoute();
+  const { id: articleId, title: articleTitle } = route.params;
 
-const fecthArticle = async () => {
   try {
-    // const response = await useAsyncData(() =>
-    //   $fetch<Article>(
-    //     `/api/articles/fetch-single-article?id=${articleId}&title=${articleTitle}`
-    //   )
-    // );
+    const response = await $fetch<Article>(
+      `/api/articles/fetch-single-article?id=${articleId}&title=${articleTitle}`
+    );
 
-    // if (response) {
-    //   article.value = response.data.value;
-    // }
-
-    // fetched article from store instead of making another api call
-    const articlesStore = useArticlesStore();
-
-    if (articlesStore.fetchError) {
-      throw new Error("Failed to fetch article from store");
+    if (response) {
+      article.value = response;
     }
-
-    article.value = articlesStore.fetchedArticles?.find(
-      ({ id }) => id.toString() === articleId
-    ) as Article;
   } catch (error) {
     console.error("Error fetching article:", error);
   }
 };
 
 onMounted(() => {
-  fecthArticle();
+  fetchArticle();
 });
 
-watchEffect(() => fecthArticle());
+const route = useRoute();
+watch(
+  () => route.params,
+  () => {
+    fetchArticle();
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -67,7 +60,9 @@ watchEffect(() => fecthArticle());
         </section>
       </div> -->
     <main class="flex flex-col gap-6 w-3/4 h-full pb-6">
-      <section class="rendered-markdown-content-container w-full flex flex-col gap-4">
+      <section
+        class="rendered-markdown-content-container w-full flex flex-col gap-4"
+      >
         <article
           class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
         >

@@ -1,15 +1,12 @@
-import type { Provider } from "@supabase/supabase-js";
 import type { FormData } from "~/types/user.types";
-
-const supabase = useSupabaseClient();
 
 export const signInWithEmailAndPassword = async (
   email: string,
   password: string
 ) => {
   try {
-    const response = await useAsyncData("login", () =>
-      $fetch(`/api/auth/login-with-pw?email=${email}&password=${password}`)
+    const response = await $fetch(
+      `/api/auth/login-with-pw?email=${email}&password=${password}`
     );
 
     if (response) {
@@ -23,10 +20,8 @@ export const signInWithEmailAndPassword = async (
 
 export async function signUpWithEmailAndPassword(formData: FormData) {
   try {
-    const response = await useAsyncData("sign-up", () =>
-      $fetch(
-        `/api/auth/sign-up-with-pw?email=${formData.email}&password=${formData.password}&username=${formData.username}&firstName=${formData.firstName}&lastName=${formData.lastName}`
-      )
+    const response = await $fetch(
+      `/api/auth/sign-up-with-pw?email=${formData.email}&password=${formData.password}&username=${formData.username}&firstName=${formData.firstName}&lastName=${formData.lastName}`
     );
 
     if (response) {
@@ -40,13 +35,13 @@ export async function signUpWithEmailAndPassword(formData: FormData) {
 
 export const signInWithOAuth = async (provider: string) => {
   try {
-    const response = await useAsyncData("sign-with-o-auth", () =>
-      $fetch(`/api/auth/sign-in-with-o-auth?provider=${provider}`)
+    const response = await $fetch(
+      `/api/auth/sign-in-with-o-auth?provider=${provider}`
     );
 
-    if (response.data) {
+    if (response) {
       // console.log(response);
-      navigateTo(response.data.value?.url, {
+      navigateTo(response.url, {
         external: true,
       });
     }
@@ -56,7 +51,18 @@ export const signInWithOAuth = async (provider: string) => {
 };
 
 export const signOut = async () => {
-  const { error } = await supabase.auth.signOut();
-  error ? console.log(error) : console.log("signed out");
-  navigateTo("/");
+  try {
+    const response = await $fetch("/api/auth/sign-out", {
+      method: "POST",
+    });
+
+    if (response.statusCode !== 200) {
+      throw new Error("Failed to sign out");
+    }
+
+    console.log("Sign-out successful");
+    navigateTo("/")
+  } catch (error) {
+    console.error("Sign-out error:", (error as Error).message);
+  }
 };
