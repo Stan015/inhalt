@@ -17,7 +17,7 @@ specificArticle.value = articlesStore.fetchedArticles?.find(
 const commentList = specificArticle.value?.comments;
 const commentIsZero = ref(false);
 
-commentList.length === 0
+commentList?.length === 0
   ? (commentIsZero.value = true)
   : (commentIsZero.value = false);
 
@@ -34,7 +34,7 @@ watchEffect(() => {});
   <button class="relative" type="button" aria-labelledby="comments">
     <Icon name="uil:comment" />
     <span v-if="!commentIsZero" class="absolute -top-2 right-0 text-[10px]">
-      {{ commentList.length }}
+      {{ commentList?.length }}
     </span>
   </button>
 </template>

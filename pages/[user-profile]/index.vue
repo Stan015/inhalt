@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { signOut } from "~/auth/auth";
-import type { Article } from "~/types/tables.types";
+import type { Article, ArticleCard } from "~/types/tables.types";
 import type { User } from "~/types/user.types";
+import { useRoute } from "vue-router";
 
 const transformUser = (dbUser: any): User => {
   return {
@@ -13,53 +14,46 @@ const transformUser = (dbUser: any): User => {
 };
 
 const user = ref<User | null>(null);
-const userInhalts = ref<Array<Article> | null>(null);
+const userInhalts = ref<Array<ArticleCard> | null>(null);
 const isLoadingProfile = ref(true);
-const isLoadingInhalt = ref(true);
+const isLoadingInhalts = ref(true);
+
+const route = useRoute();
+const userProfile = route.params.userprofile;
 
 const handleUserProfile = async () => {
-  const route = useRoute();
-  const userProfile = route.params.userprofile;
-
   isLoadingProfile.value = true;
 
   try {
-    const {data, error} = await useAsyncData("user-profile", () =>
-      $fetch(`/api/user/user-profile?user=${userProfile}`)
-    );
+    const data = await $fetch(`/api/user/user-profile?user=${userProfile}`);
 
-    if (!data || !data.value) {
+    if (!data) {
       throw new Error("Failed to fetch data");
     }
 
-    user.value = transformUser(data.value);
+    user.value = transformUser(data);
   } catch (error) {
-    console.error((error as Error).message);
+    console.error("Error fetching user profile:", (error as Error).message);
   } finally {
     isLoadingProfile.value = false;
   }
 };
 
 const handleUserInhalts = async () => {
-  const route = useRoute();
-  const userProfile = route.params.userprofile;
-
-  isLoadingInhalt.value = true;
+  isLoadingInhalts.value = true;
 
   try {
-    const {data, error} = await useAsyncData("user-inhalts", () =>
-      $fetch(`/api/user/user-inhalts?user=${userProfile}`)
-    );
+    const data = await $fetch<Array<Article>>(`/api/user/user-inhalts?user=${userProfile}`);
 
-    if (!data.value) {
+    if (!data) {
       throw new Error("Failed to fetch data");
     }
 
-    userInhalts.value = data.value;
+    userInhalts.value = data;
   } catch (error) {
-    console.error((error as Error).message);
+    console.error("Error fetching user inhalts:", (error as Error).message);
   } finally {
-    isLoadingInhalt.value = false;
+    isLoadingInhalts.value = false;
   }
 };
 
@@ -67,6 +61,17 @@ onMounted(() => {
   handleUserProfile();
   handleUserInhalts();
 });
+
+watch(
+  route,
+  () => {
+    handleUserProfile();
+    handleUserInhalts();
+  },
+  {
+    immediate: true,
+  }
+);
 </script>
 
 <template>

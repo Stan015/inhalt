@@ -7,13 +7,13 @@ import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 const props = defineProps({
   className: String,
   boxHeight: String,
-})
+});
 
 const editorRef = ref<HTMLElement | null>(null);
 let editorInstance: Editor | null = null;
 
 onMounted(() => {
-  if (editorRef.value) {
+  if (typeof window !== "undefined" && editorRef.value) {
     editorInstance = new Editor({
       el: editorRef.value,
       height: props.boxHeight,
@@ -21,22 +21,18 @@ onMounted(() => {
       previewStyle: "tab",
       plugins: [codeSyntaxHighlight, colorSyntax],
     });
-
-    // const editorEl = editorRef.value.querySelector(".toastui-editor-contents");
-    // if (editorEl) {
-    //   const styleEl = document.createElement("style");
-    //   styleEl.textContent = `
-    //     .toastui-editor-contents h1 {
-    //       text-decoration: none;
-    //     }
-    //   `;
-    //   editorEl.appendChild(styleEl);
-    // }
   }
 });
 
-const getMarkdown = () => editorInstance.getMarkdown();
-const getHTML = () => editorInstance.getHTML();
+onBeforeUnmount(() => {
+  if (editorInstance) {
+    editorInstance.destroy();
+    editorInstance = null;
+  }
+});
+
+const getMarkdown = () => editorInstance?.getMarkdown() ?? "";
+const getHTML = () => editorInstance?.getHTML() ?? "";
 
 defineExpose({ getMarkdown, getHTML });
 </script>

@@ -27,7 +27,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div v-if="htmlContent" class="html-content-container w-full">
+  <div v-if="htmlContent" class="html-content-container w-full ">
     <div class="content-wrapper w-full" v-html="htmlContent" />
   </div>
   <div v-else>

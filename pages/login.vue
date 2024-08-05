@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { signInWithEmailAndPassword, signInWithOAuth } from '../auth/auth';
+import { signInWithEmailAndPassword, signInWithOAuth } from "../auth/auth";
 
 const email = ref<string>("");
 const password = ref<string>("");
-
+const showPassword = ref(false);
 </script>
 
-  <template>
+<template>
   <section
     class="w-full min-h-main flex items-center justify-center px[12%] py-6 text-primary dark:text-primary"
   >
@@ -43,7 +43,7 @@ const password = ref<string>("");
             Password
             <span class="relative flex items-center">
               <input
-                type="password"
+                :type="showPassword ? 'text' : 'password'"
                 v-model="password"
                 name="password"
                 class="w-full bg-white text-primary text-sm p-2 rounded-lg border-2 border-light outline-none hover:border-accent focus:border-accent"
@@ -55,9 +55,10 @@ const password = ref<string>("");
                 type="button"
                 aria-labelledby="toggle password visibility"
                 class="absolute right-2"
+                @click="showPassword = !showPassword"
               >
-                <Icon name="akar-icons:eye-open" />
-                <Icon name="oui:eye-closed" />
+                <Icon v-if="showPassword" name="oui:eye-closed" />
+                <Icon v-else name="akar-icons:eye-open" />
               </button>
             </span>
           </label>

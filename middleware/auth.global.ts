@@ -100,6 +100,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     callback: "/confirm",
     include: [
       "/dashboard",
+      "/dashboard/*",
       `/${to.params.userprofile}/create-inhalt`,
       `/${to.params.userprofile}/notification`,
     ],

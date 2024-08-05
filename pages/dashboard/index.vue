@@ -26,17 +26,15 @@ const handleUserProfile = async () => {
   isLoadingProfile.value = true;
 
   try {
-    const { data } = await useAsyncData("user-profile", () =>
-      $fetch(`/api/user/user-profile?user=${userProfileName}`)
-    );
+    const data = await $fetch(`/api/user/user-profile?user=${userProfileName}`);
 
-    if (!data.value) {
-      throw new Error("Failed to fetch user profile");
+    if (!data) {
+      throw new Error("Failed to fetch data");
     }
 
-    user.value = transformUser(data.value);
+    user.value = transformUser(data);
   } catch (error) {
-    console.error((error as Error).message);
+    console.error("Error fetching user profile:", (error as Error).message);
   } finally {
     isLoadingProfile.value = false;
   }
@@ -46,17 +44,15 @@ const handleUserInhalts = async () => {
   isLoadingInhalts.value = true;
 
   try {
-    const { data } = await useAsyncData("user-inhalts", () =>
-      $fetch(`/api/user/user-inhalts?user=${userProfileName}`)
-    );
+    const data = await $fetch<Array<Article>>(`/api/user/user-inhalts?user=${userProfileName}`);
 
-    if (!data.value) {
-      throw new Error("Failed to fetch user articles");
+    if (!data) {
+      throw new Error("Failed to fetch data");
     }
 
-    userInhalts.value = data.value;
+    userInhalts.value = data;
   } catch (error) {
-    console.error((error as Error).message);
+    console.error("Error fetching user inhalts:", (error as Error).message);
   } finally {
     isLoadingInhalts.value = false;
   }
@@ -156,7 +152,7 @@ onMounted(() => {
               class="w-[6rem] h-[6rem] rounded-full border-2 border-accent overflow-hidden"
             >
               <NuxtImg
-                v-if="user?.avatar"
+                v-if="user?.avatar && user.avatar !== null"
                 class="w-full h-full rounded-full"
                 :src="user.avatar"
                 alt="avatar"
@@ -175,7 +171,7 @@ onMounted(() => {
                 {{ user?.username }}
               </p>
               <p
-                v-if="user?.occupation"
+                v-if="user?.occupation && user.occupation !== null"
                 class="text-base text-center border-2 border-black px-2 py-1 rounded-2xl mt-1 text-primary"
               >
                 {{ user.occupation }}

@@ -119,31 +119,33 @@ watch(isNewCommentAdded, () => handleFetchExistingComments(), {
   <section class="w-full">
     <div
       v-if="convertedArticleComments.length > 0"
-      v-for="comment in convertedArticleComments"
       class="w-full"
     >
       <h2>Comments:</h2>
-      <div
-        :key="comment.commented_at"
-        class="w-full h-max rounded-2xl border p-4 border-white"
-      >
-        <ProfileCard
-          user-profile-link="/stan015"
-          name="Stanley Azi"
-          occupation="Frontend Developer"
-          profile-photo-src="/img2.png"
-          class-name="profile-card"
-        />
-        <div v-html="comment.comment" :class="`${markdownClassName}`"></div>
-        <div class="flex gap-4 cursor-default">
-          <button type="button" aria-labelledby="likes">
-            <Icon name="mdi:heart-outline" />
-          </button>
-          <button type="button" aria-labelledby="comments">
-            <Icon name="uil:comment" />
-          </button>
+      <div class=" flex flex-col gap-4">
+        <div
+          v-for="comment in convertedArticleComments"
+          :key="comment.commented_at"
+          class="w-full h-max rounded-2xl border p-4 border-white"
+        >
+          <ProfileCard
+            user-profile-link="/stan015"
+            name="Stanley Azi"
+            occupation="Frontend Developer"
+            profile-photo-src="/img2.png"
+            class-name="profile-card"
+          />
+          <div v-html="comment.comment" :class="`${markdownClassName}`"></div>
+          <div class="flex gap-4 cursor-default">
+            <button type="button" aria-labelledby="likes">
+              <Icon name="mdi:heart-outline" />
+            </button>
+            <button type="button" aria-labelledby="comments">
+              <Icon name="uil:comment" />
+            </button>
+          </div>
+          <p>{{ comment.commented_at }}</p>
         </div>
-        <p>{{ comment.commented_at }}</p>
       </div>
     </div>
     <form

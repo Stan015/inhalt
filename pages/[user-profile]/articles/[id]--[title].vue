@@ -2,10 +2,19 @@
 import type { Article } from "~/types/tables.types";
 
 const article = ref<Article | null>(null);
+const isLoading = ref(true);
 
 const fetchArticle = async () => {
   const route = useRoute();
-  const { id: articleId, title: articleTitle } = route.params;
+  const articleId = parseInt(route.params.id as string, 10) || undefined;
+  const articleTitle = route.params.title as string || undefined;
+
+  if (!articleId || !articleTitle) {
+    console.error("Article ID or title is missing.");
+    return;
+  }
+
+  isLoading.value = true;
 
   try {
     const response = await $fetch<Article>(
@@ -17,6 +26,8 @@ const fetchArticle = async () => {
     }
   } catch (error) {
     console.error("Error fetching article:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -70,9 +81,9 @@ watch(
             v-if="article?.cover_image"
             :src="article?.cover_image_url"
             :alt="`cover photo of ${article?.title}`"
-            class="w-full max-h-[18rem]"
+            class="w-full max-h-[18rem] !mb-0"
           />
-          <div class="w-full h-max bg-white p-4">
+          <div class="w-full h-max bg-white dark:bg-dark text-primary dark:text-secondary p-4">
             <h1 class="w-full text-center font-bold text-[1.5rem]">
               {{ article?.title }}
             </h1>

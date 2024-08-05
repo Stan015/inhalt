@@ -19,13 +19,11 @@ export default defineNuxtConfig({
   supabase: {
     url: process.env.NUXT_PUBLIC_SUPABASE_URL,
     key: process.env.NUXT_PUBLIC_SUPABASE_KEY,
-    // redirect: false,
     redirectOptions: {
       login: "/login",
       callback: "/confirm",
-      include: ["/stan015/dashboard", "/stan015/create-inhalt", "/stan015/notification"],
+      include: ["/dashboard", "/dashboard/*", "/*/create-inhalt", "/*/notification"],
       exclude: ["/", "/sign-up"],
-      // cookieRedirect: false,
     },
   },
   css: ["~/assets/css/global.css"],
@@ -59,7 +57,7 @@ export default defineNuxtConfig({
           backgroundColor: {
             light: "#EFEFEF",
             dark: "#000000",
-            secondary: "#969696",
+            secondary: "#EFEFEF",
             action: "#6D28D9",
           },
           borderColor: {

@@ -14,17 +14,18 @@ const handleUserInhalts = async () => {
   isLoading.value = true;
 
   try {
-    const { data, error } = await useAsyncData("user-inhalts", () =>
-      $fetch(`/api/user/user-inhalts?user=${userProfileName}`)
+    const data = await $fetch<Array<Article>>(
+      `/api/user/user-inhalts?user=${userProfileName}`
     );
 
-    if (error.value) {
+    if (!data) {
       throw new Error("Failed to fetch data");
     }
 
-    userInhalts.value = data.value;
+    userInhalts.value = data;
+    console.log(userInhalts.value, data)
   } catch (error) {
-    console.error((error as Error).message);
+    console.error("Error fetching user inhalts:", (error as Error).message);
   } finally {
     isLoading.value = false;
   }
@@ -37,7 +38,9 @@ onMounted(() => {
 
 <template>
   <div class="py-6 px-[12%] min-h-main w-full text-primary dark:text-primary">
-    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">My Dashboard</h1>
+    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">
+      My Dashboard
+    </h1>
     <div
       class="w-full min-h-[calc(100svh-13rem)] grid grid-cols-[15rem_1fr] grid-rows-1 gap-4"
     >
@@ -109,20 +112,20 @@ onMounted(() => {
           Sign Out
         </button>
       </section>
-      <main class="w-full min-h-[16rem] h-full flex flex-col gap-4 bg-white rounded-2xl p-4">
+      <main
+        class="w-full min-h-[16rem] h-full flex flex-col gap-4 bg-white rounded-2xl p-4"
+      >
         <h2
           class="text-[1.5rem] font-semibold mb-2 w-full border-b-2 border-b-accent"
         >
           My Articles
         </h2>
         <div class="w-full h-full flex flex-col gap-4">
-          <!-- <NuxtLink
+          <NuxtLink
             v-for="inhalt in userInhalts"
             :key="inhalt.id"
             class="flex w-full h-max justify-between items-center border-b-2 border-white rounded-2xl px-2 hover:border-accent transition-all"
-            :to="`/${inhalt.author_username}/articles/${
-              inhalt.id
-            }--${inhalt.title.replace(/\s+/g, '-').toLowerCase()}`"
+            to=""
           >
             <h3>{{ inhalt?.title }}</h3>
             <div class="flex gap-4 cursor-default">
@@ -135,7 +138,7 @@ onMounted(() => {
                 :author-username="inhalt?.author_username"
               />
             </div>
-          </NuxtLink> -->
+          </NuxtLink>
         </div>
       </main>
     </div>
