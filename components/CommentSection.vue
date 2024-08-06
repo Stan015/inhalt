@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { useUserStore } from "../store/userStore";
-// import { useArticlesStore } from '../store/articlesStore';
 import type { Article, Comment } from "~/types/tables.types";
+
+import { useUserStore } from "../store/userStore";
+import formatDateTime from "~/utils/formatDateTime";
 
 const props = defineProps({
   markdownClassName: String,
@@ -18,7 +19,6 @@ const markdownCommentEditor = ref<{
 } | null>(null);
 
 const userStore = useUserStore();
-// const articlesStore = useArticlesStore();
 
 const articleComments = ref<Array<Comment>>([]);
 const isNewCommentAdded = ref(false);
@@ -43,7 +43,9 @@ const handleFetchExistingComments = async () => {
     articleComments.value.forEach(async (commentInfo) => {
       const comment = commentInfo.comment;
 
-      console.log(comment);
+      const { date, time } = formatDateTime(commentInfo.commented_at);
+      commentInfo.formatedDate = date;
+      commentInfo.formatedTime = time;
 
       try {
         const response = await useAsyncData(() =>
@@ -59,11 +61,6 @@ const handleFetchExistingComments = async () => {
         if (response) {
           commentInfo.comment = response.data.value?.html!;
           convertedArticleComments.value = articleComments.value;
-          
-          // console.log(
-          //   "test from commentBox component",
-          //   articleComments.value, commentInfo
-          // );
         }
       } catch (error) {
         console.error("Error converting markdown comment:", error);
@@ -79,16 +76,20 @@ const handleComment = async () => {
     const commentMarkdownContent = markdownCommentEditor.value?.getMarkdown();
     // const commentHtmlContent = markdownEditor.value?.getHTML();
 
-    const commentedBy = userStore.userCredentials.username;
+    const username = userStore.userCredentials.username;
+    const userFullName = userStore.userCredentials.fullName;
+    const userAvatar = userStore.userCredentials.avatar;
     const commentedAt = new Date().toISOString();
-
-    // console.log(commentMarkdownContent, commentedBy, commentedAt);
 
     const comments = articleComments.value;
     comments.push({
       comment: commentMarkdownContent,
-      commented_by: commentedBy!,
-      commented_at: commentedAt,
+      commented_by: {
+        username: username!,
+        full_name: userFullName!,
+        avatar: userAvatar!,
+      },
+      commented_at: commentedAt!,
     });
 
     // Update the article with new comments on db
@@ -116,26 +117,34 @@ watch(isNewCommentAdded, () => handleFetchExistingComments(), {
 </script>
 
 <template>
-  <section class="w-full">
-    <div
-      v-if="convertedArticleComments.length > 0"
-      class="w-full"
-    >
-      <h2>Comments:</h2>
-      <div class=" flex flex-col gap-4">
+  <section class="w-full rounded-2xl">
+    <div v-if="convertedArticleComments.length > 0" class="w-full">
+      <h2 class="w-full border-b border-b-accent mb-4 mt-5">Comments:</h2>
+      <div class="flex flex-col gap-4 rounded-2xl dark:text-primary">
         <div
           v-for="comment in convertedArticleComments"
           :key="comment.commented_at"
-          class="w-full h-max rounded-2xl border p-4 border-white"
+          class="w-full h-max rounded-2xl border p-4 border-white bg-white"
         >
-          <ProfileCard
-            user-profile-link="/stan015"
-            name="Stanley Azi"
-            occupation="Frontend Developer"
-            profile-photo-src="/img2.png"
-            class-name="profile-card"
-          />
-          <div v-html="comment.comment" :class="`${markdownClassName}`"></div>
+          <div class="w-dull border-b mb-2 flex justify-between gap-4">
+            <ProfileCard
+              :user-profile-link="`/${comment.commented_by.username}`"
+              :name="`${comment.commented_by.full_name}`"
+              :occupation="`${comment.commented_by.occupation}`"
+              :profile-photo-src="`${comment.commented_by.avatar}`"
+              class-name="profile-card w-max mb-1"
+            />
+
+            <span class="flex flex-col justify-end !mb-2 items-end">
+              <p class="!mb-0 !text-[0.8rem]">{{ comment?.formatedDate }}</p>
+              <p class="!mb-0 !text-[0.8rem]">{{ comment?.formatedTime }}</p>
+            </span>
+          </div>
+
+          <div
+            v-html="comment.comment"
+            :class="`${props.markdownClassName}`"
+          ></div>
           <div class="flex gap-4 cursor-default">
             <button type="button" aria-labelledby="likes">
               <Icon name="mdi:heart-outline" />
@@ -144,21 +153,22 @@ watch(isNewCommentAdded, () => handleFetchExistingComments(), {
               <Icon name="uil:comment" />
             </button>
           </div>
-          <p>{{ comment.commented_at }}</p>
         </div>
       </div>
     </div>
-    <form
-      @submit.prevent="handleComment"
-      class="flex flex-col w-full justify-center items-center mt-6 gap-2"
-    >
-      <h4 class="text-md font-bold">Write a comment</h4>
-      <MarkdownEditor
-        box-height="300px"
-        class-name="w-[35rem]"
-        ref="markdownCommentEditor"
-      />
-      <button type="submit">Comment</button>
-    </form>
+    <div class="flex flex-col w-full justify-center items-center mt-6">
+      <form
+        @submit.prevent="handleComment"
+        class="flex flex-col w-max justify-center items-center gap-4"
+      >
+        <h4 class="text-md font-bold w-full border-b border-b-accent">Write a comment</h4>
+        <MarkdownEditor
+          box-height="300px"
+          class-name="w-[35rem] bg-white rounded-2xl"
+          ref="markdownCommentEditor"
+        />
+        <button class="bg-accent rounded-2xl px-4 py-2 text-secondary dark:text-secondary transition-all hover:translate-x-2 hover:translate-y-1" type="submit">Comment</button>
+      </form>
+    </div>
   </section>
 </template>

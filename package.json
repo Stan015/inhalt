@@ -25,6 +25,7 @@
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",
     "@toast-ui/editor-plugin-color-syntax": "^3.1.0",
     "bcrypt": "^5.1.1",
+    "date-fns": "^3.6.0",
     "markdown-it": "^14.1.0",
     "multer": "1.4.5-lts.1",
     "nuxi": "^3.12.0",

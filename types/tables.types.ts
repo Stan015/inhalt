@@ -8,8 +8,15 @@ export type Likes = {
 
 export type Comment = {
   comment: string;
-  commented_by: string;
+  commented_by: {
+    username: string;
+    full_name?: string;
+    avatar?: string;
+    occupation?: string;
+  };
   commented_at: string;
+  formatedDate?: string;
+  formatedTime?: string;
 };
 
 export type Bookmark = {
@@ -45,6 +52,8 @@ export type Article = {
   comments?: Array<Comment>;
   html_content?: string;
   created_at: string;
+  formattedDate: string;
+  formattedTime: string;
 };
 
 export type ArticleCard = Omit<Article, "markdown_content">;

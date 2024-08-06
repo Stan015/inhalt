@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import type { Article } from "~/types/tables.types";
 
+import formatDateTime from "~/utils/formatDateTime";
+
 const article = ref<Article | null>(null);
 const isLoading = ref(true);
 
 const fetchArticle = async () => {
   const route = useRoute();
   const articleId = parseInt(route.params.id as string, 10) || undefined;
-  const articleTitle = route.params.title as string || undefined;
+  const articleTitle = (route.params.title as string) || undefined;
 
   if (!articleId || !articleTitle) {
     console.error("Article ID or title is missing.");
@@ -23,6 +25,9 @@ const fetchArticle = async () => {
 
     if (response) {
       article.value = response;
+      const { date, time } = formatDateTime(response.created_at);
+      article.value.formattedDate = date;
+      article.value.formattedTime = time;
     }
   } catch (error) {
     console.error("Error fetching article:", error);
@@ -83,16 +88,25 @@ watch(
             :alt="`cover photo of ${article?.title}`"
             class="w-full max-h-[18rem] !mb-0"
           />
-          <div class="w-full h-max bg-white dark:bg-dark text-primary dark:text-secondary p-4">
+          <div
+            class="w-full h-max bg-white text-primary dark:text-primary p-4 border-b"
+          >
             <h1 class="w-full text-center font-bold text-[1.5rem]">
               {{ article?.title }}
             </h1>
-            <div class="flex items-end justify-between gap-6">
-              <div class="text-[0.7rem]">
-                <span>{{ article?.created_at }}</span> .
-                <span>10 min read</span>
+            <div class="grid grid-cols-3 justify-between gap-4">
+              <div class=" flex flex-col justify-end">
+                <p class="!mb-0 w-max !text-[0.8rem]">
+                  {{ article?.formattedDate }}
+                </p>
+                <p class="!mb-0 w-max !text-[0.8rem]">
+                  {{ article?.formattedTime }}
+                </p>
+                <p class="!mb-0 w-max !text-[0.8rem]">10 min read</p>
               </div>
-              <div class="flex gap-4 cursor-default">
+              <div
+                class="flex gap-4 cursor-default w-full justify-center items-end"
+              >
                 <LikeButton :article-id="article?.id" />
                 <CommentButton :article-id="article?.id" />
                 <BookmarkButton :article-id="article?.id" />
@@ -103,26 +117,26 @@ watch(
                 />
               </div>
               <ProfileCard
-                user-profile-link="/stan015"
-                name="Stanley Azi"
-                occupation="Frontend Developer"
-                profile-photo-src="/img2.png"
-                class-name="profile-card items-end"
+                :user-profile-link="`${article?.author_username}`"
+                :name="`${article?.author_fullname}`"
+                :occupation="`${article?.author_occupation}`"
+                :profilePhotoSrc="`${article?.author_avatar}`"
+                class-name="profile-card items-end dark:text-primary justify-end"
               />
             </div>
           </div>
-          <div class="flex flex-col gap-2 p-4">
+          <div class="flex flex-col gap-2 p-4 bg-white dark:text-primary">
             <MarkdownRenderer :content="article?.markdown_content!" />
           </div>
           <div
-            class="flex items-end p-4 border-t border-white justify-between gap-6"
+            class="flex items-end p-4 border-t bg-white dark:text-primary justify-between gap-6"
           >
             <ProfileCard
-              user-profile-link="/stan015"
+              :user-profile-link="`${article?.author_username}`"
               :authorTag="true"
-              name="Stanley Azi"
-              occupation="Frontend Developer"
-              profilePhotoSrc="/img2.png"
+              :name="`${article?.author_fullname}`"
+              :occupation="`${article?.author_occupation}`"
+              :profilePhotoSrc="`${article?.author_avatar}`"
               class-name="profile-card"
             />
             <div class="flex gap-4 cursor-default">
@@ -135,13 +149,21 @@ watch(
                 :author-username="article?.author_username"
               />
             </div>
-            <div class="text-[0.7rem]"><span>Jul 9 2023 .</span> 10:02AM</div>
+            <div class=" flex flex-col justify-end items-end">
+                <p class="!mb-0 w-max !text-[0.8rem]">
+                  {{ article?.formattedDate }}
+                </p>
+                <p class="!mb-0 w-max !text-[0.8rem]">
+                  {{ article?.formattedTime }}
+                </p>
+                <p class="!mb-0 w-max !text-[0.8rem]">10 min read</p>
+              </div>
           </div>
         </article>
         <CommentSection markdown-class-name="comment-section" />
       </section>
       <section>
-        <h2 class="font-bold text-md">Related inhalts</h2>
+        <h2 class="font-bold text-md w-full border-b border-b-accent mb-4 mt-5">Related inhalts</h2>
         <article
           class="w-full h-max flex rounded-2xl border border-white relative overflow-hidden"
         >
@@ -151,7 +173,7 @@ watch(
           >
             <NuxtImg src="/img1.png" alt="cover photo" class="w-full h-full" />
           </NuxtLink>
-          <div class="w-full h-max bg-white p-4">
+          <div class="w-full h-max bg-white p-4 dark:text-primary">
             <NuxtLink to="username/title" class="w-20 h-20 overflow-hidden">
               <h2 class="w-full text-center font-bold text-[1rem]">
                 Mastering ChatGPT Blog Creation: Dos and Don'ts for SaaS
@@ -165,14 +187,14 @@ watch(
               </div>
 
               <div class="flex gap-4 cursor-default">
-                <!-- <LikeButton /> -->
-                <!-- <CommentButton /> -->
+                <LikeButton />
+                <CommentButton />
                 <BookmarkButton />
                 <ShareButton />
               </div>
 
               <ProfileCard
-                user-profile-link="/stan015"
+                user-profile-link="/Stan015"
                 name="Stanley Azi"
                 occupation="Frontend Developer"
                 profile-photo-src="/img2.png"
@@ -183,13 +205,13 @@ watch(
         </article>
       </section>
     </main>
-    <aside class="flex flex-col gap-6 w-[30rem] h-full">
+    <aside class="flex flex-col gap-6 w-[30rem] h-full dark:text-primary">
       <section class="w-full h-max bg-white rounded-2xl p-4">
         <h2>Promotion</h2>
         <div class="w-full h-[20rem]"></div>
       </section>
 
-      <section class="w-full h-max bg-white rounded-2xl p-4">
+      <section class="w-full h-max bg-white rounded-2xl p-4 dark:text-primary">
         <h2>Hot Trends <Icon name="fluent-emoji-flat:fire" /></h2>
         <div class="w-full h-[25rem]">
           <h3>Rendering images the good way</h3>

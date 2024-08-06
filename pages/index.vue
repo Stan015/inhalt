@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { Article, ArticleCard } from "~/types/tables.types";
+
 import { useArticlesStore } from "~/store/articlesStore";
+import formatDateTime from "~/utils/formatDateTime";
 
 const articlesStore = useArticlesStore();
 const allArticleCards = useState<Array<ArticleCard>>();
@@ -10,10 +12,19 @@ const fecthArticles = async () => {
     const response = await $fetch("/api/articles/fetch-articles");
     const data = response.data;
 
-    articlesStore.fetchedArticles = data as Array<Article>;
-    allArticleCards.value = articlesStore.fetchedArticles as Array<ArticleCard>;
+    if (data) {
+      articlesStore.fetchedArticles = data as Array<Article>;
+      allArticleCards.value =
+        articlesStore.fetchedArticles as Array<ArticleCard>;
 
-    console.log(allArticleCards.value);
+      allArticleCards.value.forEach((articleCard) => {
+        const { date, time } = formatDateTime(articleCard.created_at);
+        articleCard.formattedDate = date;
+        articleCard.formattedTime = time;
+      });
+
+      console.log(allArticleCards.value);
+    }
   } catch (error) {
     console.log((error as Error).message);
     articlesStore.fetchError = error as Error;
@@ -52,13 +63,15 @@ onBeforeMount(() => {
           ><Icon name="lets-icons:video-fill" /> Videos</NuxtLink
         >
       </nav>
-      <section class="w-full h-max bg-white rounded-2xl p-4  text-primary dark:text-primary">
+      <section
+        class="w-full h-max bg-white rounded-2xl p-4 text-primary dark:text-primary"
+      >
         <h2>News</h2>
         <div class="w-full h-[20rem]"></div>
       </section>
     </div>
-    <main class="block w-full h-full pb-6  text-primary dark:text-primary">
-      <nav class="flex gap-4 mb-4  text-primary dark:text-secondary">
+    <main class="block w-full h-full pb-6 text-primary dark:text-primary">
+      <nav class="flex gap-4 mb-4 text-primary dark:text-secondary">
         <button type="button">For you</button>
         <button type="button">Recent</button>
         <button type="button">Trending</button>
@@ -96,9 +109,14 @@ onBeforeMount(() => {
             </NuxtLink>
 
             <div class="flex items-end justify-between gap-6">
-              <div class="text-[0.7rem]">
-                <span>{{ article.created_at }}</span> .
-                <span>10 min read</span>
+              <div class="flex flex-col justify-end">
+                <p class="!mb-0 w-max !text-[0.6rem] ">
+                  {{ article?.formattedDate }}
+                </p>
+                <p class="!mb-0 w-max !text-[0.6rem] ">
+                  {{ article?.formattedTime }}
+                </p>
+                <p class="!mb-0 w-max !text-[0.6rem] ">10 min read</p>
               </div>
 
               <div class="flex gap-4 cursor-default">
@@ -124,7 +142,9 @@ onBeforeMount(() => {
         </article>
       </section>
     </main>
-    <aside class="flex flex-col gap-6 w-full h-full text-primary dark:text-primary">
+    <aside
+      class="flex flex-col gap-6 w-full h-full text-primary dark:text-primary"
+    >
       <section class="w-full h-max bg-white rounded-2xl p-4">
         <h2>Promotion</h2>
         <div class="w-full h-[20rem]"></div>
