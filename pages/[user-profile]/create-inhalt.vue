@@ -2,6 +2,7 @@
 import { useUserStore } from "../../store/userStore";
 
 const coverImg = ref<HTMLInputElement | null>(null);
+const convertedCoverImgFile = ref<string | null>(null);
 const articleTitle = ref("");
 
 const userStore = useUserStore();
@@ -58,27 +59,73 @@ const submitPost = async () => {
     }
   }
 };
+
+const handleImagePreview = (file: File) => {
+  const reader = new FileReader();
+
+  reader.readAsDataURL(file);
+
+  reader.onloadend = () => {
+    convertedCoverImgFile.value = reader.result as string;
+  };
+};
+
+const onFileChange = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  if (file) {
+    handleImagePreview(file);
+  }
+};
 </script>
 
-
 <template>
-  <section class="w-full min-h-main flex gap-4 py-6 px-[12%]  text-primary dark:text-secondar">
-    <article>
-      <h1 class="  text-primary dark:text-secondary">Write A New Article</h1>
-      <form @submit.prevent="submitPost" class="flex flex-col gap-6">
-        <input type="file" ref="coverImg" placeholder="Upload cover image" />
+  <section
+    class="w-full min-h-main flex gap-4 py-6 px-[12%] text-primary dark:text-secondar"
+  >
+    <article class="w-full h-full flex flex-col items-center gap-6">
+      <h1
+        class="text-[1.5rem] font-bold border-b border-b-accent text-primary dark:text-secondary"
+      >
+        Write A New Article
+      </h1>
+      <form
+        @submit.prevent="submitPost"
+        class="flex flex-col gap-6 justify-center items-center"
+      >
+        <input
+          class="w-[20rem] h-10 text-center pt-[0.2rem] pl-1 bg-accent file:border-secondary file:rounded-2xl text-secondary dark:text-white rounded-3xl outline-none border-2 border-accent transition-all hover:border-secondary focus:border-accent"
+          type="file"
+          @change="onFileChange"
+          ref="coverImg"
+          accept="image/*"
+          placeholder="Upload cover image"
+        />
+        <div v-if="convertedCoverImgFile">
+          <img
+            class="w-full max-h-[18rem]"
+            :src="convertedCoverImgFile"
+            alt="Image Preview"
+          />
+        </div>
         <input
           type="text"
           v-model="articleTitle"
           placeholder="Article title"
           required
+          class="w-full h-12 rounded-3xl p-4 pl-10 bg-white text-primary dark:text-primary text-[1.2rem] text-center font-medium outline-none border-2 border-white transition-all hover:border-accent focus:border-accent"
         />
         <MarkdownEditor
           box-height="500px"
-          class-name="w-full"
+          class-name="w-full bg-white text-primary dark:text-primary rounded-xl"
           ref="markdownEditor"
         />
-        <button type="submit">Submit</button>
+        <button
+          class="bg-accent rounded-2xl px-4 py-2 text-secondary dark:text-secondary transition-all hover:translate-x-2 hover:translate-y-1"
+          type="submit"
+        >
+          Publish
+        </button>
       </form>
     </article>
     <!-- <aside class="flex flex-col gap-6 w-[20rem] h-full">

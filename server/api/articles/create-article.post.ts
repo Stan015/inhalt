@@ -17,7 +17,19 @@ export default defineEventHandler(async (event) => {
 
     // console.log(form)
 
-    let fields = {};
+    type Field = {
+      article_title?: string;
+      markdown_content?: string;
+      submitted_at?: string;
+      username?: string;
+      user_id?: string;
+      author_fullname?: string;
+      author_occupation?: string;
+      author_avatar?: string;
+      cover_img?: string;
+    };
+
+    let fields: Field = {};
     let coverImg;
 
     form.forEach((item) => {
@@ -28,9 +40,18 @@ export default defineEventHandler(async (event) => {
       }
     });
 
-    // console.log(fields, coverImg)
+    // console.log({ field: fields, coverImage: coverImg });
 
-    const { article_title, markdown_content, submitted_at, username, user_id, author_fullname, author_occupation, author_avatar } = fields;
+    const {
+      article_title,
+      markdown_content,
+      submitted_at,
+      username,
+      user_id,
+      author_fullname,
+      author_occupation,
+      author_avatar,
+    } = fields;
 
     if (!article_title || !markdown_content || !submitted_at) {
       throw createError({
@@ -70,8 +91,9 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    const { data, error } = await supabase.from("articles").insert([
-      {
+    const { data, error } = await supabase
+      .from("articles")
+      .insert({
         title: article_title,
         author_id: user_id,
         author_username: username,
@@ -82,12 +104,14 @@ export default defineEventHandler(async (event) => {
         created_at: submitted_at,
         cover_image: uploadedCoverImage,
         cover_image_url: uploadedCoverImageUrl,
-      },
-    ]);
+      })
+      .single();
 
     if (error) {
       throw new Error(error.message);
     }
+
+    console.log(data);
 
     return {
       statusCode: 200,
