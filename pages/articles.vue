@@ -8,7 +8,7 @@ const allArticleCards = useState<Array<ArticleCard>>();
 const fecthArticles = async () => {
   try {
     const response = await $fetch("/api/articles/fetch-articles");
-    const data = response.data;
+    const data = response?.data;
 
     articlesStore.fetchedArticles = data as Array<Article>;
     allArticleCards.value = articlesStore.fetchedArticles as Array<ArticleCard>;

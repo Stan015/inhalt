@@ -23,7 +23,7 @@ const handleUserInhalts = async () => {
     }
 
     userInhalts.value = data;
-    console.log(userInhalts.value, data)
+    console.log(userInhalts.value, data);
   } catch (error) {
     console.error("Error fetching user inhalts:", (error as Error).message);
   } finally {
@@ -121,13 +121,19 @@ onMounted(() => {
           My Articles
         </h2>
         <div class="w-full h-full flex flex-col gap-4">
-          <NuxtLink
+          <div
+            class="flex w-full h-max justify-between items-center border-b-2 border-white rounded-2xl px-2 hover:border-accent transition-all"
             v-for="inhalt in userInhalts"
             :key="inhalt.id"
-            class="flex w-full h-max justify-between items-center border-b-2 border-white rounded-2xl px-2 hover:border-accent transition-all"
-            to=""
           >
-            <h3>{{ inhalt?.title }}</h3>
+            <NuxtLink
+              class="flex w-full h-max justify-between items-center"
+              :to="`/${inhalt.author_username}/articles/${
+                inhalt.id
+              }--${inhalt.title.replace(/\s+/g, '-').toLowerCase()}`"
+            >
+              <h3>{{ inhalt?.title }}</h3>
+            </NuxtLink>
             <div class="flex gap-4 cursor-default">
               <LikeButton :article-id="inhalt?.id" />
               <CommentButton :article-id="inhalt?.id" />
@@ -138,7 +144,7 @@ onMounted(() => {
                 :author-username="inhalt?.author_username"
               />
             </div>
-          </NuxtLink>
+          </div>
         </div>
       </main>
     </div>

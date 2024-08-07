@@ -84,6 +84,7 @@ import { signOut } from "~/auth/auth";
           My Videos
         </h2>
         <div class="w-full h-full flex flex-col gap-4">
+          <p>Coming soon 🙃</p>
           <!-- <NuxtLink
             v-for="inhalt in userInhalts"
             :key="inhalt.id"

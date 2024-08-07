@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
     .from("articles")
     .select("*")
     .eq("author_username", user)
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Failed to fetch user articles");

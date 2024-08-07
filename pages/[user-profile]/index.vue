@@ -43,7 +43,9 @@ const handleUserInhalts = async () => {
   isLoadingInhalts.value = true;
 
   try {
-    const data = await $fetch<Array<Article>>(`/api/user/user-inhalts?user=${userProfile}`);
+    const data = await $fetch<Array<Article>>(
+      `/api/user/user-inhalts?user=${userProfile}`
+    );
 
     if (!data) {
       throw new Error("Failed to fetch data");
@@ -79,7 +81,7 @@ watch(
     class="w-full min-h-main grid grid-cols-[15rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%] text-primary dark:text-primary"
   >
     <section
-      class="bg-white p-6 rounded-2xl flex flex-col justify-between items-center"
+      class="bg-white p-6 rounded-2xl flex flex-col justify-between items-center h-full max-h-[calc(100svh-8rem)]"
     >
       <div>
         <h1
@@ -206,16 +208,20 @@ watch(
       <section class="w-full">
         <h2 class="text-[1.3rem]">Recent inhalts</h2>
         <div class="w-full h-full flex flex-col gap-4">
-          <NuxtLink
+          <div
             v-for="inhalt in userInhalts"
             :key="inhalt.id"
             class="flex w-full h-max justify-between items-center border-b-2 border-white rounded-2xl px-2 hover:border-accent transition-all"
-            :to="`/${inhalt.author_username}/articles/${
-              inhalt.id
-            }--${inhalt.title.replace(/\s+/g, '-').toLowerCase()}`"
           >
-            <h3>{{ inhalt?.title }}</h3>
-            <div class="flex gap-4 cursor-default">
+            <NuxtLink
+              class="flex w-full h-max justify-between items-center"
+              :to="`/${inhalt.author_username}/articles/${
+                inhalt.id
+              }--${inhalt.title.replace(/\s+/g, '-').toLowerCase()}`"
+            >
+              <h3>{{ inhalt?.title }}</h3>
+            </NuxtLink>
+            <div class="flex gap-4 h-full cursor-default z-10">
               <LikeButton :article-id="inhalt?.id" />
               <CommentButton :article-id="inhalt?.id" />
               <BookmarkButton :article-id="inhalt?.id" />
@@ -225,11 +231,11 @@ watch(
                 :author-username="inhalt?.author_username"
               />
             </div>
-          </NuxtLink>
+          </div>
         </div>
       </section>
     </main>
-    <aside class="flex flex-col gap-6 w-full h-full">
+    <aside class="flex flex-col gap-6 w-full h-full max-h-[calc(100svh-8rem)]">
       <section class="w-full h-max bg-white rounded-2xl p-4">
         <h2>Promotion</h2>
         <div class="w-full h-[20rem]"></div>

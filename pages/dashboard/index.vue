@@ -268,13 +268,14 @@ onMounted(() => {
           <div
             class="grid grid-cols-3 place-items-center gap-2 text-base border-b-2 pb-2 bg-white rounded-2xl w-1/2"
           >
-            <p
+          <p
+              to="/dashboard/bookmarks"
               class="min-w-[10rem] p-4 flex flex-col items-center justify-center"
             >
               <span class="font-bold text-[1.2rem] text-accent h-6">{{
-                user?.total_likes || 0
+                user?.total_bookmarks || 0
               }}</span>
-              Read
+              Rank
             </p>
             <p
               class="min-w-[10rem] p-4 flex flex-col items-center justify-center"
@@ -284,32 +285,31 @@ onMounted(() => {
               }}</span>
               Watched
             </p>
-            <p
-              to="/dashboard/bookmarks"
-              class="min-w-[10rem] p-4 flex flex-col items-center justify-center"
-            >
-              <span class="font-bold text-[1.2rem] text-accent h-6">{{
-                user?.total_bookmarks || 0
-              }}</span>
-              Rank
-            </p>
             <NuxtLink
-              to="/dashboard/followers"
+              to=""
               class="min-w-[10rem] p-4 flex flex-col items-center justify-center"
             >
               <span class="font-bold text-[1.2rem] text-accent h-6">{{
                 user?.followers?.length || 0
               }}</span>
-              Followers
+              Super Usefull
             </NuxtLink>
+            <p
+              class="min-w-[10rem] p-4 flex flex-col items-center justify-center"
+            >
+              <span class="font-bold text-[1.2rem] text-accent h-6">{{
+                user?.total_likes || 0
+              }}</span>
+              Read
+            </p>
             <NuxtLink
-              to="/dashboard/following"
+              to="/dashboard/tags"
               class="min-w-[10rem] p-4 flex flex-col items-center justify-center"
             >
               <span class="font-bold text-[1.2rem] text-accent h-6">{{
                 user?.following?.length || 0
               }}</span>
-              Following
+              My Tags
             </NuxtLink>
             <p
               class="min-w-[10rem] p-4 flex flex-col items-center justify-center"
@@ -317,7 +317,7 @@ onMounted(() => {
               <span class="font-bold text-[1.2rem] text-accent h-6">{{
                 user?.total_comments || 0
               }}</span>
-              Comments
+              My Comments
             </p>
           </div>
         </section>
