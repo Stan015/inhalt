@@ -39,6 +39,7 @@ export type Article = {
   id: number;
   title: string;
   author_username: string;
+  email?: string;
   author_id: string;
   author_avatar?: string | null;
   author_occupation?: string | null;

@@ -27,6 +27,7 @@ export default defineEventHandler(async (event) => {
       author_occupation?: string;
       author_avatar?: string;
       cover_img?: string;
+      author_email?: string;
     };
 
     let fields: Field = {};
@@ -51,6 +52,7 @@ export default defineEventHandler(async (event) => {
       author_fullname,
       author_occupation,
       author_avatar,
+      author_email,
     } = fields;
 
     if (!article_title || !markdown_content || !submitted_at) {
@@ -96,6 +98,7 @@ export default defineEventHandler(async (event) => {
       .insert({
         title: article_title,
         author_id: user_id,
+        email: author_email,
         author_username: username,
         author_fullname: author_fullname,
         author_occupation: author_occupation,
@@ -105,13 +108,14 @@ export default defineEventHandler(async (event) => {
         cover_image: uploadedCoverImage,
         cover_image_url: uploadedCoverImageUrl,
       })
+      .select() 
       .single();
 
     if (error) {
       throw new Error(error.message);
     }
 
-    console.log(data);
+    // console.log(data);
 
     return {
       statusCode: 200,

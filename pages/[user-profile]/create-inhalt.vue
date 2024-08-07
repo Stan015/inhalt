@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import type { Article } from "~/types/tables.types";
+
 import { useUserStore } from "../../store/userStore";
 
 const coverImg = ref<HTMLInputElement | null>(null);
 const convertedCoverImgFile = ref<string | null>(null);
-const articleTitle = ref("");
+const articleTitle = ref<string>("");
 
 const userStore = useUserStore();
 
@@ -24,6 +26,7 @@ const submitPost = async () => {
     const avatar = userStore.userCredentials.avatar;
     const fullName = userStore.userCredentials.fullName;
     const occupation = userStore.userCredentials.occupation;
+    const email = userStore.userCredentials.email;
 
     const formData = new FormData();
 
@@ -39,17 +42,32 @@ const submitPost = async () => {
     formData.append("author_fullname", fullName!);
     formData.append("author_occupation", occupation!);
     formData.append("author_avatar", avatar!);
+    formData.append("author_email", email!);
 
     try {
-      const response = await $fetch("/api/articles/create-article", {
-        method: "post",
-        body: formData,
-      });
+      const response = await $fetch<{ body: Article; statusCode: number }>(
+        "/api/articles/create-article",
+        {
+          method: "post",
+          body: formData,
+        }
+      );
 
       console.log(response);
 
       if (response.statusCode === 200) {
+        const data = response.body;
+        const article_title = data.title;
+        const article_id = data.id;
+        const author_username = data.author_username;
+
         alert("Article created successfully!");
+
+        navigateTo(
+          `/${author_username}/articles/${article_id}--${article_title
+            .replace(/\s+/g, "-")
+            .toLowerCase()}`
+        );
       } else {
         alert("Error creating article.");
       }
@@ -99,7 +117,7 @@ const onFileChange = (event: Event) => {
           @change="onFileChange"
           ref="coverImg"
           accept="image/*"
-          placeholder="Upload cover image"
+          title="Upload cover image"
         />
         <div v-if="convertedCoverImgFile">
           <img

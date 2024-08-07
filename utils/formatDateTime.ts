@@ -7,7 +7,7 @@ const formatDateTime = (
 
   const formattedDate = format(dateObj, "MMM dd, yyyy");
 
-  const formattedTime = format(dateObj, "h:mma").toLowerCase();
+  const formattedTime = format(dateObj, "h:mm a").toLowerCase();
 
   return { date: formattedDate, time: formattedTime };
 };
