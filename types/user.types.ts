@@ -14,6 +14,7 @@ export type User = {
   avatar?: string;
   occupation?: string;
   bio?: string;
+  tags?: Array<string>;
   total_likes?: number;
   total_bookmarks?: number;
   total_comments?: number;

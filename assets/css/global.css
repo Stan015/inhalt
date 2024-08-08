@@ -2,12 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-/* body {
-  @apply font-sans text-primary bg-light;
-} */
-
 body {
   @apply font-sans text-primary bg-light dark:bg-dark dark:text-secondary ;
+}
+
+.scroll-bar {
+  scrollbar-color: rgb(109 40 217);
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgb(109 40 217);
+    border-radius: 0.5rem;
+  }
 }
 
 /* .html-content-container .content-wrapper {

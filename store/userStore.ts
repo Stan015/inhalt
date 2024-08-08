@@ -6,6 +6,7 @@ export const useUserStore = defineStore("userStore", () => {
   const userCredentials = ref<User>({
     username: "",
     email: "",
+    tags: [],
   });
 
   const setIsLoggedIn = (status: boolean) => (isLoggedIn.value = status);

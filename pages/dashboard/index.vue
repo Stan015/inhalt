@@ -4,6 +4,7 @@ import type { User } from "~/types/user.types";
 
 import { signOut } from "~/auth/auth";
 import { useUserStore } from "~/store/userStore";
+import {showEditProfileFunc} from "~/composable/showEditProfile";
 
 const userStore = useUserStore();
 const userProfileName = userStore.userCredentials.username;
@@ -44,7 +45,9 @@ const handleUserInhalts = async () => {
   isLoadingInhalts.value = true;
 
   try {
-    const data = await $fetch<Array<Article>>(`/api/user/user-inhalts?user=${userProfileName}`);
+    const data = await $fetch<Array<Article>>(
+      `/api/user/user-inhalts?user=${userProfileName}`
+    );
 
     if (!data) {
       throw new Error("Failed to fetch data");
@@ -58,6 +61,11 @@ const handleUserInhalts = async () => {
   }
 };
 
+const showEditProfile = useState("show-edit-profile", () => false);
+const toggleEditProfile = (value: boolean) => {
+  showEditProfile.value = showEditProfileFunc(value);
+};
+
 onMounted(() => {
   handleUserProfile();
   handleUserInhalts();
@@ -66,7 +74,9 @@ onMounted(() => {
 
 <template>
   <div class="py-6 px-[12%] min-h-main w-full text-primary dark:text-primary">
-    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">My Dashboard</h1>
+    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">
+      My Dashboard
+    </h1>
     <div
       class="w-full min-h-[calc(100svh-13rem)] grid grid-cols-[15rem_1fr] grid-rows-1 gap-4"
     >
@@ -204,9 +214,11 @@ onMounted(() => {
             <button
               class="mt-2 bg-action text-secondary rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all text-nowrap"
               type="button"
+              @click="toggleEditProfile(true)"
             >
               Edit Profile
             </button>
+            <EditProfile v-if="showEditProfile" @close="toggleEditProfile(false)" />
           </div>
         </section>
         <section class="flex gap-4">
@@ -268,7 +280,7 @@ onMounted(() => {
           <div
             class="grid grid-cols-3 place-items-center gap-2 text-base border-b-2 pb-2 bg-white rounded-2xl w-1/2"
           >
-          <p
+            <p
               to="/dashboard/bookmarks"
               class="min-w-[10rem] p-4 flex flex-col items-center justify-center"
             >
@@ -307,7 +319,7 @@ onMounted(() => {
               class="min-w-[10rem] p-4 flex flex-col items-center justify-center"
             >
               <span class="font-bold text-[1.2rem] text-accent h-6">{{
-                user?.following?.length || 0
+                userStore.userCredentials.tags?.length || 0
               }}</span>
               My Tags
             </NuxtLink>
