@@ -22,6 +22,9 @@ export type User = {
   total_videos?: number;
   followers?: Array<Follower>;
   following?: Array<Follower>;
+  socials?: {
+    [key: string]: string;
+  }
 };
 
 export type FormData = User & {

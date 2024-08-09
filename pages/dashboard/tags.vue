@@ -71,7 +71,7 @@ import { signOut } from "~/auth/auth";
         </section>
         <button
           @click="signOut"
-          class="px-4 py-1 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-base flex items-center w-max"
+          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary  dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
           type="button"
         >
           Sign Out

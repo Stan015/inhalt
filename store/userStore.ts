@@ -7,6 +7,8 @@ export const useUserStore = defineStore("userStore", () => {
     username: "",
     email: "",
     tags: [],
+    bio: "",
+    socials: {},
   });
 
   const setIsLoggedIn = (status: boolean) => (isLoggedIn.value = status);

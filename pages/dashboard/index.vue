@@ -8,6 +8,7 @@ import {showEditProfileFunc} from "~/composable/showEditProfile";
 
 const userStore = useUserStore();
 const userProfileName = userStore.userCredentials.username;
+const socials = userStore.userCredentials.socials
 
 const transformUser = (dbUser: any): User => {
   return {
@@ -34,6 +35,8 @@ const handleUserProfile = async () => {
     }
 
     user.value = transformUser(data);
+    userStore.userCredentials.bio = user.value.bio;
+    userStore.userCredentials.socials = user.value.socials;
   } catch (error) {
     console.error("Error fetching user profile:", (error as Error).message);
   } finally {
@@ -142,7 +145,7 @@ onMounted(() => {
         </section>
         <button
           @click="signOut"
-          class="px-4 py-1 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-base flex items-center w-max"
+          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary  dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
           type="button"
         >
           Sign Out
@@ -195,18 +198,18 @@ onMounted(() => {
             </p>
             <div class="flex gap-4 items-center justify-center">
               <NuxtLink
-                to="/"
-                class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
+              :to="user?.socials.linkedin"
+              class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
               >
                 <Icon name="mdi:linkedin" />
               </NuxtLink>
               <NuxtLink
-                to="/"
+                :to="user?.socials.github"
                 class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
                 ><Icon name="mdi:github"
               /></NuxtLink>
               <NuxtLink
-                to="/"
+              :to="user?.socials.twitter"
                 class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1rem] flex items-center"
                 ><Icon name="prime:twitter"
               /></NuxtLink>

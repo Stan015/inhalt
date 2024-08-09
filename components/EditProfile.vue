@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from "~/store/userStore";
+import type { User } from "~/types/user.types";
 import { tags } from "~/utils/tags";
 
 const emit = defineEmits(["close"]);
@@ -17,14 +18,19 @@ const filteredTags = computed(() => {
   );
 });
 
+const isLoading = ref(false);
+
 const avatar = ref<HTMLInputElement | null>(null);
 const convertedAvatarImgFile = ref<string | null>(null);
 const currentUserAvatar = userStore.userCredentials?.avatar || null;
+const user = userStore.userCredentials?.username;
 
 const firstName = ref(userStore.userCredentials?.firstName);
 const lastName = ref(userStore.userCredentials?.lastName);
 const occupation = ref(userStore.userCredentials?.occupation);
-let bio = ref(userStore.userCredentials?.bio);
+const bio = ref(userStore.userCredentials?.bio || "");
+const wordCount = ref(0);
+const socials = ref<{ [key: string]: string }>(userStore.userCredentials?.socials || {});
 
 const currentTagsFromStore = userStore.userCredentials?.tags || [];
 const selectedTags = ref<Array<string>>(currentTagsFromStore);
@@ -38,7 +44,7 @@ const handleSelectTag = (tag: string) => {
 
   userStore.userCredentials.tags = selectedTags.value;
 
-  console.log(selectedTags.value);
+  // console.log(selectedTags.value);
 };
 
 const handleImagePreview = (file: File) => {
@@ -59,18 +65,56 @@ const onFileChange = (event: Event) => {
   }
 };
 
-const wordCount = ref(0);
+const handleUpdate = async () => {
+  isLoading.value = true;
 
-const checkWordLimit = () => {
-  const words = bio.value?.trim().split(/\s+/);
-  wordCount.value = words?.length!;
+  const formData = new FormData();
 
-  // Check if the word count exceeds 100
-  if (wordCount.value > 100) {
-    bio.value = words?.slice(0, 100).join(" ");
-    wordCount.value = 100;
+  if (avatar.value) {
+    formData.append("avatar", avatar.value?.files?.[0] as Blob);
+  }
+  formData.append("first_name", firstName.value!);
+  formData.append("last_name", lastName.value!);
+  formData.append("occupation", occupation.value!);
+  formData.append("bio", bio.value!);
+  formData.append("tags", `{${selectedTags.value.join(",")}}`);
+  formData.append("socials",JSON.stringify(socials.value));
+
+  try {
+    const response = await $fetch<{ body: User; statusCode: number }>(
+      `/api/user/update-user?user=${user}`,
+      {
+        method: "PATCH",
+        body: formData,
+      }
+    );
+
+    if (response.statusCode === 200) {
+      // console.log(response.body);
+      userStore.userCredentials.firstName = response.body.firstName
+      userStore.userCredentials.lastName = response.body.lastName
+      userStore.userCredentials.occupation = response.body.occupation
+      userStore.userCredentials.bio = response.body.bio
+      userStore.userCredentials.tags = response.body.tags
+      userStore.userCredentials.socials = response.body.socials
+      console.log("updated successfully")
+    } else {
+      throw new Error("failed to update user details");
+    }
+  } catch (error) {
+    console.error((error as Error).message);
+  } finally {
+    isLoading.value = false;
+    handleClose();
   }
 };
+
+const updateWordCount = () => {
+  wordCount.value = bio.value.trim().split(/\s+/).length;
+  // console.log(wordCount.value)
+};
+watch(bio, updateWordCount);
+updateWordCount();
 </script>
 
 <template>
@@ -79,6 +123,7 @@ const checkWordLimit = () => {
   >
     <form
       class="flex flex-col items-center p-6 mt-[6rem] z-10 rounded-2xl bg-white gap-4 w-[30rem] max-sm:w-[18rem]"
+      @submit.prevent="handleUpdate"
     >
       <span class="w-full flex gap-4 justify-center relative">
         <h1
@@ -115,7 +160,7 @@ const checkWordLimit = () => {
           <div v-else>
             <img
               class="w-[4rem] h-[4rem] rounded-full border border-accent overflow-hidden"
-              :src="convertedAvatarImgFile"
+              :src="convertedAvatarImgFile as string"
               alt="Image Preview"
             />
           </div>
@@ -176,14 +221,15 @@ const checkWordLimit = () => {
           Bio
           <textarea
             type="text"
-            class="w-full bg-white text-primary text-sm p-2 rounded-lg border-2 border-light outline-none hover:border-accent focus:border-accent"
-            name="username"
-            id="username"
+            class="w-full bg-white text-primary text-sm p-2 rounded-lg border-2 border-light outline-none hover:border-accent focus:border-accent scroll-bar"
+            name="bio"
+            id="bio"
             pattern="^[^\s]+$"
+            maxlength="250"
             v-model="bio"
             cols="3"
-            @input="checkWordLimit"
-            placeholder="Enter a username..."
+            @input="updateWordCount"
+            placeholder="Write a bio..."
           />
         </label>
         <div class="w-full flex flex-col gap-1">
@@ -222,7 +268,7 @@ const checkWordLimit = () => {
         </div>
         <div class="w-full">
           <p class="text-base mb-1 border-b border-b-accent w-full">Socials</p>
-          <div class="w-full flex flex-wrap gap-2 items-center pt-2" >
+          <div class="w-full flex flex-wrap gap-2 items-center pt-2">
             <label
               class="border-b border-b-accent w-max text-[0.7rem] rounded-2xl px-2"
               >Github
@@ -232,6 +278,7 @@ const checkWordLimit = () => {
                 class="w-[4.7rem] bg-white text-primary text-[0.7rem] px-2 py-1 rounded-lg border border-light outline-none hover:border-accent focus:border-accent"
                 name="github"
                 id="github"
+                v-model="socials.github"
                 placeholder="paste url..."
               />
             </label>
@@ -239,12 +286,12 @@ const checkWordLimit = () => {
               class="border-b border-b-accent w-max text-[0.7rem] rounded-2xl px-2"
             >
               Twitter/X
-
               <input
                 type="url"
                 class="w-[4.7rem] bg-white text-primary text-[0.7rem] px-2 py-1 rounded-lg border border-light outline-none hover:border-accent focus:border-accent"
                 name="twitter"
                 id="twitter"
+                v-model="socials.twitter"
                 placeholder="paste url..."
               />
             </label>
@@ -258,6 +305,7 @@ const checkWordLimit = () => {
                 type="url"
                 class="w-[4.7rem] bg-white text-primary text-[0.7rem] px-2 py-1 rounded-lg border border-light outline-none hover:border-accent focus:border-accent"
                 name="linkedin"
+                v-model="socials.linkedin"
                 id="linkedin"
                 placeholder="paste url..."
               />
@@ -277,7 +325,8 @@ const checkWordLimit = () => {
           type="submit"
           class="w-[6rem] h-10 bg-action border-0 text-secondary rounded-lg hover:shadow-sm hover:shadow-accent transition-all"
         >
-          Save
+        <Icon v-if="isLoading" name="line-md:uploading-loop" />
+        <span v-else>Save</span>
         </button>
       </div>
     </form>

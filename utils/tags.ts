@@ -27,13 +27,16 @@ export const tags: Array<string> = [
   "Julia",
   "Kotlin",
   "Lua",
+  "MySQL",
   "PHP",
+  "PostgreSQL",
   "Python",
   "R",
   "Ruby",
   "Rust",
   "Scala",
   "Swift",
+  "TailwindCSS",
   "TypeScript",
 
   // Writing
