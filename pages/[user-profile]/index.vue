@@ -3,9 +3,10 @@ import { signOut } from "~/auth/auth";
 import type { Article, ArticleCard } from "~/types/tables.types";
 import type { User } from "~/types/user.types";
 import { useRoute } from "vue-router";
-import { useUserStore } from '../../store/userStore';
+import { useUserStore } from "../../store/userStore";
+import { toggleFollow } from "../../composable/toggleFollow";
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 const socials = userStore.userCredentials.socials;
 
 const transformUser = (dbUser: any): User => {
@@ -61,6 +62,21 @@ const handleUserInhalts = async () => {
   } finally {
     isLoadingInhalts.value = false;
   }
+};
+
+// toggle follow button
+const username = userStore.userCredentials.username as string;
+const userToFollow = route.params.userprofile as string;
+const isLoadingFollow = ref(false);
+const following = ref(false);
+const currentAuthUser = ref(false);
+
+if (username == userToFollow) {
+  currentAuthUser.value = true;
+}
+
+const handleFollow = () => {
+  toggleFollow({ username, userToFollow, isLoadingFollow, following });
 };
 
 onMounted(() => {
@@ -146,10 +162,18 @@ watch(
             /></NuxtLink>
           </div>
           <button
-            class="mt-2 bg-action text-secondary rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all"
+            v-if="!currentAuthUser"
+            :class="
+              following
+                ? ' bg-light text-primary mt-2 rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all'
+                : 'bg-accent text-secondary mt-2 rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all'
+            "
             type="button"
+            @click="toggleFollow"
           >
-            Follow
+            <Icon v-if="isLoadingFollow" name="line-md:uploading-loop" />
+            <span v-if="following && !isLoadingFollow">Unfollow</span>
+            <span v-else>Follow</span>
           </button>
         </div>
       </div>
@@ -210,7 +234,9 @@ watch(
         ></span
       >
       <section class="w-full">
-        <h2 class="text-[1.3rem] w-full border-b border-b-accent mb-4">Recent inhalts</h2>
+        <h2 class="text-[1.3rem] w-full border-b border-b-accent mb-4">
+          Recent inhalts
+        </h2>
         <div class="w-full h-full flex flex-col gap-4">
           <div
             v-for="inhalt in userInhalts"

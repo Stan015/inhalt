@@ -1,5 +1,21 @@
 <script setup lang="ts">
 import { signOut } from "~/auth/auth";
+import { useUserStore } from '../../store/userStore';
+
+const userStore = useUserStore()
+const username = userStore.userCredentials.username;
+
+const route = useRoute()
+
+const userToFollow = route.params.userprofile
+
+console.log(userToFollow)
+
+const following = ref(false)
+
+const toggleFollow = async () => {
+
+}
 
 </script>
 
