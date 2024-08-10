@@ -10,14 +10,6 @@ const handleClose = () => {
 
 const userStore = useUserStore();
 
-const searchTag = ref("");
-
-const filteredTags = computed(() => {
-  return tags.filter((tag) =>
-    tag.toLowerCase().includes(searchTag.value.toLowerCase())
-  );
-});
-
 const isLoading = ref(false);
 
 const avatar = ref<HTMLInputElement | null>(null);
@@ -31,21 +23,7 @@ const occupation = ref(userStore.userCredentials?.occupation);
 const bio = ref(userStore.userCredentials?.bio || "");
 const wordCount = ref(0);
 const socials = ref<{ [key: string]: string }>(userStore.userCredentials?.socials || {});
-
-const currentTagsFromStore = userStore.userCredentials?.tags || [];
-const selectedTags = ref<Array<string>>(currentTagsFromStore);
-
-const handleSelectTag = (tag: string) => {
-  if (selectedTags.value.includes(tag)) {
-    selectedTags.value = selectedTags.value.filter((t) => t !== tag);
-  } else {
-    selectedTags.value.push(tag);
-  }
-
-  userStore.userCredentials.tags = selectedTags.value;
-
-  // console.log(selectedTags.value);
-};
+const selectedTags = ref<string[]>(userStore.userCredentials.tags || []);
 
 const handleImagePreview = (file: File) => {
   const reader = new FileReader();
@@ -236,35 +214,7 @@ updateWordCount();
           <label class="w-full flex gap-2 justify-between" for="tags">
             Tags
           </label>
-
-          <div id="tags" class="w-full flex flex-col gap-4">
-            <input
-              type="search"
-              class="w-full bg-white text-primary text-sm p-2 rounded-lg border-2 border-light outline-none hover:border-accent focus:border-accent"
-              name="search-tags"
-              v-model="searchTag"
-              id="search_tags"
-              placeholder="Search tags"
-            />
-            <div
-              class="w-full h-[6rem] p-1 flex flex-wrap gap-2 overflow-y-scroll scroll-bar justify-center"
-            >
-              <p
-                v-for="tag in filteredTags"
-                :key="tag"
-                @click="handleSelectTag(tag)"
-                :aria-labelledby="`tag: ${tag}`"
-                :class="
-                  selectedTags?.includes(tag)
-                    ? 'bg-accent text-secondary dark:text-secondary'
-                    : 'bg-white text-primary dark:text-primary'
-                "
-                class="w-max h-max text-nowrap px-1 rounded-2xl border text-[0.8rem] border-accent cursor-pointer"
-              >
-                {{ tag }}
-              </p>
-            </div>
-          </div>
+          <MyTags />
         </div>
         <div class="w-full">
           <p class="text-base mb-1 border-b border-b-accent w-full">Socials</p>
@@ -321,13 +271,7 @@ updateWordCount();
         >
           Cancel
         </button>
-        <button
-          type="submit"
-          class="w-[6rem] h-10 bg-action border-0 text-secondary rounded-lg hover:shadow-sm hover:shadow-accent transition-all"
-        >
-        <Icon v-if="isLoading" name="line-md:uploading-loop" />
-        <span v-else>Save</span>
-        </button>
+        <SaveButton name="Save" :is-loading="isLoading"/>
       </div>
     </form>
   </div>

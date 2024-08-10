@@ -1,11 +1,58 @@
 <script setup lang="ts">
 import { signOut } from "~/auth/auth";
+import { useUserStore } from "../../store/userStore";
+import type { User } from "~/types/user.types";
 
+const userStore = useUserStore();
+const selectedTags = computed(() => userStore.userCredentials.tags || []);
+const isEditing = ref(false);
+const isLoading = ref(false);
+
+const stopWatcher = watch(
+  selectedTags,
+  () => {
+    isEditing.value = true;
+    console.log("Selected tags updated:", selectedTags.value);
+  },
+  { deep: true }
+);
+
+const handleUpdateTags = async () => {
+  const supabase = useSupabaseClient<User>();
+  isLoading.value = true;
+
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .update({
+        tags: selectedTags.value,
+      })
+      .eq("username", userStore.userCredentials.username)
+      .select();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    console.log(data);
+  } catch (error) {
+    console.error((error as Error).message);
+  } finally {
+    isLoading.value = false;
+    isEditing.value = false;
+  }
+};
+
+onUnmounted(() => {
+  stopWatcher();
+});
 </script>
 
 <template>
   <div class="py-6 px-[12%] min-h-main w-full text-primary dark:text-primary">
-    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">My Dashboard</h1>
+    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">
+      My Dashboard
+    </h1>
     <div
       class="w-full min-h-[calc(100svh-13rem)] grid grid-cols-[15rem_1fr] grid-rows-1 gap-4"
     >
@@ -71,39 +118,28 @@ import { signOut } from "~/auth/auth";
         </section>
         <button
           @click="signOut"
-          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary  dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
+          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
           type="button"
         >
           Sign Out
         </button>
       </section>
-      <main class="w-full min-h-[16rem] h-full flex flex-col gap-4 bg-white rounded-2xl p-4">
+      <main
+        class="w-full min-h-[16rem] h-full flex flex-col gap-4 bg-white rounded-2xl p-4"
+      >
         <h2
           class="text-[1.5rem] font-semibold mb-2 w-full border-b-2 border-b-accent"
         >
           My Tags
         </h2>
-        <div class="w-full h-full flex flex-col gap-4">
-          <!-- <NuxtLink
-            v-for="inhalt in userInhalts"
-            :key="inhalt.id"
-            class="flex w-full h-max justify-between items-center border-b-2 border-white rounded-2xl px-2 hover:border-accent transition-all"
-            :to="`/${inhalt.author_username}/articles/${
-              inhalt.id
-            }--${inhalt.title.replace(/\s+/g, '-').toLowerCase()}`"
-          >
-            <h3>{{ inhalt?.title }}</h3>
-            <div class="flex gap-4 cursor-default">
-              <LikeButton :article-id="inhalt?.id" />
-              <CommentButton :article-id="inhalt?.id" />
-              <BookmarkButton :article-id="inhalt?.id" />
-              <ShareButton
-                :article-id="inhalt?.id"
-                :title="inhalt?.title"
-                :author-username="inhalt?.author_username"
-              />
-            </div>
-          </NuxtLink> -->
+        <div class="w-full h-full flex flex-col gap-4 items-center">
+          <MyTags />
+          <SaveButton
+            v-if="isEditing"
+            @click="handleUpdateTags"
+            :is-loading="isLoading"
+            name="Save Changes"
+          />
         </div>
       </main>
     </div>

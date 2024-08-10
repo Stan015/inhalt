@@ -36,6 +36,7 @@ const handleUserProfile = async () => {
 
     user.value = transformUser(data);
     userStore.userCredentials.bio = user.value.bio;
+    userStore.userCredentials.tags = user.value.tags;
     userStore.userCredentials.socials = user.value.socials;
   } catch (error) {
     console.error("Error fetching user profile:", (error as Error).message);
@@ -296,7 +297,7 @@ onMounted(() => {
               class="min-w-[10rem] p-4 flex flex-col items-center justify-center"
             >
               <span class="font-bold text-[1.2rem] text-accent h-6">{{
-                user?.total_articles! + user?.total_videos! || 0
+                  0
               }}</span>
               Watched
             </p>

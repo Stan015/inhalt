@@ -3,6 +3,10 @@ import { signOut } from "~/auth/auth";
 import type { Article, ArticleCard } from "~/types/tables.types";
 import type { User } from "~/types/user.types";
 import { useRoute } from "vue-router";
+import { useUserStore } from '../../store/userStore';
+
+const userStore = useUserStore()
+const socials = userStore.userCredentials.socials;
 
 const transformUser = (dbUser: any): User => {
   return {
@@ -125,18 +129,18 @@ watch(
           </div>
           <div class="flex gap-4 items-center justify-center">
             <NuxtLink
-              to="/"
+              :to="socials?.linkedin"
               class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
             >
               <Icon name="mdi:linkedin" />
             </NuxtLink>
             <NuxtLink
-              to="/"
+              :to="socials?.github"
               class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
               ><Icon name="mdi:github"
             /></NuxtLink>
             <NuxtLink
-              to="/"
+              :to="socials?.twitter"
               class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1rem] flex items-center"
               ><Icon name="prime:twitter"
             /></NuxtLink>
@@ -206,12 +210,12 @@ watch(
         ></span
       >
       <section class="w-full">
-        <h2 class="text-[1.3rem]">Recent inhalts</h2>
+        <h2 class="text-[1.3rem] w-full border-b border-b-accent mb-4">Recent inhalts</h2>
         <div class="w-full h-full flex flex-col gap-4">
           <div
             v-for="inhalt in userInhalts"
             :key="inhalt.id"
-            class="flex w-full h-max justify-between items-center border-b-2 border-white rounded-2xl px-2 hover:border-accent transition-all"
+            class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
           >
             <NuxtLink
               class="flex w-full h-max justify-between items-center"

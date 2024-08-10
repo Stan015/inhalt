@@ -122,7 +122,7 @@ onMounted(() => {
         </h2>
         <div class="w-full h-full flex flex-col gap-4">
           <div
-            class="flex w-full h-max justify-between items-center border-b-2 border-white rounded-2xl px-2 hover:border-accent transition-all"
+            class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
             v-for="inhalt in userInhalts"
             :key="inhalt.id"
           >
