@@ -1,4 +1,4 @@
-export const showEditProfileFunc = (value: boolean): boolean => {
+export const useShowEditProfile = (value: boolean): boolean => {
   const showEditProfile = useState("show-edit-profile-func", () => false);
 
   showEditProfile.value = value;

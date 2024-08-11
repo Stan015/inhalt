@@ -1,27 +1,54 @@
 <script setup lang="ts">
 import { signOut } from "~/auth/auth";
-import { useUserStore } from '../../store/userStore';
+import { useUserStore } from "../../store/userStore";
+import { fetchUserFollowers, toggleFollow } from "~/utils/toggleFollow";
+import type { Follower } from "~/types/user.types";
 
-const userStore = useUserStore()
-const username = userStore.userCredentials.username;
+const userStore = useUserStore();
+const username = userStore.userCredentials.username as string;
 
-const route = useRoute()
+const route = useRoute();
 
-const userToFollow = route.params.userprofile
+const fullName = userStore.userCredentials.fullName as string;
+const userToFollow = route.params.userprofile as string;
+const isLoadingFollow = ref(false);
+const dateOfFollow = new Date().toISOString();
+const following = ref(false);
+const currentAuthUser = ref(false);
+const currentFollowing = userStore.userCredentials.following;
 
-console.log(userToFollow)
-
-const following = ref(false)
-
-const toggleFollow = async () => {
-
+if (username == userToFollow) {
+  currentAuthUser.value = true;
 }
 
+if (currentFollowing?.some((user) => user.username === userToFollow)) {
+  following.value = true;
+}
+
+const currentFollowers = userStore.userCredentials.followers as Array<Follower>;
+
+// toggle follow button
+const handleFollow = () => {
+  toggleFollow({
+    username,
+    fullName,
+    userToFollow,
+    isLoadingFollow,
+    following,
+    dateOfFollow,
+  });
+};
+
+onMounted(() => {
+  fetchUserFollowers({ username, isLoadingFollowers: { value: true } });
+});
 </script>
 
 <template>
   <div class="py-6 px-[12%] min-h-main w-full text-primary dark:text-primary">
-    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">My Dashboard</h1>
+    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">
+      My Dashboard
+    </h1>
     <div
       class="w-full min-h-[calc(100svh-13rem)] grid grid-cols-[15rem_1fr] grid-rows-1 gap-4"
     >
@@ -87,39 +114,52 @@ const toggleFollow = async () => {
         </section>
         <button
           @click="signOut"
-          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary  dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
+          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
           type="button"
         >
           Sign Out
         </button>
       </section>
-      <main class="w-full min-h-[16rem] h-full flex flex-col gap-4 bg-white rounded-2xl p-4">
+      <main
+        class="w-full min-h-[16rem] h-full flex flex-col gap-4 bg-white rounded-2xl p-4"
+      >
         <h2
           class="text-[1.5rem] font-semibold mb-2 w-full border-b-2 border-b-accent"
         >
           My Follower
         </h2>
         <div class="w-full h-full flex flex-col gap-4">
-          <!-- <NuxtLink
-            v-for="inhalt in userInhalts"
-            :key="inhalt.id"
-            class="flex w-full h-max justify-between items-center border-b-2 border-white rounded-2xl px-2 hover:border-accent transition-all"
-            :to="`/${inhalt.author_username}/articles/${
-              inhalt.id
-            }--${inhalt.title.replace(/\s+/g, '-').toLowerCase()}`"
+          <div
+            class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
+            v-if="currentFollowers.length !== 0"
+            v-for="follower in currentFollowers"
+            :key="follower.username"
           >
-            <h3>{{ inhalt?.title }}</h3>
-            <div class="flex gap-4 cursor-default">
-              <LikeButton :article-id="inhalt?.id" />
-              <CommentButton :article-id="inhalt?.id" />
-              <BookmarkButton :article-id="inhalt?.id" />
-              <ShareButton
-                :article-id="inhalt?.id"
-                :title="inhalt?.title"
-                :author-username="inhalt?.author_username"
+            <NuxtLink
+              class="flex w-full h-max justify-between items-center"
+              :to="`/${follower.username}`"
+            >
+              <h3 class="!mb-0">{{ follower.full_name }}</h3>
+            </NuxtLink>
+            <div class="flex gap-4 cursor-default mb-1">
+              <FollowButton
+                @toggle-follow="handleFollow"
+                :is-loading-follow="isLoadingFollow"
+                :following="following"
+                :current-auth-user="currentAuthUser"
               />
             </div>
-          </NuxtLink> -->
+          </div>
+          <div v-else class="w-full flex flex-col items-center gap-4" >
+              <p class="text-[1.1rem] font-medium text-center">You do not have followers yet. Create inhalt to gain more visibility.</p>
+              <NuxtLink 
+                :to="`/${username}/create-inhalt`"
+                class="flex items-center gap-1 flex-shrink-0 px-2 border-b-2 bg-action text-secondary dark:text-secondary hover:-translate-y-1 hover:translate-x-1 transition-all h-10 rounded-3xl w-max"
+                >
+                <Icon name="ph:plus-bold" />
+                create inhalt
+              </NuxtLink>
+            </div>
         </div>
       </main>
     </div>

@@ -4,7 +4,7 @@ import type { Article, ArticleCard } from "~/types/tables.types";
 import type { User } from "~/types/user.types";
 import { useRoute } from "vue-router";
 import { useUserStore } from "../../store/userStore";
-import { toggleFollow } from "../../composable/toggleFollow";
+import { toggleFollow, fetchUserFollowers, fetchUserFollowing } from '../../utils/toggleFollow';
 
 const userStore = useUserStore();
 const socials = userStore.userCredentials.socials;
@@ -66,17 +66,32 @@ const handleUserInhalts = async () => {
 
 // toggle follow button
 const username = userStore.userCredentials.username as string;
+const fullName = userStore.userCredentials.fullName as string;
 const userToFollow = route.params.userprofile as string;
 const isLoadingFollow = ref(false);
+const dateOfFollow = new Date().toISOString();
 const following = ref(false);
 const currentAuthUser = ref(false);
+const currentFollowing = userStore.userCredentials.following;
+
 
 if (username == userToFollow) {
   currentAuthUser.value = true;
 }
 
+if (currentFollowing?.some((user) => user.username === userToFollow)) {
+  following.value = true;
+}
+
 const handleFollow = () => {
-  toggleFollow({ username, userToFollow, isLoadingFollow, following });
+  toggleFollow({
+    username,
+    fullName,
+    userToFollow,
+    isLoadingFollow,
+    following,
+    dateOfFollow,
+  });
 };
 
 onMounted(() => {
@@ -143,7 +158,7 @@ watch(
               {{ user.bio }}
             </p>
           </div>
-          <div class="flex gap-4 items-center justify-center">
+          <div class="flex gap-4 items-center justify-center mb-2">
             <NuxtLink
               :to="socials?.linkedin"
               class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
@@ -161,20 +176,7 @@ watch(
               ><Icon name="prime:twitter"
             /></NuxtLink>
           </div>
-          <button
-            v-if="!currentAuthUser"
-            :class="
-              following
-                ? ' bg-light text-primary mt-2 rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all'
-                : 'bg-accent text-secondary mt-2 rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all'
-            "
-            type="button"
-            @click="toggleFollow"
-          >
-            <Icon v-if="isLoadingFollow" name="line-md:uploading-loop" />
-            <span v-if="following && !isLoadingFollow">Unfollow</span>
-            <span v-else>Follow</span>
-          </button>
+          <FollowButton @toggleFollow="handleFollow" :is-loading-follow="isLoadingFollow" :following="following" :current-auth-user="currentAuthUser" />
         </div>
       </div>
       <button

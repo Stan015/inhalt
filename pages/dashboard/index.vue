@@ -4,11 +4,11 @@ import type { User } from "~/types/user.types";
 
 import { signOut } from "~/auth/auth";
 import { useUserStore } from "~/store/userStore";
-import {showEditProfileFunc} from "~/composable/showEditProfile";
+import { useShowEditProfile } from "~/composable/useShowEditProfile";
 
 const userStore = useUserStore();
 const userProfileName = userStore.userCredentials.username;
-const socials = userStore.userCredentials.socials
+const socials = userStore.userCredentials.socials;
 
 const transformUser = (dbUser: any): User => {
   return {
@@ -67,7 +67,7 @@ const handleUserInhalts = async () => {
 
 const showEditProfile = useState("show-edit-profile", () => false);
 const toggleEditProfile = (value: boolean) => {
-  showEditProfile.value = showEditProfileFunc(value);
+  showEditProfile.value = useShowEditProfile(value);
 };
 
 onMounted(() => {
@@ -146,7 +146,7 @@ onMounted(() => {
         </section>
         <button
           @click="signOut"
-          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary  dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
+          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
           type="button"
         >
           Sign Out
@@ -199,8 +199,8 @@ onMounted(() => {
             </p>
             <div class="flex gap-4 items-center justify-center">
               <NuxtLink
-              :to="user?.socials.linkedin"
-              class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
+                :to="user?.socials.linkedin"
+                class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
               >
                 <Icon name="mdi:linkedin" />
               </NuxtLink>
@@ -210,7 +210,7 @@ onMounted(() => {
                 ><Icon name="mdi:github"
               /></NuxtLink>
               <NuxtLink
-              :to="user?.socials.twitter"
+                :to="user?.socials.twitter"
                 class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1rem] flex items-center"
                 ><Icon name="prime:twitter"
               /></NuxtLink>
@@ -222,7 +222,10 @@ onMounted(() => {
             >
               Edit Profile
             </button>
-            <EditProfile v-if="showEditProfile" @close="toggleEditProfile(false)" />
+            <EditProfile
+              v-if="showEditProfile"
+              @close="toggleEditProfile(false)"
+            />
           </div>
         </section>
         <section class="flex gap-4">
@@ -297,7 +300,7 @@ onMounted(() => {
               class="min-w-[10rem] p-4 flex flex-col items-center justify-center"
             >
               <span class="font-bold text-[1.2rem] text-accent h-6">{{
-                  0
+                0
               }}</span>
               Watched
             </p>
