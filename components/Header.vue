@@ -7,7 +7,7 @@ const { firstName, username, avatar } = user.userCredentials;
 
 <template>
   <header
-    class="w-full h-[6rem] flex items-center justify-between px-[12%] gap-4 text-base"
+    class="w-full h-[6rem] flex items-center justify-between px-[12%] gap-4 text-base max-md:px-[7%]"
   >
     <Logo />
 

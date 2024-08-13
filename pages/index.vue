@@ -38,7 +38,7 @@ onBeforeMount(() => {
 
 <template>
   <div
-    class="w-full min-h-main grid grid-cols-[13rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%]"
+    class="w-full min-h-main grid grid-cols-[13rem_minmax(20rem,_1fr)_20rem] grid-rows-1 max-md:grid-cols-[13rem_1fr] max-md:px-[7%] gap-4 py-6 px-[12%]"
   >
     <div
       class="flex flex-col gap-4 justify-between w-full h-full max-h-[calc(100svh-8rem)] text-primary dark:text-primary"
@@ -64,10 +64,10 @@ onBeforeMount(() => {
         >
       </nav>
       <section
-        class="w-full h-max bg-white rounded-2xl p-4 text-primary dark:text-primary"
+        class="w-full h-[20rem] bg-white rounded-2xl p-4 text-primary dark:text-primary"
       >
         <h2>News</h2>
-        <div class="w-full h-[20rem]"></div>
+        <div class="w-full"></div>
       </section>
     </div>
     <main class="block w-full h-full pb-6 text-primary dark:text-primary">
@@ -143,7 +143,7 @@ onBeforeMount(() => {
       </section>
     </main>
     <aside
-      class="flex flex-col gap-6 w-full h-full text-primary dark:text-primary"
+      class="flex flex-col gap-6 w-full h-full text-primary dark:text-primary max-md:absolute max-md:w-[20rem] max-md:right-[7%] max-md:hidden"
     >
       <section class="w-full h-max bg-white rounded-2xl p-4">
         <h2>Promotion</h2>
