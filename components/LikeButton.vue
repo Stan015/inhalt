@@ -125,8 +125,8 @@ watch(
     type="button"
     aria-labelledby="likes"
   >
-    <Icon v-if="isLiked" class="text-[1.3rem] text-red-500" name="mdi:heart" />
-    <Icon v-else class="text-[1.3rem]" name="mdi:heart-outline" />
+    <Icon v-if="isLiked" class="text-[1.2rem] text-red-500" name="mdi:heart" />
+    <Icon v-else class="text-[1.2rem]" name="mdi:heart-outline" />
     <span v-if="!numberOfLikesIsZero" class="absolute -top-2 right-0 text-[10px]">{{
       currentLikes?.number_of_likes
     }}</span>

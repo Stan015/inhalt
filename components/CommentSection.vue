@@ -6,6 +6,7 @@ import formatDateTime from "~/utils/formatDateTime";
 
 const props = defineProps({
   markdownClassName: String,
+  id: String,
 });
 
 const supabase = useSupabaseClient<Article>();
@@ -117,7 +118,7 @@ watch(isNewCommentAdded, () => handleFetchExistingComments(), {
 </script>
 
 <template>
-  <section class="w-full rounded-2xl">
+  <section class="w-full rounded-2xl" :id="id">
     <div v-if="convertedArticleComments.length > 0" class="w-full">
       <h2 class="w-full border-b border-b-accent mb-4 mt-5">Comments:</h2>
       <div class="flex flex-col gap-4 rounded-2xl dark:text-primary">

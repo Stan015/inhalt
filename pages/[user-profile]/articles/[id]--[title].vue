@@ -52,29 +52,6 @@ watch(
 
 <template>
   <div class="w-full min-h-main flex gap-4 py-6 px-[12%]">
-    <!-- <div class="flex flex-col gap-4 justify-between w-full h-full">
-        <nav class="flex flex-col gap-4 w-full h-max">
-          <NuxtLink
-            to="/"
-            class="flex flex-shrink-0 items-center gap-3 w-[90%] bg-white px-4 py-[1.5px] rounded-l-lg relative after:content-[' '] after:w-2 after:h-full after:absolute after:right-[-10%] after:rounded-l-2xl after:bg-white after:pointer-events-none"
-            ><Icon name="icon-park-outline:data-all" /> All</NuxtLink
-          >
-          <NuxtLink
-            to="/articles"
-            class="flex flex-shrink-0 items-center gap-3 w-[90%] bg-white px-4 py-[1.5px] rounded-l-lg relative after:content-[' '] after:w-2 after:h-full after:absolute after:right-[-10%] after:rounded-l-2xl after:bg-white after:pointer-events-none"
-            ><Icon name="gravity-ui:square-article" /> Articles</NuxtLink
-          >
-          <NuxtLink
-            to="/"
-            class="flex flex-shrink-0 items-center gap-3 w-[90%] bg-white px-4 py-[1.5px] rounded-l-lg relative after:content-[' '] after:w-2 after:h-full after:absolute after:right-[-10%] after:rounded-l-2xl after:bg-white after:pointer-events-none"
-            ><Icon name="lets-icons:video-fill" /> Video inhalt</NuxtLink
-          >
-        </nav>
-        <section class="w-full h-max bg-white rounded-2xl p-4">
-          <h2>News</h2>
-          <div class="w-full h-[20rem]"></div>
-        </section>
-      </div> -->
     <main class="flex flex-col gap-6 w-3/4 h-full pb-6">
       <section
         class="rendered-markdown-content-container w-full flex flex-col gap-4"
@@ -95,7 +72,7 @@ watch(
               {{ article?.title }}
             </h1>
             <div class="grid grid-cols-3 justify-between gap-4">
-              <div class=" flex flex-col justify-end">
+              <div class="flex flex-col justify-end">
                 <p class="!mb-0 w-max !text-[0.8rem]">
                   {{ article?.formattedDate }}
                 </p>
@@ -149,21 +126,23 @@ watch(
                 :author-username="article?.author_username"
               />
             </div>
-            <div class=" flex flex-col justify-end items-end">
-                <p class="!mb-0 w-max !text-[0.8rem]">
-                  {{ article?.formattedDate }}
-                </p>
-                <p class="!mb-0 w-max !text-[0.8rem]">
-                  {{ article?.formattedTime }}
-                </p>
-                <p class="!mb-0 w-max !text-[0.8rem]">10 min read</p>
-              </div>
+            <div class="flex flex-col justify-end items-end">
+              <p class="!mb-0 w-max !text-[0.8rem]">
+                {{ article?.formattedDate }}
+              </p>
+              <p class="!mb-0 w-max !text-[0.8rem]">
+                {{ article?.formattedTime }}
+              </p>
+              <p class="!mb-0 w-max !text-[0.8rem]">10 min read</p>
+            </div>
           </div>
         </article>
-        <CommentSection markdown-class-name="comment-section" />
+        <CommentSection markdown-class-name="comment-section" id="comments" />
       </section>
       <section>
-        <h2 class="font-bold text-md w-full border-b border-b-accent mb-4 mt-5">Related inhalts</h2>
+        <h2 class="font-bold text-md w-full border-b border-b-accent mb-4 mt-5">
+          Related inhalts
+        </h2>
         <article
           class="w-full h-max flex rounded-2xl border border-white relative overflow-hidden"
         >

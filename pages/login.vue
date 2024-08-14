@@ -11,14 +11,14 @@ const showPassword = ref(false);
     class="w-full min-h-main flex items-center justify-center px[12%] py-6 text-primary dark:text-primary"
   >
     <div
-      class="flex flex-col items-center bg-white p-6 rounded-2xl gap-4 w-[30rem] max-sm:w-[18rem]"
+      class="flex flex-col items-center bg-white p-6 rounded-2xl gap-2 w-[30rem] max-sm:w-[18rem]"
     >
       <form
-        class="flex flex-col items-center gap-4 w-full max-sm:w-full"
+        class="flex flex-col items-center gap-4 w-full max-sm:w-full max-sm:gap-3"
         @submit.prevent="signInWithEmailAndPassword(email, password)"
       >
-        <h1 class="font-bold text-lg">Login</h1>
-        <p class="text-sm text-gray-600 text-center mb-2">
+        <h1 class="font-bold text-lg border-b border-b-accent w-full text-center">Login</h1>
+        <p class="text-sm text-gray-600 text-center mb-2 max-sm:text-[0.9rem]">
           Don't have an account already?
           <NuxtLink
             to="/sign-up"
@@ -26,7 +26,7 @@ const showPassword = ref(false);
             >Sign up here</NuxtLink
           >
         </p>
-        <div class="flex flex-col w-full gap-4">
+        <div class="flex flex-col w-full gap-4 max-sm:gap-3">
           <label class="w-full flex flex-col gap-1">
             Email
             <input
@@ -75,26 +75,29 @@ const showPassword = ref(false);
           Login
         </button>
         <span
-          class="w-full border-b-2 border-b-light relative flex items-center justify-center my-4"
+          class="w-full border-b border-b-accent relative flex items-center justify-center my-4"
         >
           <p class="text-sm absolute -bottom-[0.6rem] px-1 bg-white">or</p>
         </span>
       </form>
-      <div class="w-full flex items-center gap-4 justify-between">
-        <button
-          type="button"
-          class="flex items-center gap-2 text-sm justify-center w-1/2 border-2 border-light p-3 rounded-lg hover:bg-action hover:text-secondary hover:border-accent transition-all"
-          @click="signInWithOAuth('google')"
-        >
-          <Icon name="flat-color-icons:google" /> Login with Google
-        </button>
-        <button
-          type="button"
-          class="flex items-center gap-2 text-sm justify-center w-1/2 border-2 border-light p-3 rounded-lg hover:bg-action hover:text-secondary hover:border-accent transition-all"
-          @click="signInWithOAuth('github')"
-        >
-          <Icon name="codicon:github" /> Login with Github
-        </button>
+      <div class="w-full flex flex-col items-center gap-2 justify-between">
+        <p class="text-sm" >Sign in with:</p>
+        <div class="w-full flex items-center gap-4 justify-between">
+          <button
+            type="button"
+            class="flex items-center gap-2 text-sm justify-center w-1/2 border-2 border-light p-3 rounded-lg hover:bg-action hover:text-secondary hover:border-accent transition-all"
+            @click="signInWithOAuth('google')"
+          >
+            <Icon class="w-[1.5rem] h-[1.5rem]" name="flat-color-icons:google" />Google
+          </button>
+          <button
+            type="button"
+            class="flex flex-nowrap items-center text-nowrap max-sm:text-[0.8rem] gap-2 text-sm justify-center w-1/2 border-2 border-light p-3 rounded-lg hover:bg-action hover:text-secondary hover:border-accent transition-all"
+            @click="signInWithOAuth('github')"
+          >
+            <Icon class="w-[1.5rem] h-[1.5rem]" name="codicon:github" />Github
+          </button>
+        </div>
       </div>
     </div>
   </section>

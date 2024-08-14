@@ -17,23 +17,29 @@ const formData = reactive<FormData>({
     class="w-full min-h-main flex items-center justify-center px[12%] py-6 text-primary dark:text-primary"
   >
     <div
-      class="flex flex-col items-center bg-white p-6 rounded-2xl gap-4 w-[30rem] max-sm:w-[18rem]"
+      class="flex flex-col items-center bg-white p-6 rounded-2xl gap-4 max-sm:gap-3 w-[30rem] max-sm:w-[18rem]"
     >
       <form
-        class="flex flex-col items-center bg-white gap-4 w-full max-sm:w-full"
+        class="flex flex-col items-center bg-white gap-4 max-sm:gap-3 w-full max-sm:w-full"
         @submit.prevent="signUpWithEmailAndPassword(formData)"
       >
-        <h1 class="font-bold text-lg">Sign up</h1>
-        <p class="text-sm text-gray-600 text-center mb-2">
+        <h1
+          class="font-bold text-lg border-b border-b-accent w-full text-center"
+        >
+          Sign up
+        </h1>
+        <p class="text-sm text-gray-600 text-center mb-2 max-sm:text-[0.8rem]">
           Alread have an account?
           <NuxtLink
-            to="/sign-up"
+            to="/login"
             class="text-accent hover:underline transition-all"
             >Sign in here</NuxtLink
           >
         </p>
-        <div class="flex flex-col w-full gap-4">
-          <div class="flex w-full items-center gap-4">
+        <div class="flex flex-col w-full gap-4 max-sm:gap-3">
+          <div
+            class="flex w-full items-center gap-4 max-sm:gap-3 max-sm:flex-col"
+          >
             <label class="w-full flex flex-col gap-1">
               First Name
               <input
@@ -148,7 +154,7 @@ const formData = reactive<FormData>({
               id="terms-of-use"
               class="mt-1"
             />
-            <p>
+            <p class="text-sm max-sm:text-[0.7rem]">
               By clicking Create an account, I agree that I have read and
               accepted the
               <NuxtLink
@@ -172,26 +178,32 @@ const formData = reactive<FormData>({
           Create an account
         </button>
         <span
-          class="w-full border-b-2 border-b-light relative flex items-center justify-center my-4"
+          class="w-full border-b border-b-accent relative flex items-center justify-center my-4"
         >
           <p class="text-sm absolute -bottom-[0.6rem] px-1 bg-white">or</p>
         </span>
       </form>
-      <div class="w-full flex items-center gap-4 justify-between">
-        <button
-          type="button"
-          class="flex items-center gap-2 text-sm justify-center w-1/2 border-2 border-light p-3 rounded-lg hover:bg-action hover:text-secondary hover:border-accent transition-all"
-          @click="signInWithOAuth('google')"
-        >
-          <Icon name="flat-color-icons:google" /> Sign with Google
-        </button>
-        <button
-          type="button"
-          class="flex items-center gap-2 text-sm justify-center w-1/2 border-2 border-light p-3 rounded-lg hover:bg-action hover:text-secondary hover:border-accent transition-all"
-          @click="signInWithOAuth('github')"
-        >
-          <Icon name="codicon:github" /> Sign with Github
-        </button>
+      <div class="w-full flex flex-col items-center gap-2 justify-between">
+        <p class="text-sm">Sign in with:</p>
+        <div class="w-full flex items-center gap-4 justify-between">
+          <button
+            type="button"
+            class="flex items-center gap-2 text-sm justify-center w-1/2 border-2 border-light p-3 rounded-lg hover:bg-action hover:text-secondary hover:border-accent transition-all"
+            @click="signInWithOAuth('google')"
+          >
+            <Icon
+              class="w-[1.5rem] h-[1.5rem]"
+              name="flat-color-icons:google"
+            />Google
+          </button>
+          <button
+            type="button"
+            class="flex flex-nowrap items-center text-nowrap max-sm:text-[0.8rem] gap-2 text-sm justify-center w-1/2 border-2 border-light p-3 rounded-lg hover:bg-action hover:text-secondary hover:border-accent transition-all"
+            @click="signInWithOAuth('github')"
+          >
+            <Icon class="w-[1.5rem] h-[1.5rem]" name="codicon:github" />Github
+          </button>
+        </div>
       </div>
     </div>
   </section>

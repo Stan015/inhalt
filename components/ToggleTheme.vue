@@ -1,20 +1,24 @@
 <script setup lang="ts">
-const colorMode = useColorMode()
+const colorMode = useColorMode();
 const isDark = computed({
-  get () {
-    return colorMode.value === 'dark'
+  get() {
+    return colorMode.value === "dark";
   },
-  set () {
-    colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
-  }
-})
+  set() {
+    colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
+  },
+});
+
+defineProps({
+  className: String,
+});
 </script>
 
 <template>
-  <button 
-  type="button"
+  <button
+    type="button"
     aria-labelledby="toggle theme"
-    class="absolute top-1 w-8 h-4 bg-light dark:bg-dark border border-accent rounded-3xl flex items-center px-[0.15rem] dark:justify-end transition-all"
+    :class="'absolute top-1 max-md:-top-[0.6rem] w-8 h-4 bg-light dark:bg-dark border border-accent rounded-3xl flex items-center px-[0.15rem] dark:justify-end transition-all ' + className"
     @click="isDark = !isDark"
   >
     <span

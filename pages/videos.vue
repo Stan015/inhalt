@@ -31,12 +31,7 @@
       </section>
     </div>
     <main class="block w-full h-full pb-6">
-      <nav class="flex gap-4 mb-4 text-primary dark:text-secondary">
-        <button type="button">For you</button>
-        <button type="button">Recent</button>
-        <button type="button">Trending</button>
-        <button type="button">Following</button>
-      </nav>
+      <DiscoveryNavLinks current-page="home" />
 
       <section>
         <article

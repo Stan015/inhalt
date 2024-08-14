@@ -29,7 +29,7 @@ defineProps<AuthorCard>();
       />
       <Icon v-else name="hugeicons:user" class="w-6 h-6 rounded-full border" />
     </span>
-    <h4 v-if="name !== null && name !== 'null' && name !== 'undefined'" class="text-end !text-sm !font-medium !mb-0">{{ name }}</h4>
-    <p v-if="occupation !== null && occupation !== 'null' && occupation !== 'undefined'" class="text-end !mb-0 !text-sm">{{ occupation }}</p>
+    <h4 v-if="name !== null && name !== 'null' && name !== 'undefined'" class="text-end !text-sm !font-medium !mb-0 max-sm:!text-[0.5rem]">{{ name }}</h4>
+    <p v-if="occupation !== null && occupation !== 'null' && occupation !== 'undefined'" class="text-end !mb-0 !text-sm  max-sm:!text-[0.5rem]">{{ occupation }}</p>
   </NuxtLink>
 </template>
