@@ -5,15 +5,11 @@ import bcrypt from "bcrypt";
 export default defineEventHandler(async (event) => {
   const supabase = await serverSupabaseClient<Array<User>>(event);
 
-  const { email, password, username, firstName, lastName, occupation } = getQuery(
-    event
-  ) as FormData;
+  const { email, password, username, firstName, lastName, occupation } =
+    getQuery(event) as FormData;
 
   const salt = bcrypt.genSaltSync(10);
   const passwordHash = await bcrypt.hash(password, salt);
-  // const isMatch = await bcrypt.compare(password, hash);
-
-  // let usersTableT;
 
   const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
     email: email,
@@ -21,8 +17,10 @@ export default defineEventHandler(async (event) => {
   });
 
   if (signUpError) {
-    console.log(signUpError.message);
+    console.log("Sign-up error:", signUpError.message);
   } else {
+    console.log("Sign-up successful, inserting user data into database");
+
     const { data: userTable, error: userTableError } = await supabase
       .from("users")
       .insert([
@@ -37,9 +35,12 @@ export default defineEventHandler(async (event) => {
       ]);
 
     if (userTableError) {
-      console.log(userTableError.message);
+      console.log("User table insertion error:", userTableError.message);
     } else {
-      console.log({ "sign-up-data": signUpData, "users-table": userTable });
+      console.log("User data inserted successfully", {
+        "sign-up-data": signUpData,
+        "users-table": userTable,
+      });
     }
   }
 

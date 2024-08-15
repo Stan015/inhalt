@@ -8,10 +8,12 @@ export default defineEventHandler(async (event) => {
     provider: string;
   };
 
+  const origin = event.headers.get("origin");
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: provider as Provider,
     options: {
-      redirectTo: "http://localhost:3000/",
+      redirectTo: `${origin}/confirm`,
     },
   });
 

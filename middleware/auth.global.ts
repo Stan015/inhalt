@@ -1,10 +1,31 @@
 import { useUserStore } from "~/store/userStore";
-// import type { User, UserData } from "~/types/user.types";
+import type { User } from "~/types/user.types";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const supabase = useSupabaseClient();
+  const supabase = useSupabaseClient<User>();
   const supabaseUser = useSupabaseUser().value;
   const userStore = useUserStore();
+
+  // Extract access code from URL parameters
+  const accessCode = to.query.code;
+
+  if (accessCode) {
+    try {
+      const { error } = await supabase.auth.exchangeCodeForSession(
+        accessCode as string
+      );
+
+      if (error) {
+        console.error("Error verifying access token:", error.message);
+        return navigateTo("/error");
+      }
+
+      return navigateTo("/confirm");
+    } catch (error) {
+      console.error("Unexpected error:", (error as Error).message);
+      return navigateTo("/error");
+    }
+  }
 
   if (supabaseUser) {
     userStore.setIsLoggedIn(true);
@@ -42,22 +63,41 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         user_metadata: { full_name, avatar_url, user_name },
       } = supabaseUser;
 
-      const { data: userTableData, error: userTableError } = await supabase
-        .from("users")
-        .insert([
-          {
-            id: newUserId,
-            email: newUserEmail,
-            full_name: full_name,
-            username: user_name,
-            avatar: avatar_url,
-          },
-        ]);
+      if (!user_name) {
+        const { data: userTableData, error: userTableError } = await supabase
+          .from("users")
+          .insert([
+            {
+              id: newUserId,
+              email: newUserEmail,
+              full_name: full_name,
+              avatar: avatar_url,
+            },
+          ]);
 
-      if (userTableError) {
-        console.log(userTableError.message);
+        if (userTableError) {
+          console.log(userTableError.message);
+        } else {
+          console.log("users-table", userTableData);
+        }
       } else {
-        console.log("users-table", userTableData);
+        const { data: userTableData, error: userTableError } = await supabase
+          .from("users")
+          .insert([
+            {
+              id: newUserId,
+              email: newUserEmail,
+              full_name: full_name,
+              username: user_name,
+              avatar: avatar_url,
+            },
+          ]);
+
+        if (userTableError) {
+          console.log(userTableError.message);
+        } else {
+          console.log("users-table", userTableData);
+        }
       }
     }
     userStore.setEmailChecked(true);

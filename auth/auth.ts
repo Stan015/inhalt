@@ -11,7 +11,7 @@ export const signInWithEmailAndPassword = async (
 
     if (response) {
       // console.log(response);
-      navigateTo("/");
+      navigateTo("/confirm");
     }
   } catch (error) {
     console.log((error as Error).message);

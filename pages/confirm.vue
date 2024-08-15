@@ -1,11 +1,12 @@
 <script setup lang="ts">
 const user = useSupabaseUser();
+const route = useRouter();
 
 watch(
   user,
   () => {
     if (user.value) {
-      return navigateTo("/");
+      route.push("/");
     }
   },
   { immediate: true }
