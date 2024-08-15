@@ -5,6 +5,7 @@ import { signOut } from "~/auth/auth";
 import { useUserStore } from "~/store/userStore";
 
 const userStore = useUserStore();
+const username = userStore.userCredentials.username as string;
 const userInhalts = ref<Array<Article> | null>(null);
 const isLoading = ref(true);
 
@@ -106,7 +107,7 @@ onMounted(() => {
         </section>
         <button
           @click="signOut"
-          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary  dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
+          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
           type="button"
         >
           Sign Out
@@ -123,6 +124,7 @@ onMounted(() => {
         <div class="w-full h-full flex flex-col gap-4">
           <div
             class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
+            v-if="userInhalts?.length !== 0 && userInhalts !== null"
             v-for="inhalt in userInhalts"
             :key="inhalt.id"
           >
@@ -144,6 +146,19 @@ onMounted(() => {
                 :author-username="inhalt?.author_username"
               />
             </div>
+          </div>
+          <div v-else class="w-full flex flex-col items-center gap-4">
+            <p class="text-[1.1rem] font-medium text-center">
+              You have not created an inhalt article yet. Create to gain more
+              visibility.
+            </p>
+            <NuxtLink
+              :to="`/${username}/create-inhalt`"
+              class="flex items-center gap-1 flex-shrink-0 px-2 border-b-2 bg-action text-secondary dark:text-secondary hover:-translate-y-1 hover:translate-x-1 transition-all h-10 rounded-3xl w-max"
+            >
+              <Icon name="ph:plus-bold" />
+              create inhalt
+            </NuxtLink>
           </div>
         </div>
       </main>

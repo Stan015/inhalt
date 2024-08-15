@@ -7,35 +7,36 @@ import type { Follower } from "~/types/user.types";
 const userStore = useUserStore();
 const username = userStore.userCredentials.username as string;
 
-const route = useRoute();
-
 const fullName = userStore.userCredentials.fullName as string;
-const userToFollow = route.params.userprofile as string;
+const userToFollow = ref<string>('');
 const isLoadingFollow = ref(false);
 const dateOfFollow = new Date().toISOString();
-const followingUser = ref(false);
+const followingUser = ref(true);
 const currentAuthUser = ref(false);
 
-if (username == userToFollow) {
+if (username == userToFollow.value) {
   currentAuthUser.value = true;
 }
 
-const currentFollowing = userStore.userCredentials.following as Array<Follower>;
+const currentFollowing =
+  (userStore.userCredentials.following as Array<Follower>) || [];
 
-if (currentFollowing?.some((user) => user.username === userToFollow)) {
+if (currentFollowing?.some((user) => user.username === userToFollow.value)) {
   followingUser.value = true;
 }
 
 // toggle follow button
 const handleFollow = () => {
-  toggleFollow({
-    username,
-    fullName,
-    userToFollow,
-    isLoadingFollow,
-    following: followingUser.value,
-    dateOfFollow,
-  });
+  if (userToFollow.value) {
+    toggleFollow({
+      username,
+      fullName,
+      userToFollow: userToFollow.value,
+      isLoadingFollow,
+      following: followingUser,
+      dateOfFollow,
+    });
+  }
 };
 
 onMounted(() => {
@@ -130,7 +131,7 @@ onMounted(() => {
         <div class="w-full h-full flex flex-col gap-4">
           <div
             class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
-            v-if="currentFollowing.length !== 0"
+            v-if="currentFollowing.length > 0"
             v-for="following in currentFollowing"
             :key="following.username"
           >
@@ -138,7 +139,7 @@ onMounted(() => {
               class="flex w-full h-max justify-between items-center"
               :to="`/${following.username}`"
             >
-              <h3 class="!mb-0" >{{ following.full_name }}</h3>
+              <h3 class="!mb-0">{{ following.full_name }}</h3>
             </NuxtLink>
             <div class="flex gap-4 cursor-default mb-1">
               <FollowButton
@@ -146,19 +147,21 @@ onMounted(() => {
                 :is-loading-follow="isLoadingFollow"
                 :following="followingUser"
                 :current-auth-user="currentAuthUser"
+                @click="userToFollow = following.username"
               />
             </div>
           </div>
-          <div v-else class="w-full flex flex-col items-center gap-4" >
-              <p class="text-[1.1rem] font-medium text-center">You do not have followers yet. Create inhalt to gain more visibility.</p>
-              <NuxtLink 
-                :to="`/${username}/create-inhalt`"
-                class="flex items-center gap-1 flex-shrink-0 px-2 border-b-2 bg-action text-secondary dark:text-secondary hover:-translate-y-1 hover:translate-x-1 transition-all h-10 rounded-3xl w-max"
-                >
-                <Icon name="ph:plus-bold" />
-                create inhalt
-              </NuxtLink>
-            </div>
+          <div v-else class="w-full flex flex-col items-center gap-4">
+            <p class="text-[1.1rem] font-medium text-center">
+              You are not following anyone yet. Look up inhalt users and follow.
+            </p>
+            <NuxtLink
+              to="/"
+              class="flex items-center gap-1 flex-shrink-0 px-2 border-b-2 bg-action text-secondary dark:text-secondary hover:-translate-y-1 hover:translate-x-1 transition-all h-8 rounded-3xl w-max"
+            >
+              Go to homepage
+            </NuxtLink>
+          </div>
         </div>
       </main>
     </div>

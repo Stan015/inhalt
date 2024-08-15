@@ -16,14 +16,14 @@ defineProps({
     v-if="!currentAuthUser"
     :class="
       following
-        ? ' bg-light text-primary rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all'
-        : 'bg-accent text-secondary rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all'
+        ? ' bg-light text-primary rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all text-nowrap min-w-24'
+        : 'bg-accent text-secondary rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all text-nowrap  min-w-24'
     "
     type="button"
     @click="handleFollow"
   >
     <Icon v-if="isLoadingFollow" name="line-md:uploading-loop" />
-    <span v-if="following && !isLoadingFollow">Unfollow</span>
+    <span v-else-if="following && !isLoadingFollow">Unfollow</span>
     <span v-else>Follow</span>
   </button>
 </template>

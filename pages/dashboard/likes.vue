@@ -123,6 +123,7 @@ onMounted(() => {
         <div class="w-full h-full flex flex-col gap-4">
           <div
             class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
+            v-if="userInhalts && userInhalts.length > 0"
             v-for="inhalt in userInhalts"
             :key="inhalt.id"
           >
@@ -144,6 +145,17 @@ onMounted(() => {
                 :author-username="inhalt?.author_username"
               />
             </div>
+          </div>
+          <div v-else class="w-full flex flex-col items-center gap-4">
+            <p class="text-[1.1rem] font-medium text-center">
+              You not liked any inhalt yet. Explore and engage inhalts.
+            </p>
+            <NuxtLink
+              to="/"
+              class="flex items-center gap-1 flex-shrink-0 px-2 border-b-2 bg-action text-secondary dark:text-secondary hover:-translate-y-1 hover:translate-x-1 transition-all h-8 rounded-3xl w-max"
+            >
+              Go to homepage
+            </NuxtLink>
           </div>
         </div>
       </main>

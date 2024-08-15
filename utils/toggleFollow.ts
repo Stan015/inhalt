@@ -34,7 +34,8 @@ export const toggleFollow = async ({
       .single();
 
     if (userToFollowError) {
-      throw new Error("Failed to fetch details of the user to follow");
+      console.error("Failed to fetch user to follow data");
+      throw new Error(userToFollowError.message);
     }
 
     // Fetch current user's following list

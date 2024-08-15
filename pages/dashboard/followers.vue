@@ -25,7 +25,8 @@ if (currentFollowing?.some((user) => user.username === userToFollow)) {
   following.value = true;
 }
 
-const currentFollowers = userStore.userCredentials.followers as Array<Follower>;
+const currentFollowers =
+  (userStore.userCredentials.followers as Array<Follower>) || [];
 
 // toggle follow button
 const handleFollow = () => {
@@ -131,7 +132,7 @@ onMounted(() => {
         <div class="w-full h-full flex flex-col gap-4">
           <div
             class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
-            v-if="currentFollowers.length !== 0"
+            v-if="currentFollowers.length > 0"
             v-for="follower in currentFollowers"
             :key="follower.username"
           >
@@ -150,16 +151,19 @@ onMounted(() => {
               />
             </div>
           </div>
-          <div v-else class="w-full flex flex-col items-center gap-4" >
-              <p class="text-[1.1rem] font-medium text-center">You do not have followers yet. Create inhalt to gain more visibility.</p>
-              <NuxtLink 
-                :to="`/${username}/create-inhalt`"
-                class="flex items-center gap-1 flex-shrink-0 px-2 border-b-2 bg-action text-secondary dark:text-secondary hover:-translate-y-1 hover:translate-x-1 transition-all h-10 rounded-3xl w-max"
-                >
-                <Icon name="ph:plus-bold" />
-                create inhalt
-              </NuxtLink>
-            </div>
+          <div v-else class="w-full flex flex-col items-center gap-4">
+            <p class="text-[1.1rem] font-medium text-center">
+              You do not have followers yet. Create inhalt to gain more
+              visibility.
+            </p>
+            <NuxtLink
+              :to="`/${username}/create-inhalt`"
+              class="flex items-center gap-1 flex-shrink-0 px-2 border-b-2 bg-action text-secondary dark:text-secondary hover:-translate-y-1 hover:translate-x-1 transition-all h-10 rounded-3xl w-max"
+            >
+              <Icon name="ph:plus-bold" />
+              create inhalt
+            </NuxtLink>
+          </div>
         </div>
       </main>
     </div>

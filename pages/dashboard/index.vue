@@ -199,18 +199,18 @@ onMounted(() => {
             </p>
             <div class="flex gap-4 items-center justify-center">
               <NuxtLink
-                :to="user?.socials.linkedin"
+                :to="socials?.linkedin"
                 class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
               >
                 <Icon name="mdi:linkedin" />
               </NuxtLink>
               <NuxtLink
-                :to="user?.socials.github"
+                :to="socials?.github"
                 class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
                 ><Icon name="mdi:github"
               /></NuxtLink>
               <NuxtLink
-                :to="user?.socials.twitter"
+                :to="socials?.twitter"
                 class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1rem] flex items-center"
                 ><Icon name="prime:twitter"
               /></NuxtLink>
