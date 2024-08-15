@@ -7,8 +7,8 @@ test("user can log in", async ({ page }) => {
   await page.fill('input[name="password"]', "password123");
   await page.click('button[type="submit"]');
 
-  await page.waitForSelector("/confirm"); // Replace with a selector that appears after login
+  await page.waitForURL("/confirm");
 
   const url = page.url();
-  expect(url).toBe("http://localhost:3000/confirm"); // Replace with the expected URL after login
+  expect(url).toBe("http://localhost:3000/confirm");
 });
