@@ -1,9 +1,9 @@
 import { serverSupabaseClient } from "#supabase/server";
-import { FormData } from "~/types/user.types";
+import { FormData, User } from "~/types/user.types";
 import bcrypt from "bcrypt";
 
 export default defineEventHandler(async (event) => {
-  const supabase = await serverSupabaseClient(event);
+  const supabase = await serverSupabaseClient<Array<User>>(event);
 
   const { email, password, username, firstName, lastName, occupation } = getQuery(
     event
