@@ -6,9 +6,9 @@ html {
   @apply flex flex-col w-full h-full items-center
 }
 
-* {
+/* * {
   border: 0.2px solid red;
-}
+} */
 
 body {
   @apply font-sans text-primary bg-light dark:bg-dark dark:text-secondary max-w-[2000px] w-full;
