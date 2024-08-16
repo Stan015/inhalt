@@ -81,6 +81,7 @@ onMounted(() => {
     @click="showShareOptions = !showShareOptions"
     type="button"
     aria-labelledby="share"
+    class="relative flex flex-col items-center"
   >
     <Icon name="uil:share" />
   </button>

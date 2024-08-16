@@ -120,7 +120,7 @@ watch(
 <template>
   <button
     @click="handleBookmark"
-    class="relative"
+    class="relative flex flex-col items-center"
     type="button"
     aria-labelledby="bookmark"
   >

@@ -2,9 +2,11 @@
 
 <template>
   <div
-    class="w-full min-h-main grid grid-cols-[13rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%] text-primary dark:text-primary"
+    class="w-full min-h-main flex gap-4 py-6 px-[12%] relative max-md:px-[7%]"
   >
-    <div class="flex flex-col gap-4 justify-between w-full h-full">
+    <div
+      class="flex flex-col gap-4 min-w-[12rem] justify-between h-max min-h-[calc(100svh-8rem)] text-primary dark:text-primary max-md:hidden min-lg:min-w-[10rem]"
+    >
       <nav class="flex flex-col gap-4 w-full h-max">
         <NuxtLink
           to="/"
@@ -25,72 +27,92 @@
           ><Icon name="lets-icons:video-fill" /> Videos</NuxtLink
         >
       </nav>
-      <section class="w-full h-max bg-white rounded-2xl p-4">
-        <h2>News</h2>
-        <div class="w-full h-[20rem]"></div>
+      <section
+        class="w-full h-[20rem] bg-white rounded-2xl p-4 text-primary dark:text-primary mb-4"
+      >
+        <h2 class="w-full border-b border-b-accent" >News</h2>
+        <div class="w-full"></div>
       </section>
     </div>
-    <main class="block w-full h-full pb-6">
+    <main class="block w-full h-full pb-6 text-primary dark:text-primary">
       <DiscoveryNavLinks current-page="home" />
-
-      <section>
+      <section class="flex flex-col gap-4 w-full min-h-dvh h-full">
         <article
-          class="w-full h-max rounded-2xl border border-white relative overflow-hidden"
+    class="w-full h-max rounded-2xl border border-white relative overflow-hidden text-primary dark:text-primary"
+  >
+    <NuxtLink
+      to=""
+        class="w-full h-max block"
+    >
+      <NuxtImg
+      src="/img4.jpg"        alt="cover photo"
+        loading="lazy"
+        class="w-full max-h-[17rem] max-sm:max-h-[11rem]"
+      />
+    </NuxtLink>
+
+    <div class="w-full h-max bg-white">
+      <NuxtLink
+        to=""
+      >
+        <h2
+          class="w-full text-center font-bold !text-[1.5rem] max-sm:!text-[1.2rem] px-4 pt-2"
         >
-          <NuxtLink to="/stan015/articles/123">
-            <NuxtImg
-              src="/img4.jpg"
-              alt="cover photo"
-              class="w-full max-h-[18rem]"
-            />
-          </NuxtLink>
-          <div class="w-full h-max bg-white px-4 pb-4">
-            <NuxtLink to="/stan015/articles/123">
-                <h2 class="w-full text-center font-bold text-[1.5rem] pt-4">
-                    Video Inhalt Comming Soon! 🚀
-              </h2>
-            </NuxtLink>
-            <div class="flex items-end justify-between gap-6">
-              <div class="text-[0.7rem]">
-                <span>Jul 9</span> .
-                <span>10 min read</span>
-              </div>
+          Video inhalts coming soon! 🚀
+        </h2>
+      </NuxtLink>
 
-              <div class="flex gap-4 cursor-default">
-                <!-- <LikeButton /> -->
-                <!-- <CommentButton /> -->
-                <!-- <BookmarkButton /> -->
-                <ShareButton />
-              </div>
+      <div
+        class="flex items-end justify-between gap-6 max-md:gap-3 rounded-2xl border-t border-t-accent px-4 pt-2 pb-4"
+      >
+        <div class="flex flex-col justify-end">
+          <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
+            Aug 16, 2024
+          </p>
+          <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
+            10:00 AM
+          </p>
+          <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
+            11 min read
+          </p>
+        </div>
 
-              <NuxtLink to="/" class="flex flex-col items-end text-[0.7rem]">
-                <NuxtImg
-                  src="/img2.png"
-                  alt="user profile picture"
-                  class="w-6 h-6 rounded-full border"
-                />
-                <h3 class="text-end font-medium">Stanley Azi</h3>
-                <p class="text-end">Frontend Developer</p>
-              </NuxtLink>
-            </div>
-          </div>
-        </article>
+        <div class="flex gap-4 cursor-default max-md:gap-3 items-center">
+          <LikeButton />
+          <CommentButton />
+          <BookmarkButton/>
+          <ShareButton
+          />
+        </div>
+
+        <ProfileCard
+          user-profile-link=""
+          name="Stanley Azi"
+          occupation="Frontend Developer"
+          profile-photo-src="/img2.png"
+          class-name="items-end text-primary dark:text-primary"
+        />
+      </div>
+    </div>
+  </article>
       </section>
     </main>
-    <aside class="flex flex-col gap-6 w-full h-full">
-      <section class="w-full h-max bg-white rounded-2xl p-4">
-        <h2>Promotion</h2>
+    <aside
+      class="flex flex-col justify-between gap-4 min-w-[15rem] h-max min-h-[calc(100svh-8rem)] text-primary dark:text-primary max-md:absolute max-md:w-[20rem] max-md:right-[7%] max-lg:hidden"
+    >
+      <section class="w-full h-[20rem] bg-white rounded-2xl p-4">
+        <h2 class="w-full border-b border-b-accent">Promotion</h2>
         <div class="w-full h-[20rem]"></div>
       </section>
 
-      <section class="w-full h-max bg-white rounded-2xl p-4">
-        <h2>Hot Trends <Icon name="fluent-emoji-flat:fire" /></h2>
-        <div class="w-full h-[25rem]">
-          <h3>Rendering images the good way</h3>
-          <h3>18 tools to master Nuxt</h3>
-          <h3>Vue is getting super fun!</h3>
-          <h3>Iconify + Nuxt</h3>
-          <h3>Next vs Nuxt</h3>
+      <section class="w-full h-[20rem] bg-white rounded-2xl p-4 mb-4">
+        <h2 class="w-full border-b border-b-accent">Hot Trends <Icon name="fluent-emoji-flat:fire" /></h2>
+        <div class="w-full h-[25rem] flex flex-col gap-2">
+          <NuxtLink to="" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">Rendering images the good way</NuxtLink>
+          <NuxtLink to="" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">18 tools to master Nuxt</NuxtLink>
+          <NuxtLink to="" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">Vue is getting super fun!</NuxtLink>
+          <NuxtLink to="" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">Iconify + Nuxt</NuxtLink>
+          <NuxtLink to="" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">Next vs Nuxt</NuxtLink>
         </div>
       </section>
     </aside>

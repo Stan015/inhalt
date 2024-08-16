@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import type { Follower } from "~/types/user.types";
+
 import { signOut } from "~/auth/auth";
 import { useUserStore } from "../../store/userStore";
 import { fetchUserFollowing, toggleFollow } from "~/utils/toggleFollow";
-import type { Follower } from "~/types/user.types";
+import { useGetWindowWidth } from "~/composables/useGetWindowWidth";
 
 const userStore = useUserStore();
 const username = userStore.userCredentials.username as string;
 
 const fullName = userStore.userCredentials.fullName as string;
-const userToFollow = ref<string>('');
+const userToFollow = ref<string>("");
 const isLoadingFollow = ref(false);
 const dateOfFollow = new Date().toISOString();
 const followingUser = ref(true);
@@ -39,21 +41,43 @@ const handleFollow = () => {
   }
 };
 
+const { isDashboardMenuOpen } = useGetWindowWidth();
+const setDashboardMenu = ref(isDashboardMenuOpen);
+
+const toggleDashboardMenu = () => {
+  setDashboardMenu.value = !setDashboardMenu.value;
+};
+
 onMounted(() => {
   fetchUserFollowing({ username, isLoadingFollowing: { value: true } });
 });
 </script>
 
 <template>
-  <div class="py-6 px-[12%] min-h-main w-full text-primary dark:text-primary">
-    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">
-      My Dashboard
-    </h1>
-    <div
-      class="w-full min-h-[calc(100svh-13rem)] grid grid-cols-[15rem_1fr] grid-rows-1 gap-4"
-    >
+  <div
+    class="py-6 px-[12%] max-lg:px-[7%] min-h-main w-full text-primary dark:text-primary relative"
+  >
+    <div class="flex w-full gap-6 justify-between">
+      <h1
+        class="font-bold text-[1.5rem] max-sm:text-[1.3rem] mb-4 text-primary dark:text-secondary"
+      >
+        My Dashboard
+      </h1>
+      <button
+        @click="toggleDashboardMenu"
+        type="button"
+        class="w-8 h-8 rounded-full hidden max-md:block"
+      >
+        <Icon
+          class="bg-accent w-8 h-8"
+          name="streamline:horizontal-menu-circle-solid"
+        />
+      </button>
+    </div>
+    <div class="w-full min-h-[calc(100svh-13rem)] h-full flex gap-4">
       <section
-        class="rounded-2xl flex flex-col justify-between items-center gap-4"
+        v-if="setDashboardMenu"
+        class="rounded-2xl flex flex-col justify-between items-center gap-6 h-[calc(100%-5rem)] min-w-[12rem] relative max-md:absolute max-md:right-[7%] max-md:top-[5rem] max-md:bg-black/[0.9] max-md:z-20 max-md:pl-8 max-md:py-8 transition-all"
       >
         <nav class="flex flex-col gap-4 w-full h-max">
           <NuxtLink
@@ -96,19 +120,19 @@ onMounted(() => {
           >
           <NuxtLink
             to="/dashboard/followers"
-            aria-current="false"
+            aria-current="true"
             class="flex flex-shrink-0 items-center gap-3 w-[90%] bg-white border-b-2 border-b-white hover:border-b-accent transition-all px-4 py-[1.5px] rounded-l-lg relative after:content-[' '] after:w-2 after:h-full after:absolute after:right-[-10%] after:rounded-l-2xl after:bg-white after:pointer-events-none aria-[current=true]:after:bg-accent"
             ><Icon name="game-icons:shadow-follower" /> Followers</NuxtLink
           >
           <NuxtLink
             to="/dashboard/following"
-            aria-current="true"
+            aria-current="false"
             class="flex flex-shrink-0 items-center gap-3 w-[90%] bg-white border-b-2 border-b-white hover:border-b-accent transition-all px-4 py-[1.5px] rounded-l-lg relative after:content-[' '] after:w-2 after:h-full after:absolute after:right-[-10%] after:rounded-l-2xl after:bg-white after:pointer-events-none aria-[current=true]:after:bg-accent"
             ><Icon name="simple-line-icons:user-following" />
             Following</NuxtLink
           >
         </nav>
-        <section class="w-full h-max bg-white rounded-2xl p-4">
+        <section class="w-full h-[18rem] bg-white rounded-2xl p-4">
           <h2>News</h2>
           <div class="w-full h-[15rem]"></div>
         </section>
@@ -121,10 +145,10 @@ onMounted(() => {
         </button>
       </section>
       <main
-        class="w-full min-h-[16rem] h-full flex flex-col gap-4 bg-white rounded-2xl p-4"
+        class="w-full min-h-screen h-full flex flex-col gap-4 bg-white rounded-2xl p-4"
       >
         <h2
-          class="text-[1.5rem] font-semibold mb-2 w-full border-b-2 border-b-accent"
+          class="text-[1.5rem] max-sm:text-[1.1rem] font-semibold mb-2 w-full border-b-2 border-b-accent"
         >
           My Following
         </h2>
@@ -136,10 +160,10 @@ onMounted(() => {
             :key="following.username"
           >
             <NuxtLink
-              class="flex w-full h-max justify-between items-center"
+              class="flex w-full h-max justify-between items-center text-base font-medium"
               :to="`/${following.username}`"
             >
-              <h3 class="!mb-0">{{ following.full_name }}</h3>
+              {{ following.full_name }}
             </NuxtLink>
             <div class="flex gap-4 cursor-default mb-1">
               <FollowButton
@@ -152,7 +176,9 @@ onMounted(() => {
             </div>
           </div>
           <div v-else class="w-full flex flex-col items-center gap-4">
-            <p class="text-[1.1rem] font-medium text-center">
+            <p
+              class="text-[1.1rem] max-sm:text-[0.8rem] font-medium text-center"
+            >
               You are not following anyone yet. Look up inhalt users and follow.
             </p>
             <NuxtLink

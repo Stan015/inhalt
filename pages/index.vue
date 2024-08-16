@@ -71,7 +71,7 @@ onBeforeMount(() => {
       </section>
     </div>
     <main class="block w-full h-full pb-6 text-primary dark:text-primary">
-      <DiscoveryNavLinks current-page="home" />
+      <DiscoveryNavLinks current-page="for-you" />
       <section class="flex flex-col gap-4 w-full min-h-dvh h-full">
         <InhaltCard :all-article-cards="allArticleCards" />
       </section>

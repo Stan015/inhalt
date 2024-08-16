@@ -16,8 +16,8 @@ defineProps({
     v-if="!currentAuthUser"
     :class="
       following
-        ? ' bg-light text-primary rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all text-nowrap min-w-24'
-        : 'bg-accent text-secondary rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all text-nowrap  min-w-24'
+        ? ' bg-light text-primary rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all text-nowrap min-w-24 w-max'
+        : 'bg-accent text-secondary rounded-2xl px-4 py-1 hover:-translate-y-1 hover:translate-x-1 transition-all text-nowrap  min-w-24 w-max'
     "
     type="button"
     @click="handleFollow"

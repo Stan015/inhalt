@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/color-mode",
     "@nuxt/test-utils/module",
+    "@vueuse/nuxt",
   ],
   supabase: {
     url: process.env.NUXT_PUBLIC_SUPABASE_URL,

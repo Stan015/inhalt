@@ -13,9 +13,11 @@ defineProps({
     :key="article.id"
   >
     <NuxtLink
+      v-if="article.cover_image"
       :to="`/${article.author_username}/articles/${article.id}--${article.title
         .replace(/\s+/g, '-')
         .toLowerCase()}`"
+        class="w-full h-max block"
     >
       <NuxtImg
         v-if="article.cover_image"

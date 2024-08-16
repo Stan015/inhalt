@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { signOut } from "~/auth/auth";
 import type { Article, ArticleCard } from "~/types/tables.types";
 import type { User } from "~/types/user.types";
 import { useRoute } from "vue-router";
 import { useUserStore } from "../../store/userStore";
-import { toggleFollow, fetchUserFollowers, fetchUserFollowing } from '../../utils/toggleFollow';
+import {
+  toggleFollow,
+} from "../../utils/toggleFollow";
 
 const userStore = useUserStore();
 const socials = userStore.userCredentials.socials;
@@ -74,7 +75,6 @@ const following = ref(false);
 const currentAuthUser = ref(false);
 const currentFollowing = userStore.userCredentials.following;
 
-
 if (username == userToFollow) {
   currentAuthUser.value = true;
 }
@@ -113,116 +113,122 @@ watch(
 
 <template>
   <div
-    class="w-full min-h-main grid grid-cols-[15rem_minmax(20rem,_1fr)_20rem] grid-rows-1 gap-4 py-6 px-[12%] text-primary dark:text-primary"
+    class="w-full min-h-main flex max-md:flex-col gap-4 py-6 px-[12%] max-lg:px-[7%] text-primary dark:text-primary"
   >
     <section
-      class="bg-white p-6 rounded-2xl flex flex-col justify-between items-center h-full max-h-[calc(100svh-8rem)]"
+      class="bg-white p-6 rounded-2xl flex flex-col justify-between items-center h-[calc(100svh-8rem)] max-h-[calc(100svh-8rem)] max-md:h-max max-w-[15rem] max-md:max-w-full"
     >
-      <div>
+      <div class="w-full">
         <h1
-          class="text-[1.5rem] font-bold mb-4 w-full border-b-2 border-b-accent"
+          class="text-[1.5rem] max-sm:text-[1.3rem] font-bold mb-4 w-full border-b-2 border-b-accent"
         >
           Profile
         </h1>
-        <div class="flex flex-col gap-4 items-center justify-center">
-          <span
-            class="w-[6rem] h-[6rem] rounded-full border-2 border-accent overflow-hidden"
+        <div class="w-full flex flex-col gap-4 items-center">
+          <div
+            class="flex flex-col max-md:flex-row max-sm:flex-col gap-4 items-center justify-center"
           >
-            <NuxtImg
-              v-if="user?.avatar"
-              class="w-full h-full rounded-full"
-              :src="user.avatar"
-              alt="avatar"
+            <span
+              class="max-w-[6rem] max-h-[6rem] w-[6rem] h-[6rem] rounded-full border-2 border-accent overflow-hidden"
+            >
+              <NuxtImg
+                v-if="user?.avatar"
+                class="w-full h-full rounded-full"
+                :src="user.avatar"
+                alt="avatar"
+              />
+              <Icon
+                v-else
+                name="hugeicons:user"
+                class=" w-full h-full rounded-full"
+              />
+            </span>
+            <div class="flex flex-col items-center gap-1">
+              <h2 class="mb-0 text-center text-[1.3rem] max-sm:text-[1.1rem]">{{ user?.fullName }}</h2>
+              <p class="text-base text-center text-accent">
+                {{ user?.username }}
+              </p>
+              <p
+                v-if="user?.occupation"
+                class="text-base text-center border-2 border-black px-2 py-1 rounded-2xl mt-1 text-primary"
+              >
+                {{ user.occupation }}
+              </p>
+            </div>
+            <div class="max-md:max-w-[18rem] h-full flex flex-col gap-4 items-center">
+              <p
+                v-if="user?.bio"
+                class="text-base max-sm:text-[0.9rem] text-center text-primary text-balance mt-2"
+              >
+                {{ user.bio }}
+              </p>
+              <div class="flex gap-4 items-center justify-center mb-2">
+                <NuxtLink
+                  :to="socials?.linkedin"
+                  class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
+                >
+                  <Icon name="mdi:linkedin" />
+                </NuxtLink>
+                <NuxtLink
+                  :to="socials?.github"
+                  class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
+                  ><Icon name="mdi:github"
+                /></NuxtLink>
+                <NuxtLink
+                  :to="socials?.twitter"
+                  class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1rem] flex items-center"
+                  ><Icon name="prime:twitter"
+                /></NuxtLink>
+              </div>
+
+              <FollowButton
+              @toggleFollow="handleFollow"
+              :is-loading-follow="isLoadingFollow"
+              :following="following"
+              :current-auth-user="currentAuthUser"
             />
-            <Icon
-              v-else
-              name="hugeicons:user"
-              class="w-full h-full rounded-full"
-            />
-          </span>
-          <div class="flex flex-col items-center gap-1">
-            <h2 class="mb-0 text-center text-[1.3rem]">{{ user?.fullName }}</h2>
-            <p class="text-base text-center text-accent">
-              {{ user?.username }}
-            </p>
-            <p
-              v-if="user?.occupation"
-              class="text-base text-center border-2 border-black px-2 py-1 rounded-2xl mt-1 text-primary"
-            >
-              {{ user.occupation }}
-            </p>
-            <p
-              v-if="user?.bio"
-              class="text-base text-center text-primary text-balance mt-2"
-            >
-              {{ user.bio }}
-            </p>
+            </div>
           </div>
-          <div class="flex gap-4 items-center justify-center mb-2">
-            <NuxtLink
-              :to="socials?.linkedin"
-              class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
-            >
-              <Icon name="mdi:linkedin" />
-            </NuxtLink>
-            <NuxtLink
-              :to="socials?.github"
-              class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1.2rem] flex items-center"
-              ><Icon name="mdi:github"
-            /></NuxtLink>
-            <NuxtLink
-              :to="socials?.twitter"
-              class="p-2 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-[1rem] flex items-center"
-              ><Icon name="prime:twitter"
-            /></NuxtLink>
-          </div>
-          <FollowButton @toggleFollow="handleFollow" :is-loading-follow="isLoadingFollow" :following="following" :current-auth-user="currentAuthUser" />
+          
         </div>
       </div>
-      <button
-        @click="signOut"
-        class="px-4 py-1 rounded-3xl border-b-2 border-light dark:border-dark hover:border-accent transition-all text-base flex items-center w-max"
-        type="button"
-      >
-        Sign Out
-      </button>
     </section>
-    <main class="bg-white p-6 rounded-2xl flex flex-col gap-4">
+    <main class="bg-white p-6 rounded-2xl flex flex-col gap-4 w-full">
       <section
-        class="grid grid-cols-3 place-items-center gap-2 text-base border-b-2 border-b-accent pb-2 w-full"
+        class="grid grid-cols-3 place-items-center gap-2 text-base max-sm:text-[0.8rem] border-b-2 border-b-accent pb-2 w-full"
       >
-        <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+        <p class="min-w-[10rem] max-sm:min-w-max p-4 flex flex-col items-center justify-center">
+          <span class="font-bold text-[1.2rem] max-sm:text-base text-accent h-6">{{
             user?.total_likes || 0
           }}</span>
           Likes
         </p>
-        <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+        <p class="min-w-[10rem] max-sm:min-w-max p-4 max-sm:p-2 flex flex-col items-center justify-center">
+          <span class="font-bold text-[1.2rem] max-sm:text-base text-accent h-6">{{
             user?.total_articles! + user?.total_videos! || 0
           }}</span>
           Inhalts
         </p>
-        <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+        <p class="min-w-[10rem] max-sm:min-w-max p-4 max-sm:p-2 flex flex-col items-center justify-center">
+          <span class="font-bold text-[1.2rem] max-sm:text-base text-accent h-6">{{
             user?.total_bookmarks || 0
           }}</span>
           Bookmarks
         </p>
-        <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+        <p class="min-w-[10rem] max-sm:min-w-max p-4 max-sm:p-2 flex flex-col items-center justify-center">
+          <span class="font-bold text-[1.2rem] max-sm:text-base text-accent h-6">{{
             user?.followers?.length || 0
           }}</span>
           Followers
         </p>
-        <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+        <p class="min-w-[10rem] max-sm:min-w-max p-4 max-sm:p-2 flex flex-col items-center justify-center">
+          <span class="font-bold text-[1.2rem] max-sm:text-base text-accent h-6">{{
             user?.following?.length || 0
           }}</span>
           Following
         </p>
-        <p class="min-w-[10rem] p-4 flex flex-col items-center justify-center">
-          <span class="font-bold text-[1.2rem] text-accent h-6">{{
+        <p class="min-w-[10rem] max-sm:min-w-max p-4 max-sm:p-2 flex flex-col items-center justify-center">
+          <span class="font-bold text-[1.2rem] max-sm:text-base text-accent h-6">{{
             user?.total_comments || 0
           }}</span>
           Comments
@@ -230,13 +236,13 @@ watch(
       </section>
       <span class="flex place-content-end w-full"
         ><NuxtLink
-          class="text-secondary bg-action rounded-2xl px-4 py-2 place-self-end w-max"
+          class="text-secondary bg-action rounded-2xl px-4 py-2 place-self-end w-max max-sm:text-[0.8rem] max-sm:px-2 max-sm:py-1"
           to="/dashboard"
           >Go To My Dashboard</NuxtLink
         ></span
       >
       <section class="w-full">
-        <h2 class="text-[1.3rem] w-full border-b border-b-accent mb-4">
+        <h2 class="text-[1.3rem] max-sm:text-[1.1rem] w-full border-b border-b-accent mb-4 ">
           Recent inhalts
         </h2>
         <div class="w-full h-full flex flex-col gap-4">
@@ -246,12 +252,12 @@ watch(
             class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
           >
             <NuxtLink
-              class="flex w-full h-max justify-between items-center"
+              class="flex w-full h-max justify-between items-center text-[0.8rem] font-semibold"
               :to="`/${inhalt.author_username}/articles/${
                 inhalt.id
               }--${inhalt.title.replace(/\s+/g, '-').toLowerCase()}`"
             >
-              <h3>{{ inhalt?.title }}</h3>
+              {{ inhalt?.title }}
             </NuxtLink>
             <div class="flex gap-4 h-full cursor-default z-10">
               <LikeButton :article-id="inhalt?.id" />
@@ -267,20 +273,44 @@ watch(
         </div>
       </section>
     </main>
-    <aside class="flex flex-col gap-6 w-full h-full max-h-[calc(100svh-8rem)]">
-      <section class="w-full h-max bg-white rounded-2xl p-4">
-        <h2>Promotion</h2>
+    <aside
+      class="flex flex-col justify-between gap-4 min-w-[15rem] h-max min-h-[calc(100svh-8rem)] text-primary dark:text-primary max-md:absolute max-md:w-[20rem] max-md:right-[7%] max-lg:hidden"
+    >
+      <section class="w-full h-[20rem] bg-white rounded-2xl p-4">
+        <h2 class="w-full border-b border-b-accent">Promotion</h2>
         <div class="w-full h-[20rem]"></div>
       </section>
 
-      <section class="w-full h-max bg-white rounded-2xl p-4">
-        <h2>Hot Trends <Icon name="fluent-emoji-flat:fire" /></h2>
-        <div class="w-full h-[25rem]">
-          <h3>Rendering images the good way</h3>
-          <h3>18 tools to master Nuxt</h3>
-          <h3>Vue is getting super fun!</h3>
-          <h3>Iconify + Nuxt</h3>
-          <h3>Next vs Nuxt</h3>
+      <section class="w-full h-[20rem] bg-white rounded-2xl p-4 mb-4">
+        <h2 class="w-full border-b border-b-accent">
+          Hot Trends <Icon name="fluent-emoji-flat:fire" />
+        </h2>
+        <div class="w-full h-max flex flex-col gap-2">
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Rendering images the good way</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >18 tools to master Nuxt</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Vue is getting super fun!</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Iconify + Nuxt</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Next vs Nuxt</NuxtLink
+          >
         </div>
       </section>
     </aside>

@@ -6,6 +6,10 @@ html {
   @apply flex flex-col w-full h-full items-center
 }
 
+* {
+  border: 0.2px solid red;
+}
+
 body {
   @apply font-sans text-primary bg-light dark:bg-dark dark:text-secondary max-w-[2000px] w-full;
 }
@@ -78,6 +82,35 @@ li {
 .rendered-markdown-content-container li {
   list-style: disc;
   margin-left: 1rem;
+}
+
+@media screen and (max-width: 420px) {
+  .rendered-markdown-content-container h1 {
+    font-size: 1.2rem;
+  }
+  
+  .rendered-markdown-content-container h2 {
+    font-size: 1.1rem;
+  }
+  
+  .rendered-markdown-content-container h3 {
+    font-size: 1rem;
+  }
+  
+  .rendered-markdown-content-container h4,
+  h5,
+  h6 {
+    font-size: 1rem;
+  }
+  
+  .rendered-markdown-content-container p,
+  li {
+    font-size: 0.9rem;
+  }
+
+  .rendered-markdown-content-container code {
+    font-size: 0.9rem;
+  }
 }
 
 .rendered-markdown-content-container pre,

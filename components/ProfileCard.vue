@@ -19,7 +19,7 @@ defineProps<AuthorCard>();
       className ? className : '',
     ]"
   >
-    <h3 v-if="authorTag" class="font-bold !text-md mb-2 underline">Author</h3>
+    <h3 v-if="authorTag" class="font-bold !text-md mb-2 underline max-md:!text-[0.9rem]">Author</h3>
     <span>
       <NuxtImg
         v-if="profilePhotoSrc !== null && profilePhotoSrc !== 'null' && profilePhotoSrc !== 'undefined'"

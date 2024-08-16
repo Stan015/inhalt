@@ -72,23 +72,47 @@
           </NuxtLink>
         </section>
       </main>
-      <aside class="flex flex-col gap-6 w-full h-full">
-        <section class="w-full h-max bg-white rounded-2xl p-4">
-          <h2>Promotion</h2>
-          <div class="w-full h-[20rem]"></div>
-        </section>
-  
-        <section class="w-full h-max bg-white rounded-2xl p-4">
-          <h2>Hot Trends <Icon name="fluent-emoji-flat:fire" /></h2>
-          <div class="w-full h-[25rem]">
-            <h3>Rendering images the good way</h3>
-            <h3>18 tools to master Nuxt</h3>
-            <h3>Vue is getting super fun!</h3>
-            <h3>Iconify + Nuxt</h3>
-            <h3>Next vs Nuxt</h3>
-          </div>
-        </section>
-      </aside>
+      <aside
+      class="flex flex-col justify-between gap-4 min-w-[15rem] h-max min-h-[calc(100svh-8rem)] text-primary dark:text-primary max-md:absolute max-md:w-[20rem] max-md:right-[7%] max-md:hidden"
+    >
+      <section class="w-full h-[20rem] bg-white rounded-2xl p-4">
+        <h2 class="w-full border-b border-b-accent">Promotion</h2>
+        <div class="w-full h-[20rem]"></div>
+      </section>
+
+      <section class="w-full h-[20rem] bg-white rounded-2xl p-4 mb-4">
+        <h2 class="w-full border-b border-b-accent">
+          Hot Trends <Icon name="fluent-emoji-flat:fire" />
+        </h2>
+        <div class="w-full h-[25rem] flex flex-col gap-2">
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Rendering images the good way</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >18 tools to master Nuxt</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Vue is getting super fun!</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Iconify + Nuxt</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Next vs Nuxt</NuxtLink
+          >
+        </div>
+      </section>
+    </aside>
     </div>
     <NuxtPage />
   </template>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Article, Comment } from "~/types/tables.types";
-
 import { useUserStore } from "../store/userStore";
 import formatDateTime from "~/utils/formatDateTime";
 
@@ -27,83 +26,88 @@ const convertedArticleComments = ref<Array<Comment>>([]);
 
 // Fetch the existing comments
 const handleFetchExistingComments = async () => {
-  const { data: articleData, error } = await supabase
-    .from("articles")
-    .select("comments")
-    .eq("id", articleId)
-    .single();
+  try {
+    const { data: articleData, error } = await supabase
+      .from("articles")
+      .select("comments")
+      .eq("id", articleId)
+      .single();
 
-  if (error) {
-    console.error("Error fetching article:", error.message);
-    return;
-  }
+    if (error) throw new Error(error.message);
 
-  if (articleData && articleData.comments) {
-    articleComments.value = articleData.comments as Comment[];
+    if (articleData && articleData.comments) {
+      articleComments.value = articleData.comments as Comment[];
 
-    articleComments.value.forEach(async (commentInfo) => {
-      const comment = commentInfo.comment;
+      const conversionPromises = articleComments.value.map(
+        async (commentInfo) => {
+          const comment = commentInfo.comment;
+          const { date, time } = formatDateTime(commentInfo.commented_at);
+          commentInfo.formatedDate = date;
+          commentInfo.formatedTime = time;
 
-      const { date, time } = formatDateTime(commentInfo.commented_at);
-      commentInfo.formatedDate = date;
-      commentInfo.formatedTime = time;
+          try {
+            const { data: response } = await useAsyncData(() =>
+              $fetch<{ html: string }>(
+                "/api/articles/convert-markdown-to-content",
+                {
+                  method: "POST",
+                  body: { markdown: comment },
+                }
+              )
+            );
 
-      try {
-        const response = await useAsyncData(() =>
-          $fetch<{ html: string }>(
-            "/api/articles/convert-markdown-to-content",
-            {
-              method: "POST",
-              body: { markdown: comment },
-            }
-          )
-        );
-
-        if (response) {
-          commentInfo.comment = response.data.value?.html!;
-          convertedArticleComments.value = articleComments.value;
+            commentInfo.comment = response.value?.html || comment;
+          } catch (conversionError) {
+            console.error(
+              "Error converting markdown comment:",
+              conversionError
+            );
+          }
         }
-      } catch (error) {
-        console.error("Error converting markdown comment:", error);
-      }
-    });
-  }
+      );
 
-  isNewCommentAdded.value = false;
+      await Promise.all(conversionPromises);
+      convertedArticleComments.value = articleComments.value;
+    }
+
+    isNewCommentAdded.value = false;
+  } catch (error) {
+    console.error("Error fetching article comments:", (error as Error).message);
+  }
 };
 
 const handleComment = async () => {
   if (markdownCommentEditor.value) {
-    const commentMarkdownContent = markdownCommentEditor.value?.getMarkdown();
-    // const commentHtmlContent = markdownEditor.value?.getHTML();
+    const commentMarkdownContent = markdownCommentEditor.value.getMarkdown();
 
-    const username = userStore.userCredentials.username;
-    const userFullName = userStore.userCredentials.fullName;
-    const userAvatar = userStore.userCredentials.avatar;
-    const commentedAt = new Date().toISOString();
+    const { username, fullName: full_name, avatar } = userStore.userCredentials;
+    const commented_at = new Date().toISOString();
 
-    const comments = articleComments.value;
-    comments.push({
+    const newComment: Comment = {
       comment: commentMarkdownContent,
       commented_by: {
         username: username!,
-        full_name: userFullName!,
-        avatar: userAvatar!,
+        full_name: full_name!,
+        avatar: avatar!,
       },
-      commented_at: commentedAt!,
-    });
+      commented_at,
+    };
 
-    // Update the article with new comments on db
-    const { error: updateError } = await supabase
-      .from("articles")
-      .update({ comments })
-      .eq("id", articleId);
+    articleComments.value.push(newComment);
 
-    if (updateError) {
-      console.error("Error adding comment:", updateError);
-    } else {
+    try {
+      const { data: updateData, error: updateError } = await supabase
+        .from("articles")
+        .update({ comments: articleComments.value })
+        .eq("id", articleId)
+        .select();
+
+      if (updateError) throw new Error(updateError.message);
+
+      articleComments.value = updateData as Comment[];
       isNewCommentAdded.value = true;
-      console.log("Comment added successfully");
+    } catch (updateError) {
+      console.error("Error adding comment:", updateError);
     }
   }
 };
@@ -112,9 +116,15 @@ onMounted(() => {
   handleFetchExistingComments();
 });
 
-watch(isNewCommentAdded, () => handleFetchExistingComments(), {
-  immediate: true,
-});
+watch(
+  isNewCommentAdded,
+  () => {
+    if (isNewCommentAdded.value) {
+      handleFetchExistingComments();
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -162,13 +172,20 @@ watch(isNewCommentAdded, () => handleFetchExistingComments(), {
         @submit.prevent="handleComment"
         class="flex flex-col w-max justify-center items-center gap-4"
       >
-        <h4 class="text-md font-bold w-full border-b border-b-accent">Write a comment</h4>
+        <h4 class="text-md font-bold w-full border-b border-b-accent">
+          Write a comment
+        </h4>
         <MarkdownEditor
           box-height="300px"
-          class-name="w-[35rem] bg-white rounded-2xl"
+          class-name="w-[35rem] max-sm:w-[20rem] max-lg:w-[22rem] bg-white rounded-2xl"
           ref="markdownCommentEditor"
         />
-        <button class="bg-accent rounded-2xl px-4 py-2 text-secondary dark:text-secondary transition-all hover:translate-x-2 hover:translate-y-1" type="submit">Comment</button>
+        <button
+          class="bg-accent rounded-2xl px-4 py-2 text-secondary dark:text-secondary transition-all hover:translate-x-2 hover:translate-y-1"
+          type="submit"
+        >
+          Comment
+        </button>
       </form>
     </div>
   </section>

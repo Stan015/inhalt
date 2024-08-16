@@ -8,7 +8,7 @@ const props = defineProps({
   <nav class="flex gap-4 max-md:gap-2 mb-4 text-primary dark:text-secondary">
     <NuxtLink
       to="/algo/for-you"
-      :aria-current="props.currentPage === 'home' || 'for-you' ? true : false"
+      :aria-current="props.currentPage === 'for-you' ? true : false"
       class="text-nowrap text-sm rounded-2xl border-b border-b-light dark:border-b-dark px-2 aria-[current=true]:border-b-accent max-sm:text-[0.7rem]"
       >For you</NuxtLink
     >

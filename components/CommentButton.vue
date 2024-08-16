@@ -31,7 +31,11 @@ watchEffect(() => {});
 </script>
 
 <template>
-  <button class="relative" type="button" aria-labelledby="comments">
+  <button
+    class="relative flex flex-col items-center"
+    type="button"
+    aria-labelledby="comments"
+  >
     <Icon name="uil:comment" />
     <span v-if="!commentIsZero" class="absolute -top-2 right-0 text-[10px]">
       {{ commentList?.length }}

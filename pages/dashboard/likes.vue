@@ -3,6 +3,7 @@ import type { Article } from "~/types/tables.types";
 
 import { signOut } from "~/auth/auth";
 import { useUserStore } from "~/store/userStore";
+import { useGetWindowWidth } from "~/composables/useGetWindowWidth";
 
 const userStore = useUserStore();
 const userInhalts = ref<Array<Article> | null>(null);
@@ -31,21 +32,41 @@ const handleUserInhalts = async () => {
   }
 };
 
+const { isDashboardMenuOpen } = useGetWindowWidth();
+const setDashboardMenu = ref(isDashboardMenuOpen);
+
+const toggleDashboardMenu = () => {
+  setDashboardMenu.value = !setDashboardMenu.value;
+};
+
 onMounted(() => {
   handleUserInhalts();
 });
 </script>
 
 <template>
-  <div class="py-6 px-[12%] min-h-main w-full text-primary dark:text-primary">
-    <h1 class="font-bold text-[1.5rem] mb-4 text-primary dark:text-secondary">
-      My Dashboard
-    </h1>
-    <div
-      class="w-full min-h-[calc(100svh-13rem)] grid grid-cols-[15rem_1fr] grid-rows-1 gap-4"
-    >
+  <div
+    class="py-6 px-[12%] max-lg:px-[7%] min-h-main w-full text-primary dark:text-primary relative"
+  >
+    <div class="flex w-full gap-6 justify-between">
+      <h1 class="font-bold text-[1.5rem] max-sm:text-[1.3rem] mb-4 text-primary dark:text-secondary">
+        My Dashboard
+      </h1>
+      <button
+        @click="toggleDashboardMenu"
+        type="button"
+        class="w-8 h-8 rounded-full hidden max-md:block"
+      >
+        <Icon
+          class="bg-accent w-8 h-8"
+          name="streamline:horizontal-menu-circle-solid"
+        />
+      </button>
+    </div>
+    <div class="w-full min-h-[calc(100svh-13rem)] h-full flex gap-4">
       <section
-        class="rounded-2xl flex flex-col justify-between items-center gap-4"
+        v-if="setDashboardMenu"
+        class="rounded-2xl flex flex-col justify-between items-center gap-6 h-[calc(100%-5rem)] min-w-[12rem] relative max-md:absolute max-md:right-[7%] max-md:top-[5rem] max-md:bg-black/[0.9] max-md:z-20 max-md:pl-8 max-md:py-8 transition-all"
       >
         <nav class="flex flex-col gap-4 w-full h-max">
           <NuxtLink
@@ -100,23 +121,23 @@ onMounted(() => {
             Following</NuxtLink
           >
         </nav>
-        <section class="w-full h-max bg-white rounded-2xl p-4">
+        <section class="w-full h-[18rem] bg-white rounded-2xl p-4">
           <h2>News</h2>
           <div class="w-full h-[15rem]"></div>
         </section>
         <button
           @click="signOut"
-          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary  dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
+          class="px-4 py-1 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
           type="button"
         >
           Sign Out
         </button>
       </section>
       <main
-        class="w-full min-h-[16rem] h-full flex flex-col gap-4 bg-white rounded-2xl p-4"
+        class="w-full min-h-screen h-full flex flex-col gap-4 bg-white rounded-2xl p-4"
       >
         <h2
-          class="text-[1.5rem] font-semibold mb-2 w-full border-b-2 border-b-accent"
+          class="text-[1.5rem] max-sm:text-[1.1rem] font-semibold mb-2 w-full border-b-2 border-b-accent"
         >
           My Likes
         </h2>
@@ -128,12 +149,12 @@ onMounted(() => {
             :key="inhalt.id"
           >
             <NuxtLink
-              class="flex w-full h-max justify-between items-center"
+              class="flex w-full h-max justify-between items-center text-[0.8rem] font-semibold"
               :to="`/${inhalt.author_username}/articles/${
                 inhalt.id
               }--${inhalt.title.replace(/\s+/g, '-').toLowerCase()}`"
             >
-              <h3>{{ inhalt?.title }}</h3>
+              {{ inhalt?.title }}
             </NuxtLink>
             <div class="flex gap-4 cursor-default">
               <LikeButton :article-id="inhalt?.id" />
@@ -147,7 +168,7 @@ onMounted(() => {
             </div>
           </div>
           <div v-else class="w-full flex flex-col items-center gap-4">
-            <p class="text-[1.1rem] font-medium text-center">
+            <p class="text-[1.1rem] max-sm:text-[0.8rem] font-medium text-center">
               You not liked any inhalt yet. Explore and engage inhalts.
             </p>
             <NuxtLink
