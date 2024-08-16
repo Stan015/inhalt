@@ -11,9 +11,14 @@ export default defineEventHandler(async (event) => {
   const salt = bcrypt.genSaltSync(10);
   const passwordHash = await bcrypt.hash(password, salt);
 
+  const origin = event.headers.get("origin");
+
   const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
     email: email,
     password: password,
+    options: {
+      emailRedirectTo: `${origin}/confirm`,
+    },
   });
 
   if (signUpError) {
