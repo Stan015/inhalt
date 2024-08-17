@@ -38,7 +38,8 @@ defineExpose({ getMarkdown, getHTML });
 </script>
 
 <template>
-  <div :class="`${className}`">
-    <div ref="editorRef" />
+  <div >
+    <div :class="`${className}`" ref="editorRef" />
   </div>
 </template>
+

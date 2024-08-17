@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html {
-  @apply flex flex-col w-full h-full items-center
+  @apply flex flex-col w-full h-full items-center;
 }
 
 /* * {
@@ -88,21 +88,21 @@ li {
   .rendered-markdown-content-container h1 {
     font-size: 1.2rem;
   }
-  
+
   .rendered-markdown-content-container h2 {
     font-size: 1.1rem;
   }
-  
+
   .rendered-markdown-content-container h3 {
     font-size: 1rem;
   }
-  
+
   .rendered-markdown-content-container h4,
   h5,
   h6 {
     font-size: 1rem;
   }
-  
+
   .rendered-markdown-content-container p,
   li {
     font-size: 0.9rem;
@@ -186,4 +186,49 @@ li {
 
 .rendered-markdown-content-container a:hover {
   text-decoration: underline;
+}
+
+/* markdown editor */
+.toastui-editor-defaultUI-toolbar {
+  justify-content: flex-end !important;
+}
+
+.ProseMirror {
+  font-family: "Poppins", "Open Sans", "Helvetica Neue", "Helvetica", "Arial",
+    "나눔바른고딕", "Nanum Barun Gothic", "맑은고딕", "Malgun Gothic",
+    sans-serif !important;
+  color: #000 !important;
+  font-size: 1rem !important;
+}
+
+@media screen and (max-width: 1026px) {
+  .toastui-editor-defaultUI-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .toastui-editor-defaultUI-toolbar button {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .toastui-editor-dropdown-toolbar {
+    height: auto !important;
+    width: 100% !important;
+    flex-wrap: wrap;
+    right: 0 !important;
+    padding: 0.5rem !important;
+    margin: 1.3px !important;
+    justify-content: center !important;
+
+    & > .toastui-editor-toolbar-icons {
+      width: 1.1rem !important;
+      height: 1.1rem !important;
+    }
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .ProseMirror {
+    font-size: 0.8rem !important;
+  }
 }

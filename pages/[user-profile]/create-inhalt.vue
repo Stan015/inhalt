@@ -99,7 +99,7 @@ const onFileChange = (event: Event) => {
 
 <template>
   <section
-    class="w-full min-h-main flex gap-4 py-6 px-[12%] text-primary dark:text-secondar"
+    class="w-full min-h-main flex gap-4 py-6 px-[12%] text-primary dark:text-secondary max-md:px-[7%]"
   >
     <article class="w-full h-full flex flex-col items-center gap-6">
       <h1
@@ -135,7 +135,7 @@ const onFileChange = (event: Event) => {
         />
         <MarkdownEditor
           box-height="500px"
-          class-name="w-full bg-white text-primary dark:text-primary rounded-xl"
+          class-name="w-full bg-white text-primary dark:text-primary rounded-xl overflow-scroll max-md:w-[30rem] max-lg:w-[32rem] max-sm:w-[20rem]"
           ref="markdownEditor"
         />
         <button
@@ -146,21 +146,5 @@ const onFileChange = (event: Event) => {
         </button>
       </form>
     </article>
-    <!-- <aside class="flex flex-col gap-6 w-[20rem] h-full">
-      <section class="w-full h-max bg-white rounded-2xl p-4">
-        <h2>Promotion</h2>
-        <div class="w-full h-[20rem]"></div>
-      </section>
-      <section class="w-full h-max bg-white rounded-2xl p-4">
-        <h2>Hot Trends <Icon name="fluent-emoji-flat:fire" /></h2>
-        <div class="w-full h-[25rem]">
-          <h3>Rendering images the good way</h3>
-          <h3>18 tools to master Nuxt</h3>
-          <h3>Vue is getting super fun!</h3>
-          <h3>Iconify + Nuxt</h3>
-          <h3>Next vs Nuxt</h3>
-        </div>
-      </section>
-    </aside> -->
   </section>
 </template>
