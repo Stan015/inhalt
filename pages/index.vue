@@ -3,11 +3,15 @@ import type { Article, ArticleCard } from "~/types/tables.types";
 
 import { useArticlesStore } from "~/store/articlesStore";
 import formatDateTime from "~/utils/formatDateTime";
+import InhaltCardSkeleton from "~/components/skeletons/InhaltCardSkeleton.vue";
 
 const articlesStore = useArticlesStore();
 const allArticleCards = useState<Array<ArticleCard>>();
+const isLoading = ref(true);
 
 const fecthArticles = async () => {
+  isLoading.value = true;
+
   try {
     const response = await $fetch("/api/articles/fetch-articles");
     const data = response?.data;
@@ -28,6 +32,8 @@ const fecthArticles = async () => {
   } catch (error) {
     console.log((error as Error).message);
     articlesStore.fetchError = error as Error;
+  } finally {
+    isLoading.value = false;
   }
 };
 
@@ -66,14 +72,17 @@ onBeforeMount(() => {
       <section
         class="w-full h-[20rem] bg-white rounded-2xl p-4 text-primary dark:text-primary mb-4"
       >
-        <h2 class="w-full border-b border-b-accent" >News</h2>
+        <h2 class="w-full border-b border-b-accent">News</h2>
         <div class="w-full"></div>
       </section>
     </div>
     <main class="block w-full h-full pb-6 text-primary dark:text-primary">
       <DiscoveryNavLinks current-page="for-you" />
       <section class="flex flex-col gap-4 w-full min-h-dvh h-full">
-        <InhaltCard :all-article-cards="allArticleCards" />
+        <InhaltCard v-if="!isLoading" :all-article-cards="allArticleCards" />
+        <template v-else>
+          <InhaltCardSkeleton v-for="n in 8" :key="n" />
+        </template>
       </section>
     </main>
     <aside
@@ -85,13 +94,35 @@ onBeforeMount(() => {
       </section>
 
       <section class="w-full h-[20rem] bg-white rounded-2xl p-4 mb-4">
-        <h2 class="w-full border-b border-b-accent">Hot Trends <Icon name="fluent-emoji-flat:fire" /></h2>
+        <h2 class="w-full border-b border-b-accent">
+          Hot Trends <Icon name="fluent-emoji-flat:fire" />
+        </h2>
         <div class="w-full h-[25rem] flex flex-col gap-2">
-          <NuxtLink to="" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">Rendering images the good way</NuxtLink>
-          <NuxtLink to="" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">18 tools to master Nuxt</NuxtLink>
-          <NuxtLink to="" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">Vue is getting super fun!</NuxtLink>
-          <NuxtLink to="" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">Iconify + Nuxt</NuxtLink>
-          <NuxtLink to="" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">Next vs Nuxt</NuxtLink>
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Rendering images the good way</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >18 tools to master Nuxt</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Vue is getting super fun!</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Iconify + Nuxt</NuxtLink
+          >
+          <NuxtLink
+            to=""
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Next vs Nuxt</NuxtLink
+          >
         </div>
       </section>
     </aside>

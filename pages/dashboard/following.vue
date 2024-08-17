@@ -5,6 +5,7 @@ import { signOut } from "~/auth/auth";
 import { useUserStore } from "../../store/userStore";
 import { fetchUserFollowing, toggleFollow } from "~/utils/toggleFollow";
 import { useGetWindowWidth } from "~/composables/useGetWindowWidth";
+import FollowListSkeleton from "~/components/skeletons/FollowListSkeleton.vue";
 
 const userStore = useUserStore();
 const username = userStore.userCredentials.username as string;
@@ -15,6 +16,7 @@ const isLoadingFollow = ref(false);
 const dateOfFollow = new Date().toISOString();
 const followingUser = ref(true);
 const currentAuthUser = ref(false);
+const isLoadingFollowingList = ref(true);
 
 if (username == userToFollow.value) {
   currentAuthUser.value = true;
@@ -49,7 +51,7 @@ const toggleDashboardMenu = () => {
 };
 
 onMounted(() => {
-  fetchUserFollowing({ username, isLoadingFollowing: { value: true } });
+  fetchUserFollowing({ username, isLoadingFollowing: isLoadingFollowingList });
 });
 </script>
 
@@ -155,7 +157,7 @@ onMounted(() => {
         <div class="w-full h-full flex flex-col gap-4">
           <div
             class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
-            v-if="currentFollowing.length > 0"
+            v-if="currentFollowing.length > 0 && !isLoadingFollowingList"
             v-for="following in currentFollowing"
             :key="following.username"
           >
@@ -175,6 +177,9 @@ onMounted(() => {
               />
             </div>
           </div>
+          <template v-else-if="isLoadingFollowingList">
+            <FollowListSkeleton v-for="n in 8" :key="n" />
+          </template>
           <div v-else class="w-full flex flex-col items-center gap-4">
             <p
               class="text-[1.1rem] max-sm:text-[0.8rem] font-medium text-center"

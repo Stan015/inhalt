@@ -4,6 +4,7 @@ import type { Article } from "~/types/tables.types";
 import { signOut } from "~/auth/auth";
 import { useUserStore } from "~/store/userStore";
 import { useGetWindowWidth } from "~/composables/useGetWindowWidth";
+import RecentInhaltListSkeleton from "~/components/skeletons/RecentInhaltListSkeleton.vue";
 
 const userStore = useUserStore();
 const username = userStore.userCredentials.username as string;
@@ -145,7 +146,7 @@ onMounted(() => {
         <div class="w-full h-full flex flex-col gap-4">
           <div
             class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
-            v-if="userInhalts?.length !== 0 && userInhalts !== null"
+            v-if="userInhalts?.length !== 0 && userInhalts !== null && !isLoading"
             v-for="inhalt in userInhalts"
             :key="inhalt.id"
           >
@@ -168,6 +169,10 @@ onMounted(() => {
               />
             </div>
           </div>
+          <template v-else-if="isLoading">
+            <RecentInhaltListSkeleton v-for="n in 8" :key="n"/>
+          </template>
+
           <div v-else class="w-full flex flex-col items-center gap-4">
             <p class="text-[1.1rem] max-sm:text-[0.8rem] font-medium text-center">
               You have not created an inhalt article yet. Create to gain more

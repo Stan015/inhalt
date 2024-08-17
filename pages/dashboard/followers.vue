@@ -5,6 +5,7 @@ import { signOut } from "~/auth/auth";
 import { useUserStore } from "../../store/userStore";
 import { fetchUserFollowers, toggleFollow } from "~/utils/toggleFollow";
 import { useGetWindowWidth } from "~/composables/useGetWindowWidth";
+import FollowListSkeleton from "~/components/skeletons/FollowListSkeleton.vue";
 
 const userStore = useUserStore();
 const username = userStore.userCredentials.username as string;
@@ -18,6 +19,7 @@ const dateOfFollow = new Date().toISOString();
 const following = ref(false);
 const currentAuthUser = ref(false);
 const currentFollowing = userStore.userCredentials.following;
+const isLoadingFollowersList = ref(true);
 
 if (username == userToFollow) {
   currentAuthUser.value = true;
@@ -50,7 +52,7 @@ const toggleDashboardMenu = () => {
 };
 
 onMounted(() => {
-  fetchUserFollowers({ username, isLoadingFollowers: { value: true } });
+  fetchUserFollowers({ username, isLoadingFollowers: isLoadingFollowersList});
 });
 </script>
 
@@ -156,7 +158,7 @@ onMounted(() => {
         <div class="w-full h-full flex flex-col gap-4">
           <div
             class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
-            v-if="currentFollowers.length > 0"
+            v-if="currentFollowers.length > 0 && !isLoadingFollowersList"
             v-for="follower in currentFollowers"
             :key="follower.username"
           >
@@ -175,6 +177,9 @@ onMounted(() => {
               />
             </div>
           </div>
+          <template v-else-if="isLoadingFollowersList">
+            <FollowListSkeleton v-for="n in 8" :key="n" />
+          </template>
           <div v-else class="w-full flex flex-col items-center gap-4">
             <p class="text-[1.1rem] max-sm:text-[0.8rem] font-medium text-center">
               You do not have followers yet. Create inhalt to gain more

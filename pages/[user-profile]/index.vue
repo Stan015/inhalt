@@ -6,6 +6,8 @@ import { useUserStore } from "../../store/userStore";
 import {
   toggleFollow,
 } from "../../utils/toggleFollow";
+import ProfileCardSkeleton from "~/components/skeletons/ProfileCardSkeleton.vue";
+import RecentInhaltListSkeleton from "~/components/skeletons/RecentInhaltListSkeleton.vue";
 
 const userStore = useUserStore();
 const socials = userStore.userCredentials.socials;
@@ -118,13 +120,13 @@ watch(
     <section
       class="bg-white p-6 rounded-2xl flex flex-col justify-between items-center h-[calc(100svh-8rem)] max-h-[calc(100svh-8rem)] max-md:h-max max-w-[15rem] max-md:max-w-full"
     >
-      <div class="w-full">
+      <div class="w-[15rem] max-md:w-full p-4">
         <h1
           class="text-[1.5rem] max-sm:text-[1.3rem] font-bold mb-4 w-full border-b-2 border-b-accent"
         >
           Profile
         </h1>
-        <div class="w-full flex flex-col gap-4 items-center">
+        <div v-if="!isLoadingProfile" class="w-full flex flex-col gap-4 items-center">
           <div
             class="flex flex-col max-md:flex-row max-sm:flex-col gap-4 items-center justify-center"
           >
@@ -191,6 +193,7 @@ watch(
           </div>
           
         </div>
+        <ProfileCardSkeleton v-else />
       </div>
     </section>
     <main class="bg-white p-6 rounded-2xl flex flex-col gap-4 w-full">
@@ -247,6 +250,7 @@ watch(
         </h2>
         <div class="w-full h-full flex flex-col gap-4">
           <div
+            v-if="!isLoadingInhalts"
             v-for="inhalt in userInhalts"
             :key="inhalt.id"
             class="flex w-full h-max justify-between items-center border-b-2 border-light rounded-2xl px-2 hover:border-accent transition-all"
@@ -270,6 +274,9 @@ watch(
               />
             </div>
           </div>
+          <template  v-else>
+            <RecentInhaltListSkeleton v-for="n in 8" :key="n"/>
+          </template>
         </div>
       </section>
     </main>

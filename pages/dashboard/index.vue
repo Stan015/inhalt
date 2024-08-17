@@ -6,6 +6,7 @@ import { signOut } from "~/auth/auth";
 import { useUserStore } from "~/store/userStore";
 import { useShowEditProfile } from "~/composables/useShowEditProfile";
 import { useGetWindowWidth } from "~/composables/useGetWindowWidth";
+import ProfileCardSkeleton from "~/components/skeletons/ProfileCardSkeleton.vue";
 
 const userStore = useUserStore();
 const userProfileName = userStore.userCredentials.username;
@@ -173,7 +174,7 @@ onMounted(() => {
           Sign Out
         </button>
       </section>
-      <main class="flex flex-col gap-4">
+      <main class="flex flex-col gap-4 w-full">
         <section class="w-full min-h-[16rem] h-max bg-white rounded-2xl p-4">
           <h1
             class="text-[1.5rem] max-sm:text-[1.3rem] font-bold mb-4 w-full border-b-2 border-b-accent"
@@ -182,6 +183,7 @@ onMounted(() => {
           </h1>
           <div class="w-full flex flex-col gap-4 items-center">
             <div
+              v-if="!isLoadingProfile"
               class="flex flex-row max-sm:flex-col gap-4 items-center max-md:justify-center w-full justify-between"
             >
               <span
@@ -254,6 +256,7 @@ onMounted(() => {
                 />
               </div>
             </div>
+            <ProfileCardSkeleton class-name="!flex-row max-sm:!flex-col !gap-4 !items-center max-md:!justify-center !w-full !justify-evenly" v-else />
           </div>
         </section>
         <section class="flex max-md:flex-col gap-4 w-full">
