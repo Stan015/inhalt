@@ -24,7 +24,7 @@ defineProps({
         :src="article.cover_image_url"
         alt="cover photo"
         loading="lazy"
-        class="w-full max-h-[17rem] max-sm:max-h-[11rem]"
+        class="w-full max-h-[17rem] max-sm:max-h-[11rem] object-fill"
       />
     </NuxtLink>
 

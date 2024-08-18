@@ -2,9 +2,23 @@ import { serverSupabaseClient } from "#supabase/server";
 import { v4 as uuidv4 } from "uuid";
 // import type { Article } from "~/types/tables.types";
 
+type Field = {
+  article_title?: string;
+  markdown_content?: string;
+  submitted_at?: string;
+  username?: string;
+  user_id?: string;
+  author_fullname?: string;
+  author_occupation?: string;
+  author_avatar?: string;
+  cover_img?: string;
+  author_email?: string;
+  article_tags?: string;
+};
+
 export default defineEventHandler(async (event) => {
   try {
-    const supabase = await serverSupabaseClient(event);
+    const supabase = await serverSupabaseClient<Field>(event);
 
     const form = await readMultipartFormData(event);
 
@@ -16,19 +30,6 @@ export default defineEventHandler(async (event) => {
     }
 
     // console.log(form)
-
-    type Field = {
-      article_title?: string;
-      markdown_content?: string;
-      submitted_at?: string;
-      username?: string;
-      user_id?: string;
-      author_fullname?: string;
-      author_occupation?: string;
-      author_avatar?: string;
-      cover_img?: string;
-      author_email?: string;
-    };
 
     let fields: Field = {};
     let coverImg;
@@ -53,6 +54,7 @@ export default defineEventHandler(async (event) => {
       author_occupation,
       author_avatar,
       author_email,
+      article_tags,
     } = fields;
 
     if (!article_title || !markdown_content || !submitted_at) {
@@ -107,6 +109,7 @@ export default defineEventHandler(async (event) => {
         created_at: submitted_at,
         cover_image: uploadedCoverImage,
         cover_image_url: uploadedCoverImageUrl,
+        article_tags: article_tags,
       })
       .select() 
       .single();

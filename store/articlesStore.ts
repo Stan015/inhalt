@@ -9,3 +9,11 @@ export const useArticlesStore = defineStore("articlesStore", () => {
     fetchError,
   };
 });
+
+export const useCreateInhaltStore = defineStore("createInhaltsStore", () => {
+  const selectedCreateTags = ref<Array<string>>([])
+
+  return {
+    selectedCreateTags
+  }
+})

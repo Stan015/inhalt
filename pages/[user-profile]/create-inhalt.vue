@@ -2,10 +2,12 @@
 import type { Article } from "~/types/tables.types";
 
 import { useUserStore } from "../../store/userStore";
+import { useCreateInhaltStore } from "~/store/articlesStore";
 
 const coverImg = ref<HTMLInputElement | null>(null);
 const convertedCoverImgFile = ref<string | null>(null);
 const articleTitle = ref<string>("");
+const isLoading = ref(false);
 
 const userStore = useUserStore();
 
@@ -15,7 +17,33 @@ const markdownEditor = ref<{
 } | null>(null);
 
 const submitPost = async () => {
-  if (markdownEditor.value) {
+  const selectedCreateTags = useCreateInhaltStore().selectedCreateTags;
+  const selectedTagsIsExcess = ref(false);
+  const noSelectedTags = ref(true);
+  const selectedTagsIsBelowMinimum = ref(false);
+
+  if (selectedCreateTags.length > 0) noSelectedTags.value = false;
+
+  if (selectedCreateTags.length > 4) {
+    selectedTagsIsExcess.value = true;
+    alert("You can only select 4 tags.");
+    return;
+  }
+
+  if (selectedCreateTags.length < 3) {
+    selectedTagsIsBelowMinimum.value = true;
+    alert("Select at least 3 tags.");
+    return;
+  }
+
+  if (
+    markdownEditor.value &&
+    !noSelectedTags.value &&
+    !selectedTagsIsBelowMinimum.value &&
+    !selectedTagsIsExcess.value
+  ) {
+    isLoading.value = true;
+
     const markdownContent = markdownEditor.value.getMarkdown();
     // const htmlContent = markdownEditor.value?.getHTML();
     const title = articleTitle.value;
@@ -43,6 +71,7 @@ const submitPost = async () => {
     formData.append("author_occupation", occupation!);
     formData.append("author_avatar", avatar!);
     formData.append("author_email", email!);
+    formData.append("article_tags", `{${selectedCreateTags.join(",")}}`!);
 
     try {
       const response = await $fetch<{ body: Article; statusCode: number }>(
@@ -62,6 +91,8 @@ const submitPost = async () => {
         const author_username = data.author_username;
 
         alert("Article created successfully!");
+        
+        useCreateInhaltStore().selectedCreateTags = [];
 
         navigateTo(
           `/${author_username}/articles/${article_id}--${article_title
@@ -74,6 +105,8 @@ const submitPost = async () => {
     } catch (error) {
       console.error("Error creating article:", (error as Error).message);
       alert("Error creating article.");
+    } finally {
+      isLoading.value = false;
     }
   }
 };
@@ -101,7 +134,9 @@ const onFileChange = (event: Event) => {
   <section
     class="w-full min-h-main flex gap-4 py-6 px-[12%] text-primary dark:text-secondary max-md:px-[7%]"
   >
-    <article class="w-full h-full flex flex-col items-center gap-6">
+    <article
+      class="w-full px-[1.8rem] lg:px-[2.3rem] h-full flex flex-col items-center gap-6"
+    >
       <h1
         class="text-[1.5rem] font-bold border-b border-b-accent text-primary dark:text-secondary"
       >
@@ -131,18 +166,20 @@ const onFileChange = (event: Event) => {
           v-model="articleTitle"
           placeholder="Article title"
           required
-          class="w-full h-12 rounded-3xl p-4 pl-10 bg-white text-primary dark:text-primary text-[1.2rem] text-center font-medium outline-none border-2 border-white transition-all hover:border-accent focus:border-accent"
+          class="w-full max-w-full h-12 rounded-3xl p-4 pl-10 bg-white text-primary dark:text-primary text-[1.2rem] text-center font-medium outline-none border-2 border-white transition-all hover:border-accent focus:border-accent"
         />
         <MarkdownEditor
           box-height="500px"
           class-name="w-full bg-white text-primary dark:text-primary rounded-xl overflow-scroll max-md:w-[30rem] max-lg:w-[32rem] max-sm:w-[20rem]"
           ref="markdownEditor"
         />
+        <CreateInhaltTags />
         <button
-          class="bg-accent rounded-2xl px-4 py-2 text-secondary dark:text-secondary transition-all hover:translate-x-2 hover:translate-y-1"
+          class="w-[8.5rem] text-center bg-accent rounded-2xl px-4 py-2 text-secondary dark:text-secondary transition-all hover:translate-x-2 hover:translate-y-1"
           type="submit"
         >
-          Publish
+          <span v-if="isLoading" class="flex items-center gap-2">Publishing <Icon  name="line-md:uploading-loop" /></span>
+          <span v-else>Publish</span>
         </button>
       </form>
     </article>
