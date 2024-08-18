@@ -1,12 +1,32 @@
 import type { Article } from "~/types/tables.types";
 
 export const useArticlesStore = defineStore("articlesStore", () => {
-  const fetchedArticles = ref<Array<Article>>([]);
-  const fetchError = ref<Error>()
+  const currentDisplayedArticles = ref<Array<Article>>([]);
+  const currentDisplayedError = ref<Error>();
+
+  const fetchedForYouArticles = ref<Array<Article>>([]);
+  const fetchForYouError = ref<Error>();
+
+  const fetchedRecentArticles = ref<Array<Article>>([]);
+  const fetchRecentError = ref<Error>()
+
+  const fetchedTrendingArticles = ref<Array<Article>>([]);
+  const fetchTrendingError = ref<Error>()
+
+  const fetchedFollowingArticles = ref<Array<Article>>([]);
+  const fetchFollowingError = ref<Error>()
 
   return {
-    fetchedArticles,
-    fetchError,
+    currentDisplayedArticles,
+    currentDisplayedError,
+    fetchedForYouArticles,
+    fetchForYouError,
+    fetchedRecentArticles,
+    fetchRecentError,
+    fetchedTrendingArticles,
+    fetchTrendingError,
+    fetchedFollowingArticles,
+    fetchFollowingError
   };
 });
 

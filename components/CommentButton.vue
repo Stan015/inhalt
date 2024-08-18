@@ -4,13 +4,14 @@ import { useArticlesStore } from "../store/articlesStore";
 
 const props = defineProps({
   articleId: Number,
+  currentPage: String,
 });
 
 const articlesStore = useArticlesStore();
 
 const specificArticle = ref<Article>();
 
-specificArticle.value = articlesStore.fetchedArticles?.find(
+specificArticle.value = articlesStore.currentDisplayedArticles?.find(
   ({ id }) => id === props.articleId
 ) as Article;
 

@@ -53,6 +53,8 @@ export type Article = {
   comments?: Array<Comment>;
   html_content?: string;
   created_at: string;
+  read_count?: number;
+  last_read?: Date;
   formattedDate: string;
   formattedTime: string;
 };

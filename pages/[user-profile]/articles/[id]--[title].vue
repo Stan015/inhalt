@@ -2,15 +2,16 @@
 import type { Article } from "~/types/tables.types";
 
 import formatDateTime from "~/utils/formatDateTime";
+import { useArticleReadTracker } from "~/composables/useArticleReadTracker";
 
 const article = ref<Article | null>(null);
 const isLoading = ref(true);
 
-const fetchArticle = async () => {
-  const route = useRoute();
-  const articleId = parseInt(route.params.id as string, 10) || undefined;
-  const articleTitle = (route.params.title as string) || undefined;
+const route = useRoute();
+const articleId = parseInt(route.params.id as string, 10) || undefined;
+const articleTitle = (route.params.title as string) || undefined;
 
+const fetchArticle = async () => {
   if (!articleId || !articleTitle) {
     console.error("Article ID or title is missing.");
     return;
@@ -36,11 +37,13 @@ const fetchArticle = async () => {
   }
 };
 
+const { scrollDepth, timeSpent } = useArticleReadTracker(articleId!);
+console.log(scrollDepth.value, timeSpent.value);
+
 onMounted(() => {
   fetchArticle();
 });
 
-const route = useRoute();
 watch(
   () => route.params,
   () => {
@@ -90,10 +93,11 @@ watch(
               <div
                 class="flex gap-4 cursor-default w-full justify-center items-end"
               >
-                <LikeButton :article-id="article?.id" />
-                <CommentButton :article-id="article?.id" />
-                <BookmarkButton :article-id="article?.id" />
+                <LikeButton v-if="article" :article-id="article.id" />
+                <CommentButton v-if="article" :article-id="article?.id" />
+                <BookmarkButton v-if="article" :article-id="article?.id" />
                 <ShareButton
+                  v-if="article"
                   :article-id="article?.id"
                   :title="article?.title"
                   :author-username="article?.author_username"
@@ -123,10 +127,11 @@ watch(
               class-name="profile-card"
             />
             <div class="flex gap-4 cursor-default">
-              <LikeButton :article-id="article?.id" />
-              <CommentButton :article-id="article?.id" />
-              <BookmarkButton :article-id="article?.id" />
+              <LikeButton v-if="article" :article-id="article.id" />
+              <CommentButton v-if="article" :article-id="article.id" />
+              <BookmarkButton v-if="article" :article-id="article.id" />
               <ShareButton
+                v-if="article"
                 :article-id="article?.id"
                 :title="article?.title"
                 :author-username="article?.author_username"
@@ -152,7 +157,7 @@ watch(
           Related inhalts
         </h2>
         <article
-          class="w-full h-max flex rounded-2xl border border-white relative overflow-hidden max-md:flex-col "
+          class="w-full h-max flex rounded-2xl border border-white relative overflow-hidden max-md:flex-col"
         >
           <NuxtLink
             to="username/title"
@@ -160,17 +165,24 @@ watch(
           >
             <NuxtImg src="/img1.png" alt="cover photo" class="w-full h-full" />
           </NuxtLink>
-          <div class="w-full h-max bg-white p-4 dark:text-primary flex flex-col">
-            <NuxtLink to="username/title" class="w-20 h-20 overflow-hidden max-md:w-full">
+          <div
+            class="w-full h-max bg-white p-4 dark:text-primary flex flex-col"
+          >
+            <NuxtLink
+              to="username/title"
+              class="w-20 h-20 overflow-hidden max-md:w-full"
+            >
               <h2 class="w-full text-center font-bold text-[1rem]">
                 Mastering ChatGPT Blog Creation: Dos and Don'ts for SaaS
                 Marketing Managers
               </h2>
             </NuxtLink>
             <div class="flex items-end justify-between gap-2">
-              <div class="!mb-0 flex flex-nowrap max-sm:flex-col gap-1 !text-[0.6rem] max-sm:!text-[0.5rem]">
-                <span class="text-nowrap" >Jul 9</span>
-                <span  class="text-nowrap">10 min read</span>
+              <div
+                class="!mb-0 flex flex-nowrap max-sm:flex-col gap-1 !text-[0.6rem] max-sm:!text-[0.5rem]"
+              >
+                <span class="text-nowrap">Jul 9</span>
+                <span class="text-nowrap">10 min read</span>
               </div>
 
               <div class="flex gap-4 cursor-default">

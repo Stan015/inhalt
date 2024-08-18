@@ -4,21 +4,30 @@ import type { Article, ArticleCard } from "~/types/tables.types";
 import { useArticlesStore } from "~/store/articlesStore";
 import formatDateTime from "~/utils/formatDateTime";
 import InhaltCardSkeleton from "~/components/skeletons/InhaltCardSkeleton.vue";
+import { useUserStore } from "~/store/userStore";
 
 const articlesStore = useArticlesStore();
 const allArticleCards = useState<Array<ArticleCard>>();
 const isLoading = ref(true);
 
-const fecthArticles = async () => {
+const userStore = useUserStore();
+const userFollowing = userStore.userCredentials?.following?.map(
+  (f) => f.username
+);
+const userTags = userStore.userCredentials?.tags;
+
+const fetchArticles = async () => {
   isLoading.value = true;
   try {
-    const response = await $fetch("/api/articles/fetch-articles");
-    const data = response?.data;
+    const data = await $fetch("/api/articles/fetch-following-articles", {
+      method: "GET",
+      query: { userFollowing, userTags },
+    });
 
     if (data) {
-      articlesStore.fetchedArticles = data as Array<Article>;
-      allArticleCards.value =
-        articlesStore.fetchedArticles as Array<ArticleCard>;
+      allArticleCards.value = data as Array<ArticleCard>;
+      articlesStore.fetchedFollowingArticles = data as Array<Article>;
+      articlesStore.currentDisplayedArticles = data as Array<Article>;
 
       allArticleCards.value.forEach((articleCard) => {
         const { date, time } = formatDateTime(articleCard.created_at);
@@ -30,14 +39,14 @@ const fecthArticles = async () => {
     }
   } catch (error) {
     console.log((error as Error).message);
-    articlesStore.fetchError = error as Error;
+    articlesStore.fetchFollowingError = error as Error;
   } finally {
     isLoading.value = false;
   }
 };
 
 onBeforeMount(() => {
-  fecthArticles();
+  fetchArticles();
 });
 </script>
 

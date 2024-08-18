@@ -41,10 +41,10 @@ const fetchArticleBookmarks = async () => {
         currentBookmarks.value?.bookmarked_by[i].name === username
       ) {
         isBookmarked.value = true;
-        console.log("user already bookmarked this article");
+        // console.log("user already bookmarked this article");
       } else {
         isBookmarked.value = false;
-        console.log("user hasn't bookmarked this article");
+        // console.log("user hasn't bookmarked this article");
       }
     }
   }
@@ -61,14 +61,14 @@ const handleToggleBookmarkOnDB = async (bookmarked: boolean) => {
     });
     bookmarks.number_of_bookmarks = bookmarks.bookmarked_by.length;
 
-    console.log("from bookmark", currentBookmarks.value);
+    // console.log("from bookmark", currentBookmarks.value);
   } else {
     const filteredBookmarks = bookmarks.bookmarked_by.filter(
       ({ name }) => name !== username
     );
     bookmarks.bookmarked_by = filteredBookmarks;
     bookmarks.number_of_bookmarks = bookmarks.bookmarked_by.length;
-    console.log("from unbookmark", currentBookmarks.value, filteredBookmarks);
+    // console.log("from unbookmark", currentBookmarks.value, filteredBookmarks);
   }
 
   // Update the article with new bookmark data
@@ -81,10 +81,10 @@ const handleToggleBookmarkOnDB = async (bookmarked: boolean) => {
     console.error("Error liking article:", updateError);
   } else if (bookmarked) {
     isBookmarked.value = true;
-    console.log("Article bookmarked successfully");
+    // console.log("Article bookmarked successfully");
   } else {
     isBookmarked.value = false;
-    console.log("Article unbookmarked successfully");
+    // console.log("Article unbookmarked successfully");
   }
 };
 
@@ -112,7 +112,7 @@ watch(
   isBookmarked,
   () => {
     fetchArticleBookmarks();
-    console.log(isBookmarked.value);
+    // console.log(isBookmarked.value);
   },
   { immediate: true }
 );

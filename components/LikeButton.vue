@@ -41,10 +41,10 @@ const fetchArticleLikes = async () => {
         currentLikes.value?.liked_by[i].name === username
       ) {
         isLiked.value = true;
-        console.log("user already liked this article");
+        // console.log("user already liked this article");
       } else {
         isLiked.value = false;
-        console.log("user hasn't liked this article");
+        // console.log("user hasn't liked this article");
       }
     }
   }
@@ -61,14 +61,14 @@ const handleToggleLikeOnDB = async (liked: boolean) => {
     });
     likes.number_of_likes = likes.liked_by.length;
 
-    console.log("from like", currentLikes.value);
+    // console.log("from like", currentLikes.value);
   } else {
     const filteredLikes = likes.liked_by.filter(
       ({ name }) => name !== username
     );
     likes.liked_by = filteredLikes;
     likes.number_of_likes = likes.liked_by.length;
-    console.log("from unlike", currentLikes.value, filteredLikes);
+    // console.log("from unlike", currentLikes.value, filteredLikes);
   }
 
   // Update the article with new likes data
@@ -81,10 +81,10 @@ const handleToggleLikeOnDB = async (liked: boolean) => {
     console.error("Error liking article:", updateError);
   } else if (liked) {
     isLiked.value = true;
-    console.log("Article liked successfully");
+    // console.log("Article liked successfully");
   } else {
     isLiked.value = false;
-    console.log("Article unliked successfully");
+    // console.log("Article unliked successfully");
   }
 };
 
@@ -112,7 +112,7 @@ watch(
   isLiked,
   () => {
     fetchArticleLikes();
-    console.log(isLiked.value);
+    // console.log(isLiked.value);
   },
   { immediate: true }
 );

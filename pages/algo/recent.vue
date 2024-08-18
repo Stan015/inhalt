@@ -16,9 +16,9 @@ const fecthArticles = async () => {
     const data = response?.data;
 
     if (data) {
-      articlesStore.fetchedArticles = data as Array<Article>;
-      allArticleCards.value =
-        articlesStore.fetchedArticles as Array<ArticleCard>;
+      allArticleCards.value = data as Array<ArticleCard>;
+      articlesStore.fetchedRecentArticles = data as Array<Article>;
+      articlesStore.currentDisplayedArticles = data as Array<Article>;
 
       allArticleCards.value.forEach((articleCard) => {
         const { date, time } = formatDateTime(articleCard.created_at);
@@ -30,7 +30,7 @@ const fecthArticles = async () => {
     }
   } catch (error) {
     console.log((error as Error).message);
-    articlesStore.fetchError = error as Error;
+    articlesStore.fetchRecentError = error as Error;
   } finally {
     isLoading.value = false;
   }
