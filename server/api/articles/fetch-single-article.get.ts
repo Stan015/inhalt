@@ -28,6 +28,8 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  setHeader(event, "Cache-Control", "no-cache");
+
   //   console.log(data)
 
   return data;

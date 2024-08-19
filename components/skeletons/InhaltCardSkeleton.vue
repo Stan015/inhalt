@@ -15,7 +15,7 @@
     <div class="w-full flex justify-between px-3 mb-3 gap-3 items-end">
       <div class="flex flex-col items-start w-[30%] h-max gap-1">
         <div
-          class="w-[50%] h-[0.5rem] rounded-xl bg-gray-300 animate-pulse block"
+          class="w-[40%] h-[0.5rem] rounded-xl bg-gray-300 animate-pulse block"
         />
         <div
           class="w-[50%] h-[0.5rem] rounded-xl bg-gray-300 animate-pulse block"

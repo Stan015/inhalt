@@ -81,17 +81,17 @@ watch(
             <div class="grid grid-cols-3 justify-between gap-4">
               <div class="flex flex-col justify-end">
                 <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
-                  {{ article?.formattedDate }}
+                  {{ article?.formattedTime }}
                 </p>
                 <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
-                  {{ article?.formattedTime }}
+                  {{ article?.formattedDate }}
                 </p>
                 <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
                   10 min read
                 </p>
               </div>
               <div
-                class="flex gap-4 cursor-default w-full justify-center items-end"
+                class="flex gap-4 cursor-default w-full justify-center items-end h-max place-self-end"
               >
                 <LikeButton v-if="article" :article-id="article.id" />
                 <CommentButton v-if="article" :article-id="article?.id" />
@@ -126,7 +126,7 @@ watch(
               :profilePhotoSrc="`${article?.author_avatar}`"
               class-name="profile-card"
             />
-            <div class="flex gap-4 cursor-default">
+            <div class="flex gap-4 cursor-default h-max">
               <LikeButton v-if="article" :article-id="article.id" />
               <CommentButton v-if="article" :article-id="article.id" />
               <BookmarkButton v-if="article" :article-id="article.id" />
@@ -139,10 +139,10 @@ watch(
             </div>
             <div class="flex flex-col justify-end items-end">
               <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
-                {{ article?.formattedDate }}
+                {{ article?.formattedTime }}
               </p>
               <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
-                {{ article?.formattedTime }}
+                {{ article?.formattedDate }}
               </p>
               <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
                 10 min read
@@ -160,22 +160,21 @@ watch(
           class="w-full h-max flex rounded-2xl border border-white relative overflow-hidden max-md:flex-col"
         >
           <NuxtLink
-            to="username/title"
-            class="w-[8rem] h-[7rem] overflow-hidden max-md:w-full"
+            to=""
+            class="w-[8rem] min-h-full max-md:max-h-[7rem] overflow-hidden max-md:w-full"
           >
-            <NuxtImg src="/img1.png" alt="cover photo" class="w-full h-full" />
+            <NuxtImg
+              src="/img1.png"
+              alt="cover photo"
+              class="w-full h-full object-cover"
+            />
           </NuxtLink>
           <div
-            class="w-full h-max bg-white p-4 dark:text-primary flex flex-col"
+            class="!w-full h-max max-h-[9rem] bg-white p-4 dark:text-primary"
           >
-            <NuxtLink
-              to="username/title"
-              class="w-20 h-20 overflow-hidden max-md:w-full"
-            >
-              <h2 class="w-full text-center font-bold text-[1rem]">
-                Mastering ChatGPT Blog Creation: Dos and Don'ts for SaaS
-                Marketing Managers
-              </h2>
+            <NuxtLink to="" class="w-full h-max !mb-1 max-md:w-full !text-center text-sm flex justify-center">
+              Mastering ChatGPT Blog Creation: Dos and Don'ts for SaaS Marketing
+              Managers
             </NuxtLink>
             <div class="flex items-end justify-between gap-2">
               <div
@@ -185,7 +184,7 @@ watch(
                 <span class="text-nowrap">10 min read</span>
               </div>
 
-              <div class="flex gap-4 cursor-default">
+              <div class="flex gap-4 cursor-default h-max">
                 <LikeButton />
                 <CommentButton />
                 <BookmarkButton />
@@ -216,7 +215,7 @@ watch(
         <h2 class="w-full border-b border-b-accent">
           Hot Trends <Icon name="fluent-emoji-flat:fire" />
         </h2>
-        <div class="w-full h-[25rem] flex flex-col gap-2">
+        <div class="w-full h-max overflow-y-scroll flex flex-col gap-2">
           <NuxtLink
             to=""
             class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"

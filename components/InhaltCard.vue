@@ -42,21 +42,21 @@ defineProps({
       </NuxtLink>
 
       <div
-        class="flex items-end justify-between gap-6 max-md:gap-3 rounded-2xl border-t border-t-accent px-4 pt-2 pb-4"
+        class="grid grid-cols-3 w-full items-end justify-between gap-6 max-md:gap-3 rounded-2xl border-t border-t-accent px-4 pt-2 pb-4"
       >
         <div class="flex flex-col justify-end">
           <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
-            {{ article?.formattedDate }}
+            {{ article?.formattedTime }}
           </p>
           <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
-            {{ article?.formattedTime }}
+            {{ article?.formattedDate }}
           </p>
           <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
             10 min read
           </p>
         </div>
 
-        <div class="flex gap-4 cursor-default max-md:gap-3 items-center">
+        <div class="flex gap-4 cursor-default max-md:gap-3 items-center justify-center">
           <LikeButton :article-id="article?.id" />
           <CommentButton :article-id="article?.id" />
           <BookmarkButton :article-id="article?.id" />

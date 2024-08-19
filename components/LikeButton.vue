@@ -121,7 +121,7 @@ watch(
 <template>
   <button
     @click="handleLike"
-    class="relative flex flex-col items-center"
+    class="relative flex flex-col items-center justify-end"
     type="button"
     aria-labelledby="likes"
   >

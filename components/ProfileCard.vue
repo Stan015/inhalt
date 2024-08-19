@@ -19,7 +19,7 @@ defineProps<AuthorCard>();
       className ? className : '',
     ]"
   >
-    <h3 v-if="authorTag" class="font-bold !text-md mb-2 underline max-md:!text-[0.9rem]">Author</h3>
+    <h3 v-if="authorTag" class="font-bold !text-[1rem] mb-2 underline max-md:!text-[0.9rem]">Author</h3>
     <span>
       <NuxtImg
         v-if="profilePhotoSrc !== null && profilePhotoSrc !== 'null' && profilePhotoSrc !== 'undefined'"
@@ -29,7 +29,7 @@ defineProps<AuthorCard>();
       />
       <Icon v-else name="hugeicons:user" class="w-6 h-6 rounded-full border" />
     </span>
-    <h4 v-if="name !== null && name !== 'null' && name !== 'undefined'" class="text-end !text-sm !font-medium !mb-0 max-sm:!text-[0.5rem]">{{ name }}</h4>
-    <p v-if="occupation !== null && occupation !== 'null' && occupation !== 'undefined'" class="text-end !mb-0 !text-sm  max-sm:!text-[0.5rem]">{{ occupation }}</p>
+    <h4 v-if="name !== null && name !== 'null' && name !== 'undefined'" class="text-end !text-[0.6rem] !font-medium !mb-0 max-sm:!text-[0.5rem]">{{ name }}</h4>
+    <p v-if="occupation !== null && occupation !== 'null' && occupation !== 'undefined'" class="text-end !mb-0 !text-[0.6rem] max-sm:!text-[0.5rem]">{{ occupation }}</p>
   </NuxtLink>
 </template>

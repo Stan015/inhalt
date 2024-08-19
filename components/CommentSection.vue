@@ -36,12 +36,12 @@ const handleFetchExistingComments = async () => {
     if (error) throw new Error(error.message);
 
     if (articleData && articleData.comments) {
-      articleComments.value = articleData.comments as Comment[];
+      articleComments.value = [...(articleData.comments as Comment[])];
+      convertedArticleComments.value = [...articleComments.value];
 
-      const conversionPromises = articleComments.value.map(
-        async (commentInfo) => {
-          const comment = commentInfo.comment;
-          const { date, time } = formatDateTime(commentInfo.commented_at);
+      convertedArticleComments.value.forEach(async (commentInfo) => {
+          const convertedComment = { ...commentInfo };
+          const { date, time } = formatDateTime(convertedComment.commented_at);
           commentInfo.formatedDate = date;
           commentInfo.formatedTime = time;
 
@@ -51,23 +51,20 @@ const handleFetchExistingComments = async () => {
                 "/api/articles/convert-markdown-to-content",
                 {
                   method: "POST",
-                  body: { markdown: comment },
+                  body: { markdown: convertedComment.comment },
                 }
               )
             );
 
-            commentInfo.comment = response.value?.html || comment;
+            convertedComment.comment = response.value?.html || convertedComment.comment;
           } catch (conversionError) {
-            console.error(
-              "Error converting markdown comment:",
-              conversionError
-            );
+            console.error("Error converting markdown comment:", conversionError);
           }
-        }
-      );
 
-      await Promise.all(conversionPromises);
-      convertedArticleComments.value = articleComments.value;
+          return convertedComment;
+        })
+
+      console.log(convertedArticleComments.value, "Converted", articleComments.value, "Original");
     }
 
     isNewCommentAdded.value = false;
@@ -80,17 +77,17 @@ const handleComment = async () => {
   if (markdownCommentEditor.value) {
     const commentMarkdownContent = markdownCommentEditor.value.getMarkdown();
 
-    const { username, fullName: full_name, avatar } = userStore.userCredentials;
-    const commented_at = new Date().toISOString();
+    const { username, fullName, avatar } = userStore.userCredentials;
+    const commentedAt = new Date().toISOString();
 
     const newComment: Comment = {
       comment: commentMarkdownContent,
       commented_by: {
         username: username!,
-        full_name: full_name!,
+        full_name: fullName!,
         avatar: avatar!,
       },
-      commented_at,
+      commented_at: commentedAt,
     };
 
     articleComments.value.push(newComment);
@@ -100,12 +97,13 @@ const handleComment = async () => {
         .from("articles")
         .update({ comments: articleComments.value })
         .eq("id", articleId)
-        .select();
+        .select("comments");
 
       if (updateError) throw new Error(updateError.message);
 
-      articleComments.value = updateData as Comment[];
+      articleComments.value = updateData[0].comments as Comment[];
       isNewCommentAdded.value = true;
+      console.log("Successfully added comment", updateData[0].comments);
     } catch (updateError) {
       console.error("Error adding comment:", updateError);
     }
@@ -137,7 +135,7 @@ watch(
           :key="comment.commented_at"
           class="w-full h-max rounded-2xl border p-4 border-white bg-white"
         >
-          <div class="w-dull border-b mb-2 flex justify-between gap-4">
+          <div class="w-dull border-b mb-2 grid grid-cols-3 justify-between items-center gap-4">
             <ProfileCard
               :user-profile-link="`/${comment.commented_by.username}`"
               :name="`${comment.commented_by.full_name}`"
@@ -146,9 +144,11 @@ watch(
               class-name="profile-card w-max mb-1"
             />
 
+           
+
             <span class="flex flex-col justify-end !mb-2 items-end">
-              <p class="!mb-0 !text-[0.8rem]">{{ comment?.formatedDate }}</p>
-              <p class="!mb-0 !text-[0.8rem]">{{ comment?.formatedTime }}</p>
+              <p class="!mb-0 !text-[0.6rem]">{{ comment?.formatedTime }}</p>
+              <p class="!mb-0 !text-[0.6rem]">{{ comment?.formatedDate }}</p>
             </span>
           </div>
 
