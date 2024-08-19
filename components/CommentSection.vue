@@ -19,6 +19,7 @@ const markdownCommentEditor = ref<{
 } | null>(null);
 
 const userStore = useUserStore();
+const username = userStore.userCredentials.username;
 
 const articleComments = ref<Array<Comment>>([]);
 const isNewCommentAdded = ref(false);
@@ -40,31 +41,37 @@ const handleFetchExistingComments = async () => {
       convertedArticleComments.value = [...articleComments.value];
 
       convertedArticleComments.value.forEach(async (commentInfo) => {
-          const convertedComment = { ...commentInfo };
-          const { date, time } = formatDateTime(convertedComment.commented_at);
-          commentInfo.formatedDate = date;
-          commentInfo.formatedTime = time;
+        const convertedComment = { ...commentInfo };
+        const { date, time } = formatDateTime(convertedComment.commented_at);
+        commentInfo.formatedDate = date;
+        commentInfo.formatedTime = time;
 
-          try {
-            const { data: response } = await useAsyncData(() =>
-              $fetch<{ html: string }>(
-                "/api/articles/convert-markdown-to-content",
-                {
-                  method: "POST",
-                  body: { markdown: convertedComment.comment },
-                }
-              )
-            );
+        try {
+          const { data: response } = await useAsyncData(() =>
+            $fetch<{ html: string }>(
+              "/api/articles/convert-markdown-to-content",
+              {
+                method: "POST",
+                body: { markdown: convertedComment.comment },
+              }
+            )
+          );
 
-            convertedComment.comment = response.value?.html || convertedComment.comment;
-          } catch (conversionError) {
-            console.error("Error converting markdown comment:", conversionError);
-          }
+          convertedComment.comment =
+            response.value?.html || convertedComment.comment;
+        } catch (conversionError) {
+          console.error("Error converting markdown comment:", conversionError);
+        }
 
-          return convertedComment;
-        })
+        return convertedComment;
+      });
 
-      console.log(convertedArticleComments.value, "Converted", articleComments.value, "Original");
+      console.log(
+        convertedArticleComments.value,
+        "Converted",
+        articleComments.value,
+        "Original"
+      );
     }
 
     isNewCommentAdded.value = false;
@@ -110,12 +117,100 @@ const handleComment = async () => {
   }
 };
 
+// delete comment
+const commentDeleted = ref(false);
+const commentEdited = ref(false);
+
+const deleteComment = async (commentIndex: number) => {
+  try {
+    articleComments.value.splice(commentIndex, 1);
+
+    const { data: updateData, error: updateError } = await supabase
+      .from("articles")
+      .update({ comments: articleComments.value })
+      .eq("id", articleId)
+      .select("comments");
+
+    if (updateError) throw new Error(updateError.message);
+
+    articleComments.value = updateData[0].comments as Comment[];
+    convertedArticleComments.value = [...articleComments.value];
+
+    commentDeleted.value = true;
+    // console.log("Comment deleted successfully", updateData[0].comments);
+  } catch (error) {
+    console.error("Error deleting comment:", (error as Error).message);
+  } finally {
+    commentDeleted.value = false;
+  }
+};
+//
+
+// edit comment
+const isEditingComment = ref(false);
+const isSavingEditedComment = ref(false);
+const indexOfCommentToEdit = ref<number | null>(null);
+const currentCommentContent = ref<string | null>(null);
+const markdownCommentEditorForEdit = ref<{
+  getMarkdown: () => string;
+  getHTML: () => string;
+} | null>(null);
+
+const startEditingComment = (index: number, commentContent: string) => {
+  indexOfCommentToEdit.value = index;
+  currentCommentContent.value = commentContent;
+  isEditingComment.value = true;
+};
+
+const saveEditedComment = async () => {
+  if (
+    !markdownCommentEditorForEdit.value ||
+    indexOfCommentToEdit.value === null
+  )
+    return;
+
+  isSavingEditedComment.value = true;
+
+  const updatedCommentMarkdown =
+    markdownCommentEditorForEdit.value.getMarkdown();
+
+  if (articleComments.value[indexOfCommentToEdit.value]) {
+    articleComments.value[indexOfCommentToEdit.value].comment =
+      updatedCommentMarkdown;
+  }
+
+  try {
+    const { data: updateData, error: updateError } = await supabase
+      .from("articles")
+      .update({ comments: articleComments.value })
+      .eq("id", articleId)
+      .select("comments");
+
+    if (updateError) throw new Error(updateError.message);
+
+    articleComments.value = updateData[0].comments as Comment[];
+    isEditingComment.value = false;
+    indexOfCommentToEdit.value = null;
+  } catch (updateError) {
+    console.error("Error saving edited comment:", updateError);
+  } finally {
+    isSavingEditedComment.value = false;
+    isEditingComment.value = false;
+  }
+};
+
+const cancelEditingComment = () => {
+  isEditingComment.value = false;
+  indexOfCommentToEdit.value = null;
+  currentCommentContent.value = null;
+};
+
 onMounted(() => {
   handleFetchExistingComments();
 });
 
 watch(
-  isNewCommentAdded,
+  [isNewCommentAdded, commentDeleted],
   () => {
     if (isNewCommentAdded.value) {
       handleFetchExistingComments();
@@ -131,11 +226,13 @@ watch(
       <h2 class="w-full border-b border-b-accent mb-4 mt-5">Comments:</h2>
       <div class="flex flex-col gap-4 rounded-2xl dark:text-primary">
         <div
-          v-for="comment in convertedArticleComments"
+          v-for="(comment, index) in convertedArticleComments"
           :key="comment.commented_at"
           class="w-full h-max rounded-2xl border p-4 border-white bg-white"
         >
-          <div class="w-dull border-b mb-2 grid grid-cols-3 justify-between items-center gap-4">
+          <div
+            class="w-dull border-b mb-2 grid grid-cols-3 justify-between items-center gap-4"
+          >
             <ProfileCard
               :user-profile-link="`/${comment.commented_by.username}`"
               :name="`${comment.commented_by.full_name}`"
@@ -144,9 +241,27 @@ watch(
               class-name="profile-card w-max mb-1"
             />
 
-           
+            <div
+              class="flex gap-6 w-max h-max !text-primary dark:!text-primary place-self-center"
+              v-if="comment.commented_by.username === username"
+            >
+              <button
+                @click="deleteComment(index)"
+                class="flex items-center justify-center h-[1.6rem] w-[1.6rem] rounded-3xl border-b-2 dark:border-dark max-md:dark:border-light hover:border-accent transition-all"
+              >
+                <Icon name="fluent:delete-48-filled" />
+              </button>
+              <!-- <button
+                class="flex items-center justify-center h-[1.6rem] w-[1.6rem] rounded-3xl border-b-2 dark:border-dark max-md:dark:border-light hover:border-accent transition-all"
+                @click="
+                  startEditingComment(index, articleComments[index].comment)
+                "
+              >
+                <Icon name="iconamoon:edit-bold" />
+              </button> -->
+            </div>
 
-            <span class="flex flex-col justify-end !mb-2 items-end">
+            <span class="flex flex-col justify-end !mb-2 items-end  col-end-4">
               <p class="!mb-0 !text-[0.6rem]">{{ comment?.formatedTime }}</p>
               <p class="!mb-0 !text-[0.6rem]">{{ comment?.formatedDate }}</p>
             </span>
@@ -165,6 +280,37 @@ watch(
             </button>
           </div>
         </div>
+        <!-- <div
+          v-if="isEditingComment"
+          class="fixed inset-0 bg-black/[0.7] flex items-center justify-center z-40"
+        >
+          <div class="w-max flex flex-col gap-2">
+            <MarkdownEditor
+              box-height="300px"
+              class-name="w-[35rem] max-sm:w-[20rem] max-lg:w-[22rem] overflow-scroll bg-white rounded-2xl"
+              ref="markdownCommentEditorForEdit"
+            />
+
+            <div class="w-max self-end flex gap-2">
+              <button
+                class="w-max bg-white rounded-2xl px-4 py-2 text-primary dark:text-primary transition-all hover:translate-x-2 hover:translate-y-1"
+                type="button"
+                @click="cancelEditingComment"
+              >
+                cancel
+              </button>
+              <button
+                class="w-max bg-accent rounded-2xl px-4 py-2 text-secondary dark:text-secondary transition-all hover:translate-x-2 hover:translate-y-1"
+                type="button"
+                @click="
+                  saveEditedComment
+                "
+              >
+                save
+              </button>
+            </div>
+          </div>
+        </div> -->
       </div>
     </div>
     <div class="flex flex-col w-full justify-center items-center mt-6">
