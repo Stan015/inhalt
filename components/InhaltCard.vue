@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { ArticleCard } from "~/types/tables.types";
+import { formatLastRead } from "~/utils/formatLastRead";
 
 defineProps({
   allArticleCards: Array<ArticleCard>,
@@ -17,7 +18,7 @@ defineProps({
       :to="`/${article.author_username}/articles/${article.id}--${article.title
         .replace(/\s+/g, '-')
         .toLowerCase()}`"
-        class="w-full h-max block"
+      class="w-full h-max block"
     >
       <NuxtImg
         v-if="article.cover_image"
@@ -52,11 +53,13 @@ defineProps({
             {{ article?.formattedDate }}
           </p>
           <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
-            10 min read
+            {{ formatLastRead(article?.last_read!) }}
           </p>
         </div>
 
-        <div class="flex gap-4 cursor-default max-md:gap-3 items-center justify-center">
+        <div
+          class="flex gap-4 cursor-default max-md:gap-3 items-center justify-center"
+        >
           <LikeButton :article-id="article?.id" />
           <CommentButton :article-id="article?.id" />
           <BookmarkButton :article-id="article?.id" />

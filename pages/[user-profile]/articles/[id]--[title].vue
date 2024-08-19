@@ -3,6 +3,7 @@ import type { Article } from "~/types/tables.types";
 
 import formatDateTime from "~/utils/formatDateTime";
 import { useArticleReadTracker } from "~/composables/useArticleReadTracker";
+import { formatLastRead } from "~/utils/formatLastRead";
 
 const article = ref<Article | null>(null);
 const isLoading = ref(true);
@@ -87,7 +88,7 @@ watch(
                   {{ article?.formattedDate }}
                 </p>
                 <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
-                  10 min read
+                  {{ formatLastRead(article?.last_read!) }}
                 </p>
               </div>
               <div
@@ -145,7 +146,7 @@ watch(
                 {{ article?.formattedDate }}
               </p>
               <p class="!mb-0 w-max !text-[0.6rem] max-sm:!text-[0.5rem]">
-                10 min read
+                {{ formatLastRead(article?.last_read!) }}
               </p>
             </div>
           </div>
@@ -172,7 +173,10 @@ watch(
           <div
             class="!w-full h-max max-h-[9rem] bg-white p-4 dark:text-primary"
           >
-            <NuxtLink to="" class="w-full h-max !mb-1 max-md:w-full !text-center text-sm flex justify-center">
+            <NuxtLink
+              to=""
+              class="w-full h-max !mb-1 max-md:w-full !text-center text-sm flex justify-center"
+            >
               Mastering ChatGPT Blog Creation: Dos and Don'ts for SaaS Marketing
               Managers
             </NuxtLink>
