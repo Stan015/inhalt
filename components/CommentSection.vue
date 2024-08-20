@@ -66,12 +66,12 @@ const handleFetchExistingComments = async () => {
         return convertedComment;
       });
 
-      console.log(
-        convertedArticleComments.value,
-        "Converted",
-        articleComments.value,
-        "Original"
-      );
+      // console.log(
+      //   convertedArticleComments.value,
+      //   "Converted",
+      //   articleComments.value,
+      //   "Original"
+      // );
     }
 
     isNewCommentAdded.value = false;
