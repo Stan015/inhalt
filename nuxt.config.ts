@@ -17,6 +17,8 @@ export default defineNuxtConfig({
     "@nuxtjs/color-mode",
     "@nuxt/test-utils/module",
     "@vueuse/nuxt",
+    "@nuxtjs/algolia",
+    "@nuxtjs/algolia",
   ],
   supabase: {
     url: process.env.NUXT_PUBLIC_SUPABASE_URL,
@@ -24,9 +26,25 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: "/login",
       callback: "/confirm",
-      include: ["/dashboard", "/dashboard/*", "/*/create-inhalt", "/*/notification"],
+      include: [
+        "/dashboard",
+        "/dashboard/*",
+        "/*/create-inhalt",
+        "/*/notification",
+      ],
       exclude: ["/", "/sign-up"],
     },
+  },
+  algolia: {
+    applicationId: process.env.NUXT_PUBLIC_ALGOLIA_APP_ID,
+    apiKey: process.env.NUXT_PUBLIC_ALGOLIA_API_KEY,
+    instantSearch: {
+      theme: "algolia",
+    },
+    globalIndex: "",
+    lite: true,
+    cache: false,
+    useFetch: false,
   },
   css: ["~/assets/css/global.css"],
   googleFonts: {
