@@ -70,10 +70,12 @@ onBeforeMount(() => {
         >
       </nav>
       <section
-        class="w-full h-[20rem] bg-white rounded-2xl p-4 text-primary dark:text-primary mb-4"
+        class="w-full max-w-[15rem] h-[20rem] bg-white rounded-2xl p-4 text-primary dark:text-primary mb-4"
       >
         <h2 class="w-full border-b border-b-accent">News</h2>
-        <div class="w-full"></div>
+        <div class="w-full text-[0.8rem]">
+          <p>🎓 Big News! I’m excited to announce that it's a graduation year for Stanley Azi! 🎉 12 incredible months of learning at AltSchool Africa + being a Computer Engineering graduate in 2 months (Oct, 2024.)!. Thanks to everyone who supported me along the way! 🚀 #Graduation #ClassOf2024</p>
+        </div>
       </section>
     </div>
     <main class="block w-full h-full pb-6 text-primary dark:text-primary">
@@ -86,11 +88,15 @@ onBeforeMount(() => {
       </section>
     </main>
     <aside
-      class="flex flex-col justify-between gap-4 min-w-[15rem] h-max min-h-[calc(100svh-8rem)] text-primary dark:text-primary max-md:absolute max-md:w-[20rem] max-md:right-[7%] max-lg:hidden"
+      class="flex flex-col justify-between gap-4 min-w-[15rem] max-w-[16rem] h-max min-h-[calc(100svh-8rem)] text-primary dark:text-primary max-md:absolute max-md:w-[20rem] max-md:right-[7%] max-lg:hidden"
     >
       <section class="w-full h-[20rem] bg-white rounded-2xl p-4">
         <h2 class="w-full border-b border-b-accent">Promotion</h2>
-        <div class="w-full h-[20rem]"></div>
+        <div class="w-full h-[20rem] flex flex-col gap-1 text-[0.8rem]">
+          <p>🎉 Watch out for Sabinus.Meme!, the ultimate meme store app launching soon! 🎉</p>
+          <p>This wonderful app aims at being your Go-to store where you can find funniest Investor Sabinus' memes! Users would be able to upload new Sabinus memes, add to favourites for easy reach and also store their other memes.🚀</p>
+          <NuxtLink to="https://sabinusmeme.vercel.app/" target="blank" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">Browing inhalt on a desktop? Take a look here! 🎉</NuxtLink>
+        </div>
       </section>
 
       <section class="w-full h-[20rem] bg-white rounded-2xl p-4 mb-4">
