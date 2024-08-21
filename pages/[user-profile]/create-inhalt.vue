@@ -3,9 +3,11 @@ import type { Article } from "~/types/tables.types";
 
 import { useUserStore } from "../../store/userStore";
 import { useCreateInhaltStore } from "~/store/articlesStore";
+import { useSaveAlgoliaRecord } from "~/composables/algolia/useSaveAlgoliaRecord";
 
 const coverImg = ref<HTMLInputElement | null>(null);
 const convertedCoverImgFile = ref<string | null>(null);
+const createdArticleData = ref<Article | null>(null);
 const articleTitle = ref<string>("");
 const isLoading = ref(false);
 
@@ -91,8 +93,10 @@ const submitPost = async () => {
         const author_username = data.author_username;
 
         alert("Article created successfully!");
-        
+
         useCreateInhaltStore().selectedCreateTags = [];
+
+        createdArticleData.value = data;
 
         navigateTo(
           `/${author_username}/articles/${article_id}--${article_title
@@ -110,6 +114,19 @@ const submitPost = async () => {
     }
   }
 };
+
+// save article data to algolia
+watch(createdArticleData, (newArticle) => {
+  if (newArticle) {
+    useSaveAlgoliaRecord({
+      title: newArticle.title,
+      author_username: newArticle.author_username,
+      author_fullname: newArticle.author_fullname,
+      author_occupation: newArticle.author_occupation,
+      cover_image_url: newArticle.cover_image_url,
+    }, "inhalt_articles");
+  }
+});
 
 const handleImagePreview = (file: File) => {
   const reader = new FileReader();
@@ -178,7 +195,9 @@ const onFileChange = (event: Event) => {
           class="w-[8.5rem] text-center bg-accent rounded-2xl px-4 py-2 text-secondary dark:text-secondary transition-all hover:translate-x-2 hover:translate-y-1"
           type="submit"
         >
-          <span v-if="isLoading" class="flex items-center gap-2">Publishing <Icon  name="line-md:uploading-loop" /></span>
+          <span v-if="isLoading" class="flex items-center gap-2"
+            >Publishing <Icon name="line-md:uploading-loop"
+          /></span>
           <span v-else>Publish</span>
         </button>
       </form>
