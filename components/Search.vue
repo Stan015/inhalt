@@ -52,7 +52,7 @@ watch(
 
   <div
     v-if="searchResults?.length > 0 && searchQuery.length > 0"
-    class="absolute top-[6rem] max-md:top-[8rem] left-[12%] max-md:left-[7%] right-[12%] max-md:right-[7%] bg-white dark:bg-primary border-2 border-white rounded-lg shadow-lg z-20 flex justify-center flex-wrap gap-4 p-4 pb-6"
+    class="absolute top-[6rem] max-md:top-[8rem] left-[12%] max-md:left-[7%] right-[12%] max-md:right-[7%] bg-white dark:bg-primary border-2 border-accent rounded-2xl shadow-lg z-20 flex justify-center flex-wrap gap-4 p-4 pb-6"
   >
     <NuxtLink
       v-for="res in searchResults"
