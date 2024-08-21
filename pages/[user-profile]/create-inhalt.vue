@@ -3,7 +3,6 @@ import type { Article } from "~/types/tables.types";
 
 import { useUserStore } from "../../store/userStore";
 import { useCreateInhaltStore } from "~/store/articlesStore";
-import { useSaveAlgoliaRecord } from "~/composables/algolia/useSaveAlgoliaRecord";
 
 const coverImg = ref<HTMLInputElement | null>(null);
 const convertedCoverImgFile = ref<string | null>(null);
@@ -114,19 +113,6 @@ const submitPost = async () => {
     }
   }
 };
-
-// save article data to algolia
-watch(createdArticleData, (newArticle) => {
-  if (newArticle) {
-    useSaveAlgoliaRecord({
-      title: newArticle.title,
-      author_username: newArticle.author_username,
-      author_fullname: newArticle.author_fullname,
-      author_occupation: newArticle.author_occupation,
-      cover_image_url: newArticle.cover_image_url,
-    }, "inhalt_articles");
-  }
-});
 
 const handleImagePreview = (file: File) => {
   const reader = new FileReader();
