@@ -38,7 +38,7 @@ defineExpose({ getMarkdown, getHTML });
 </script>
 
 <template>
-  <div >
+  <div class="w-max h-max overflow-hidden rounded-2xl">
     <div :class="`${className}`" ref="editorRef" />
   </div>
 </template>

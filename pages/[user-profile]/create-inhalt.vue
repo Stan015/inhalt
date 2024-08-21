@@ -187,7 +187,7 @@ const onFileChange = (event: Event) => {
         />
         <MarkdownEditor
           box-height="500px"
-          class-name="w-full bg-white text-primary dark:text-primary rounded-xl overflow-scroll max-md:w-[30rem] max-lg:w-[32rem] max-sm:w-[20rem]"
+          class-name="w-full bg-white text-primary dark:text-primary rounded-xl max-md:w-[30rem] max-lg:w-[32rem] max-sm:w-[20rem]"
           ref="markdownEditor"
         />
         <CreateInhaltTags />

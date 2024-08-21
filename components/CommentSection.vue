@@ -323,7 +323,7 @@ watch(
         </h4>
         <MarkdownEditor
           box-height="300px"
-          class-name="w-[35rem] max-sm:w-[20rem] max-lg:w-[22rem] overflow-scroll bg-white rounded-2xl"
+          class-name="w-[35rem] max-sm:w-[20rem] max-lg:w-[22rem] bg-white rounded-2xl"
           ref="markdownCommentEditor"
         />
         <button
