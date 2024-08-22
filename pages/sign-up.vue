@@ -1,8 +1,21 @@
 <script setup lang="ts">
 import { signInWithOAuth, signUpWithEmailAndPassword } from "~/auth/auth";
 import type { FormData } from "~/types/user.types";
+import { signUpSchema } from "~/auth/zodValidation";
+import { Notyf } from "notyf";
 
 const showPassword = ref(false);
+let notyf: Notyf | null;
+
+onMounted(() => {
+  notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
+});
 
 const formData = reactive<FormData>({
   firstName: "",
@@ -10,6 +23,38 @@ const formData = reactive<FormData>({
   email: "",
   password: "",
 });
+const confirmPassword = ref<string>("");
+
+const signUpWithEmailAndPasswordSchema = async () => {
+  try {
+    const result = signUpSchema.safeParse({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      username: formData.username,
+      password: formData.password,
+      confirmPassword: confirmPassword.value,
+      occupation: formData.occupation,
+    });
+
+    if (!result.success) {
+      throw new Error(result.error.errors[0].message);
+    }
+
+    if (result.data.password !== result.data.confirmPassword) {
+      throw new Error("Passwords do not match");
+    } else {
+      const { confirmPassword, ...data } = result.data;
+
+      await signUpWithEmailAndPassword({ ...data });
+    }
+  } catch (error) {
+    if (notyf) {
+      notyf.error((error as Error).message);
+    }
+    console.error((error as Error).message);
+  }
+};
 </script>
 
 <template>
@@ -21,7 +66,7 @@ const formData = reactive<FormData>({
     >
       <form
         class="flex flex-col items-center bg-white gap-4 max-sm:gap-3 w-full max-sm:w-full"
-        @submit.prevent="signUpWithEmailAndPassword(formData)"
+        @submit.prevent="signUpWithEmailAndPasswordSchema"
       >
         <h1
           class="font-bold text-lg border-b border-b-accent w-full text-center"
@@ -132,6 +177,7 @@ const formData = reactive<FormData>({
                 :type="showPassword ? 'text' : 'password'"
                 name="confirm-password"
                 class="w-full bg-white text-primary text-sm p-2 rounded-lg border-2 border-light outline-none hover:border-accent focus:border-accent"
+                v-model="confirmPassword"
                 id="confirm-password"
                 placeholder="Confirm your password..."
                 required

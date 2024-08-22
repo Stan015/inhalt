@@ -1,9 +1,45 @@
 <script setup lang="ts">
 import { signInWithEmailAndPassword, signInWithOAuth } from "../auth/auth";
+import { loginSchema } from "../auth/zodValidation";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 const email = ref<string>("");
 const password = ref<string>("");
 const showPassword = ref(false);
+let notyf: Notyf | null;
+
+onMounted(() => {
+  notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
+});
+
+const loginWithEmailAndPassword = () => {
+  try {
+    const result = loginSchema.safeParse({
+      email: email.value,
+      password: password.value,
+    });
+
+    if (!result.success) {
+      throw new Error(result.error.errors[0].message);
+    }
+
+    if (result.data) {
+      signInWithEmailAndPassword(result.data.email, result.data.password);
+    }
+  } catch (error) {
+    if (notyf) {
+      notyf.error((error as Error).message);
+    }
+    console.error((error as Error).message);
+  }
+};
 </script>
 
 <template>
@@ -15,9 +51,13 @@ const showPassword = ref(false);
     >
       <form
         class="flex flex-col items-center gap-4 w-full max-sm:w-full max-sm:gap-3"
-        @submit.prevent="signInWithEmailAndPassword(email, password)"
+        @submit.prevent="loginWithEmailAndPassword"
       >
-        <h1 class="font-bold text-lg border-b border-b-accent w-full text-center">Login</h1>
+        <h1
+          class="font-bold text-lg border-b border-b-accent w-full text-center"
+        >
+          Login
+        </h1>
         <p class="text-sm text-gray-600 text-center mb-2 max-sm:text-[0.9rem]">
           Don't have an account already?
           <NuxtLink
@@ -81,14 +121,17 @@ const showPassword = ref(false);
         </span>
       </form>
       <div class="w-full flex flex-col items-center gap-2 justify-between">
-        <p class="text-sm" >Sign in with:</p>
+        <p class="text-sm">Sign in with:</p>
         <div class="w-full flex items-center gap-4 justify-between">
           <button
             type="button"
             class="flex items-center gap-2 text-sm justify-center w-1/2 border-2 border-light p-3 rounded-lg hover:bg-action hover:text-secondary hover:border-accent transition-all"
             @click="signInWithOAuth('google')"
           >
-            <Icon class="w-[1.5rem] h-[1.5rem]" name="flat-color-icons:google" />Google
+            <Icon
+              class="w-[1.5rem] h-[1.5rem]"
+              name="flat-color-icons:google"
+            />Google
           </button>
           <button
             type="button"
