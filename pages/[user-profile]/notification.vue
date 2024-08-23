@@ -1,5 +1,21 @@
-<script lang="ts"></script>
+<script setup lang="ts">
+const route = useRouter();
+</script>
 
 <template>
-    
+  <section
+    class="w-full h-screen flex flex-col items-center justify-start pt-10"
+  >
+    <div class="flex flex-col gap-2 items-center">
+      <h1 class="text-[1.5rem] font-bold border-b border-accent">My Notifications</h1>
+      <p>Recent notifications will appear here...</p>
+      <button
+        @click="route.back()"
+        class="px-4 py-1 my-4 rounded-3xl border-b-2 border-dark text-primary dark:text-secondary dark:border-white hover:border-accent transition-all text-base flex items-center w-max"
+        type="button"
+      >
+        Go Back
+      </button>
+    </div>
+  </section>
 </template>
