@@ -2,10 +2,24 @@
 import type { Article, Comment } from "~/types/tables.types";
 import { useUserStore } from "../store/userStore";
 import formatDateTime from "~/utils/formatDateTime";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 const props = defineProps({
   markdownClassName: String,
   id: String,
+});
+
+let notyf: Notyf | null;
+
+onMounted(() => {
+  notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
 });
 
 const supabase = useSupabaseClient<Article>();
@@ -87,17 +101,22 @@ const handleComment = async () => {
     const { username, fullName, avatar } = userStore.userCredentials;
     const commentedAt = new Date().toISOString();
 
-    const newComment: Comment = {
-      comment: commentMarkdownContent,
-      commented_by: {
-        username: username!,
-        full_name: fullName!,
-        avatar: avatar!,
-      },
-      commented_at: commentedAt,
-    };
+    if (!username) {
+      notyf?.error("You need to be logged in to comment");
+    } else {
+      const newComment: Comment = {
+        commented_by: {
+          username,
+          full_name: fullName,
+          avatar,
+        },
+        commented_at: commentedAt,
+        comment: commentMarkdownContent,
+      };
 
-    articleComments.value.push(newComment);
+      articleComments.value.push(newComment);
+      notyf?.success("Comment added successfully");
+    }
 
     try {
       const { data: updateData, error: updateError } = await supabase
@@ -112,6 +131,7 @@ const handleComment = async () => {
       isNewCommentAdded.value = true;
       console.log("Successfully added comment", updateData[0].comments);
     } catch (updateError) {
+      notyf?.error("Error adding comment");
       console.error("Error adding comment:", updateError);
     }
   }
@@ -137,8 +157,10 @@ const deleteComment = async (commentIndex: number) => {
     convertedArticleComments.value = [...articleComments.value];
 
     commentDeleted.value = true;
+    notyf?.success("Comment deleted successfully");
     // console.log("Comment deleted successfully", updateData[0].comments);
   } catch (error) {
+    notyf?.error("Error deleting comment");
     console.error("Error deleting comment:", (error as Error).message);
   } finally {
     commentDeleted.value = false;
@@ -261,7 +283,7 @@ watch(
               </button> -->
             </div>
 
-            <span class="flex flex-col justify-end !mb-2 items-end  col-end-4">
+            <span class="flex flex-col justify-end !mb-2 items-end col-end-4">
               <p class="!mb-0 !text-[0.6rem]">{{ comment?.formatedTime }}</p>
               <p class="!mb-0 !text-[0.6rem]">{{ comment?.formatedDate }}</p>
             </span>
