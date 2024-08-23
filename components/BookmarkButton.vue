@@ -1,11 +1,25 @@
 <script setup lang="ts">
 import { useUserStore } from "../store/userStore";
 import type { Article, Bookmark } from "../types/tables.types";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 const supabase = useSupabaseClient<Article>();
 
 const props = defineProps({
   articleId: Number,
+});
+
+let notyf: Notyf | null;
+
+onMounted(() => {
+  notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
 });
 
 const userStore = useUserStore();
@@ -78,12 +92,15 @@ const handleToggleBookmarkOnDB = async (bookmarked: boolean) => {
     .eq("id", props.articleId);
 
   if (updateError) {
-    console.error("Error liking article:", updateError);
+    notyf?.error("Error bookmarking article");
+    console.error("Error bookmarking article:", updateError);
   } else if (bookmarked) {
     isBookmarked.value = true;
+    notyf?.success("Article bookmarked successfully");
     // console.log("Article bookmarked successfully");
   } else {
     isBookmarked.value = false;
+    notyf?.success("Article unbookmarked successfully");
     // console.log("Article unbookmarked successfully");
   }
 };
@@ -100,7 +117,7 @@ const handleBookmark = async () => {
   }
 
   if (!userStore.isLoggedIn) {
-    alert("Sign in to bookmark post.");
+    notyf?.error("Sign in to bookmark post.");
   }
 };
 

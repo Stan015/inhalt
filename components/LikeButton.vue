@@ -1,11 +1,25 @@
 <script setup lang="ts">
 import { useUserStore } from "../store/userStore";
 import type { Article, Likes } from "../types/tables.types";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 const supabase = useSupabaseClient<Article>();
 
 const props = defineProps({
   articleId: Number,
+});
+
+let notyf: Notyf | null;
+
+onMounted(() => {
+  notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
 });
 
 const userStore = useUserStore();
@@ -78,12 +92,15 @@ const handleToggleLikeOnDB = async (liked: boolean) => {
     .eq("id", props.articleId);
 
   if (updateError) {
+    notyf?.error("Error liking article.");
     console.error("Error liking article:", updateError);
   } else if (liked) {
     isLiked.value = true;
+    notyf?.success("Article liked successfully");
     // console.log("Article liked successfully");
   } else {
     isLiked.value = false;
+    notyf?.success("Article unliked successfully");
     // console.log("Article unliked successfully");
   }
 };
@@ -100,7 +117,7 @@ const handleLike = async () => {
   }
 
   if (!userStore.isLoggedIn) {
-    alert("Sign in to like post.");
+    notyf?.error("Sign in to like post.");
   }
 };
 
