@@ -10,6 +10,7 @@ const article = ref<Article | null>(null);
 const isLoading = ref(true);
 
 const route = useRoute();
+const host = window.location.host;
 const articleId = parseInt(route.params.id as string, 10) || undefined;
 const articleTitle = (route.params.title as string) || undefined;
 
@@ -107,7 +108,7 @@ watch(
                 />
               </div>
               <ProfileCard
-                :user-profile-link="`${article?.author_username}`"
+                :user-profile-link="`${host}/${article?.author_username}`"
                 :name="`${article?.author_fullname}`"
                 :occupation="`${article?.author_occupation}`"
                 :profilePhotoSrc="`${article?.author_avatar}`"
@@ -122,7 +123,7 @@ watch(
             class="flex items-end p-4 border-t bg-white dark:text-primary justify-between gap-6"
           >
             <ProfileCard
-              :user-profile-link="`${article?.author_username}`"
+              :user-profile-link="`${host}/${article?.author_username}`"
               :authorTag="true"
               :name="`${article?.author_fullname}`"
               :occupation="`${article?.author_occupation}`"
@@ -216,9 +217,22 @@ watch(
       <section class="w-full h-[20rem] bg-white rounded-2xl p-4">
         <h2 class="w-full border-b border-b-accent">Promotion</h2>
         <div class="w-full h-[20rem] flex flex-col gap-1 text-[0.8rem]">
-          <p>🎉 Watch out for Sabinus.Meme!, the ultimate meme store app launching soon! 🎉</p>
-          <p>This wonderful app aims at being your Go-to store where you can find funniest Investor Sabinus' memes! Users would be able to upload new Sabinus memes, add to favourites for easy reach and also store their other memes.🚀</p>
-          <NuxtLink to="https://sabinusmeme.vercel.app/"  target="blank" class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2">Browing inhalt on a desktop? Take a look here! 🎉</NuxtLink>
+          <p>
+            🎉 Watch out for Sabinus.Meme!, the ultimate meme store app
+            launching soon! 🎉
+          </p>
+          <p>
+            This wonderful app aims at being your Go-to store where you can find
+            funniest Investor Sabinus' memes! Users would be able to upload new
+            Sabinus memes, add to favourites for easy reach and also store their
+            other memes.🚀
+          </p>
+          <NuxtLink
+            to="https://sabinusmeme.vercel.app/"
+            target="blank"
+            class="border-b hover:border-b-accent rounded-xl text-[0.8rem] px-2"
+            >Browing inhalt on a desktop? Take a look here! 🎉</NuxtLink
+          >
         </div>
       </section>
 
