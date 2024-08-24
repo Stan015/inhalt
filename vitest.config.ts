@@ -1,5 +1,5 @@
 import { defineVitestConfig } from "@nuxt/test-utils/config";
 
 export default defineVitestConfig({
-  test: { environment: "node", globals: true, exclude: ["tests/e2e/**"] },
+  test: { environment: "node", include: ["tests/unit-tests/**"], exclude: ["tests/e2e/**"] },
 });
