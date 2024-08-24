@@ -51,7 +51,7 @@ jobs:
           pnpm exec playwright install
 
       - name: Run tests
-        run: pnpm test:coverage && pnpm test:e2e
+        run: pnpm test:unit && pnpm test:e2e
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
