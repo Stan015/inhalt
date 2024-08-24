@@ -12,6 +12,11 @@ defaults:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+          NUXT_PUBLIC_ALGOLIA_API_KEY: ${{ secrets.NUXT_PUBLIC_ALGOLIA_API_KEY }}
+          NUXT_PUBLIC_ALGOLIA_APP_ID: ${{ secrets.NUXT_PUBLIC_ALGOLIA_APP_ID }}
+          NUXT_PUBLIC_SUPABASE_KEY: ${{ secrets.NUXT_PUBLIC_SUPABASE_KEY }}
+          NUXT_PUBLIC_SUPABASE_URL: ${{ secrets.NUXT_PUBLIC_SUPABASE_URL }}
     strategy:
       matrix:
         node-version: [20]
@@ -46,11 +51,6 @@ jobs:
           pnpm exec playwright install
 
       - name: Run tests
-        env:
-          NUXT_PUBLIC_ALGOLIA_API_KEY: ${{ secrets.NUXT_PUBLIC_ALGOLIA_API_KEY }}
-          NUXT_PUBLIC_ALGOLIA_APP_ID: ${{ secrets.NUXT_PUBLIC_ALGOLIA_APP_ID }}
-          NUXT_PUBLIC_SUPABASE_KEY: ${{ secrets.NUXT_PUBLIC_SUPABASE_KEY }}
-          NUXT_PUBLIC_SUPABASE_URL: ${{ secrets.NUXT_PUBLIC_SUPABASE_URL }}
         run: pnpm test:coverage && pnpm test:e2e
 
       - name: Upload coverage reports to Codecov
