@@ -51,7 +51,7 @@ jobs:
           pnpm exec playwright install
 
       - name: Start the server
-        run: pnpm run start &
+        run: pnpm run dev &
       
       - name: Wait for the server to start
         run: npx wait-on http://localhost:3000
