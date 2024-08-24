@@ -47,7 +47,6 @@ jobs:
 
       - name: Run tests
         env:
-          ALGOLIA_ADMIN_API_KEY: ${{ secrets.ALGOLIA_ADMIN_API_KEY }}
           NUXT_PUBLIC_ALGOLIA_API_KEY: ${{ secrets.NUXT_PUBLIC_ALGOLIA_API_KEY }}
           NUXT_PUBLIC_ALGOLIA_APP_ID: ${{ secrets.NUXT_PUBLIC_ALGOLIA_APP_ID }}
           NUXT_PUBLIC_SUPABASE_KEY: ${{ secrets.NUXT_PUBLIC_SUPABASE_KEY }}
