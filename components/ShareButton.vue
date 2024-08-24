@@ -1,10 +1,24 @@
 <script setup lang="ts">
 import { useUserStore } from "~~/store/userStore";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 const props = defineProps({
   articleId: Number,
   title: String,
   authorUsername: String,
+});
+
+let notyf: Notyf | null;
+
+onMounted(() => {
+  notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
 });
 
 const domain = ref<string | null>(null);
@@ -50,7 +64,7 @@ const copyLink = () => {
   }--${props.title!.replace(/\s+/g, "-").toLowerCase()}`;
 
   navigator.clipboard.writeText(url).then(() => {
-    alert("Link copied to clipboard");
+    notyf?.success("Link copied to clipboard");
     handleShare();
   });
 };

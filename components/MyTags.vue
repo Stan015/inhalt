@@ -1,8 +1,22 @@
 <script setup lang="ts">
 import { useUserStore } from "~/store/userStore";
 import { tags } from "~/utils/tags";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 const userStore = useUserStore();
+
+let notyf: Notyf | null;
+
+onMounted(() => {
+  notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
+});
 
 const searchTag = ref("");
 
@@ -18,8 +32,10 @@ const selectedTags = ref<Array<string>>(currentTagsFromStore);
 const handleSelectTag = (tag: string) => {
   if (selectedTags.value.includes(tag)) {
     selectedTags.value = selectedTags.value.filter((t) => t !== tag);
+    notyf?.success(`Tag "${tag}" removed`);
   } else {
     selectedTags.value.push(tag);
+    notyf?.success(`Tag "${tag}" added`);
   }
 
   userStore.userCredentials.tags = selectedTags.value;

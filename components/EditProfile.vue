@@ -2,11 +2,25 @@
 import { useUserStore } from "~/store/userStore";
 import type { User } from "~/types/user.types";
 import { tags } from "~/utils/tags";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 const emit = defineEmits(["close"]);
 const handleClose = () => {
   emit("close");
 };
+
+let notyf: Notyf | null;
+
+onMounted(() => {
+  notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
+});
 
 const userStore = useUserStore();
 
@@ -75,11 +89,13 @@ const handleUpdate = async () => {
       userStore.userCredentials.bio = response.body.bio
       userStore.userCredentials.tags = response.body.tags
       userStore.userCredentials.socials = response.body.socials
+      notyf?.success("Profile updated successfully");
       console.log("updated successfully")
     } else {
       throw new Error("failed to update user details");
     }
   } catch (error) {
+    notyf?.error("Error updating profile");
     console.error((error as Error).message);
   } finally {
     isLoading.value = false;
