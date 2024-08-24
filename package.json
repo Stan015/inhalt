@@ -12,7 +12,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test": "vitest"
+    "test:unit": "vitest",
+    "test:e2e": "exec playwright test"
   },
   "dependencies": {
     "@nuxt/icon": "^1.0.0",
