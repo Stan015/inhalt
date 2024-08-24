@@ -21,8 +21,8 @@ export default defineNuxtConfig({
     "@nuxtjs/algolia",
   ],
   supabase: {
-    url: process.env.NUXT_PUBLIC_SUPABASE_URL,
-    key: process.env.NUXT_PUBLIC_SUPABASE_KEY,
+    url: process.env.NUXT_PUBLIC_SUPABASE_URL!,
+    key: process.env.NUXT_PUBLIC_SUPABASE_KEY!,
     redirectOptions: {
       login: "/login",
       callback: "/confirm",
@@ -36,8 +36,8 @@ export default defineNuxtConfig({
     },
   },
   algolia: {
-    applicationId: process.env.NUXT_PUBLIC_ALGOLIA_APP_ID,
-    apiKey: process.env.NUXT_PUBLIC_ALGOLIA_API_KEY,
+    applicationId: process.env.NUXT_PUBLIC_ALGOLIA_APP_ID!,
+    apiKey: process.env.NUXT_PUBLIC_ALGOLIA_API_KEY!,
     instantSearch: {
       theme: "algolia",
     },
