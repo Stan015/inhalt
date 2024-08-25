@@ -3,6 +3,8 @@ import type { Article } from "~/types/tables.types";
 
 import { useUserStore } from "../../store/userStore";
 import { useCreateInhaltStore } from "~/store/articlesStore";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
 
 const coverImg = ref<HTMLInputElement | null>(null);
 const convertedCoverImgFile = ref<string | null>(null);
@@ -11,6 +13,17 @@ const articleTitle = ref<string>("");
 const isLoading = ref(false);
 
 const userStore = useUserStore();
+let notyf: Notyf | null;
+
+onMounted(() => {
+  notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
+});
 
 const markdownEditor = ref<{
   getMarkdown: () => string;
@@ -27,13 +40,13 @@ const submitPost = async () => {
 
   if (selectedCreateTags.length > 4) {
     selectedTagsIsExcess.value = true;
-    alert("You can only select 4 tags.");
+    notyf?.error("You can only select 4 tags.");
     return;
   }
 
   if (selectedCreateTags.length < 3) {
     selectedTagsIsBelowMinimum.value = true;
-    alert("Select at least 3 tags.");
+    notyf?.error("Select at least 3 tags.");
     return;
   }
 
@@ -91,7 +104,7 @@ const submitPost = async () => {
         const article_id = data.id;
         const author_username = data.author_username;
 
-        alert("Article created successfully!");
+        notyf?.success("Article created successfully!");
 
         useCreateInhaltStore().selectedCreateTags = [];
 
@@ -103,11 +116,11 @@ const submitPost = async () => {
             .toLowerCase()}`
         );
       } else {
-        alert("Error creating article.");
+        notyf?.error("Error creating article.");
       }
     } catch (error) {
       console.error("Error creating article:", (error as Error).message);
-      alert("Error creating article.");
+      notyf?.error("Error creating article.");
     } finally {
       isLoading.value = false;
     }

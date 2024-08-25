@@ -1,6 +1,20 @@
 <script setup lang="ts">
 import { useCreateInhaltStore } from "~/store/articlesStore";
 import { tags } from "~/utils/tags";
+import { Notyf } from "notyf";
+import "notyf/notyf.min.css";
+
+let notyf: Notyf | null;
+
+onMounted(() => {
+  notyf = new Notyf({
+    duration: 3000,
+    position: {
+      x: "right",
+      y: "top",
+    },
+  });
+});
 
 const createInhaltStore = useCreateInhaltStore();
 
@@ -19,7 +33,7 @@ const selectedTagsIsExcess = ref(false);
 watch(selectedTags, () => {
   if (selectedTags.value.length > 4) {
     selectedTagsIsExcess.value = true;
-    alert("You can only select 4 tags.");
+    notyf?.error("You can only select 4 tags.");
   }
 }, {immediate: true, deep: true});
 
