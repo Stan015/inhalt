@@ -65,8 +65,15 @@ const handleUpdate = async () => {
   if (avatar.value) {
     formData.append("avatar", avatar.value?.files?.[0] as Blob);
   }
-  formData.append("first_name", firstName.value!);
-  formData.append("last_name", lastName.value!);
+
+  if (firstName.value) {
+    formData.append("firstName", firstName.value!);
+  }
+
+  if (lastName.value) {
+    formData.append("lastName", lastName.value!);
+  }
+
   formData.append("occupation", occupation.value!);
   formData.append("bio", bio.value!);
   formData.append("tags", `{${selectedTags.value.join(",")}}`);
