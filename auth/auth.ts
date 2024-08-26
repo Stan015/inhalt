@@ -27,10 +27,6 @@ export const signInWithEmailAndPassword = async (
     if (response) {
       // console.log(response);
       navigateTo("/confirm");
-
-      if (notyf) {
-        notyf.success('Sign-in successful');
-      }
     }
   } catch (error) {
     if (notyf) {
@@ -49,9 +45,6 @@ export async function signUpWithEmailAndPassword(formData: FormData) {
     if (response) {
       // console.log(response);
       navigateTo("/confirm");
-      if (notyf) {
-        notyf.success('Sign-in successful');
-      }
     }
   } catch (error) {
     if (notyf) {
