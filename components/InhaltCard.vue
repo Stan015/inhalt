@@ -36,7 +36,7 @@ defineProps({
         }--${article.title.replace(/\s+/g, '-').toLowerCase()}`"
       >
         <h2
-          class="w-full text-center font-bold !text-[1.5rem] max-sm:!text-[1.2rem] px-4 pt-2"
+          class="w-full text-center font-bold !text-[1.3rem] max-sm:!text-[1rem] !text-balance px-4 pt-2"
         >
           {{ article.title }}
         </h2>
